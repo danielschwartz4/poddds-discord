@@ -45,22 +45,3 @@ main().catch((err) => {
   console.log("BREE ERROR BELOW");
   console.log(err);
 });
-
-// const bree = new Bree({
-//   root: "dist/jobs/",
-//   jobs: [
-//     {
-//       name: "sendDiscordMessage",
-//       path: "./dist/jobs/discordScheduler.js",
-//       // cron: "* * * * *",
-//       interval: "Every 5 seconds",
-//       worker: {
-//         workerData: {
-//           description: "This job will send emails.",
-//         },
-//       },
-//     },
-//   ],
-// });
-
-// bree.start();
