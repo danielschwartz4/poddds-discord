@@ -5,13 +5,17 @@ import { reactToImages } from "./reactToImages";
 
 async function discordBot() {
   // NOTE: Ensure that you invite the bot to every channel or make them admin
-  const DAILY_UPDATES_CHAT_CHANNEL_ID = "1011046708211359935"
-  const WEEKLY_GOALS_SETTING_CHANNEL_ID = "1011047016886972447"
-  const ADMIN_USER_IDS = ["743590338337308754"] // for updates
+  const DAILY_UPDATES_CHAT_CHANNEL_ID = "1011046708211359935";
+  const WEEKLY_GOALS_SETTING_CHANNEL_ID = "1011047016886972447";
+  const ADMIN_USER_IDS = ["743590338337308754"]; // for updates
 
   // Add discord
   const client = new DiscordJS.Client({
-    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
+    intents: [
+      GatewayIntentBits.Guilds,
+      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.MessageContent,
+    ],
   });
 
   client.on("ready", () => {
@@ -24,4 +28,4 @@ async function discordBot() {
   client.login(process.env.DISCORD_TOKEN);
 }
 
-export default discordBot
+export default discordBot;
