@@ -2,9 +2,11 @@ require("dotenv").config();
 import DiscordJS, { GatewayIntentBits } from "discord.js";
 import { newGoalAlert } from "./newGoal";
 import { reactToImages } from "./reactToImages";
+import cronScheduler from "./manageStreaks";
 
 async function discordBot() {
   // NOTE: Ensure that you invite the bot to every channel or make them admin
+  const SERVER_ID = "1011046440195330189"
   const DAILY_UPDATES_CHAT_CHANNEL_ID = "1011046708211359935"
   const WEEKLY_GOALS_SETTING_CHANNEL_ID = "1011047016886972447"
   const ADMIN_USER_IDS = ["743590338337308754"] // for updates
@@ -19,6 +21,7 @@ async function discordBot() {
 
     newGoalAlert(client, WEEKLY_GOALS_SETTING_CHANNEL_ID, ADMIN_USER_IDS);
     reactToImages(client, DAILY_UPDATES_CHAT_CHANNEL_ID);
+    cronScheduler(client, SERVER_ID);
   });
 
   client.login(process.env.DISCORD_TOKEN);
