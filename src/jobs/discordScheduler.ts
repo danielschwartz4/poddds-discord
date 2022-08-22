@@ -1,38 +1,27 @@
 require("dotenv").config();
-import DiscordJS, { GatewayIntentBits, TextChannel } from "discord.js";
+import DiscordJS, { GatewayIntentBits } from "discord.js";
+import { newGoalAlert } from "./newGoal";
+import { reactToImages } from "./reactToImages";
 
-async function main() {
+async function discordBot() {
+  // NOTE: Ensure that you invite the bot to every channel or make them admin
+  const DAILY_UPDATES_CHAT_CHANNEL_ID = "1011046708211359935"
+  const WEEKLY_GOALS_SETTING_CHANNEL_ID = "1011047016886972447"
+  const ADMIN_USER_IDS = ["743590338337308754"] // for updates
+
   // Add discord
-  let interval;
   const client = new DiscordJS.Client({
-    intents: [
-      GatewayIntentBits.Guilds,
-      GatewayIntentBits.GuildMessages,
-      GatewayIntentBits.MessageContent,
-    ],
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent],
   });
 
-  client.on("messageCreate", async (msg) => {
-    switch (msg.content) {
-      //other commands above here...
-      case "!eye":
-        msg.channel.send("You are now subscribed to eye reminders.");
-        interval = setInterval(function () {
-          msg.channel
-            .send("Please take an eye break now!")
-            .catch(console.error);
-        }, 3000); //every second
-        break;
-    }
+  client.on("ready", () => {
+    console.log("The client bot is ready!");
+
+    newGoalAlert(client, WEEKLY_GOALS_SETTING_CHANNEL_ID, ADMIN_USER_IDS);
+    reactToImages(client, DAILY_UPDATES_CHAT_CHANNEL_ID);
   });
 
-  client.login(
-    "MTAxMDAxNDMwOTEzNDM3MjkyNA.GxePu4.gIauuOZqR9j8j3xhYvb_fRuC8t5OxIFCk9GgdY"
-  );
-
-  return "success";
+  client.login(process.env.DISCORD_TOKEN);
 }
 
-main().catch((err) => console.log(err));
-
-export default main;
+export default discordBot
