@@ -1,9 +1,10 @@
 require("dotenv").config();
 import DiscordJS, { GatewayIntentBits } from "discord.js";
 import { newGoalAlert } from "./newGoal";
-import { reactToImages } from "./reactToImages";
-import cronScheduler from "./manageStreaks";
+import { reactToImages } from "./react";
+import cronScheduler from "./streak";
 import { newMember } from "./newMember";
+import { addExistingMembers } from "./addExistingMembers";
 
 async function discordBot() {
   // NOTE: Ensure that you invite the bot to every channel or make them admin
@@ -25,6 +26,7 @@ async function discordBot() {
 
   client.on("ready", () => {
     console.log("The client bot is ready!");
+    addExistingMembers(client, SERVER_ID);
     newGoalAlert(client, WEEKLY_GOALS_SETTING_CHANNEL_ID, ADMIN_USER_IDS);
     reactToImages(client, DAILY_UPDATES_CHAT_CHANNEL_ID);
     cronScheduler(client, SERVER_ID);
