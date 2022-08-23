@@ -1,21 +1,21 @@
 import express from "express";
-import path from "path";
-import { DataSource } from "typeorm";
-import { __prod__ } from "./constants";
+import AppDataSource from "./dataSource";
 import discordScheduler from "./jobs/discordScheduler";
 
-const AppDataSource = new DataSource({
-  type: "postgres",
-  host: "localhost",
-  // port: 3306,
-  synchronize: __prod__ ? false : true,
-  database: process.env.LOCALHOST_DATABASE,
-  username: process.env.LOCALHOST_USERNAME,
-  password: process.env.LOCALHOST_PASSWORD,
-  migrations: [path.join(__dirname, "./migrations/*")],
-  entities: ["dist/entities/*.*"],
-  logging: true,
-});
+// const AppDataSource = new DataSource({
+//   type: "postgres",
+//   host: "localhost",
+//   // port: 3306,
+//   synchronize: __prod__ ? false : true,
+//   database: __prod__
+//     ? process.env.DATABASE_URL
+//     : process.env.LOCALHOST_DATABASE,
+//   username: process.env.LOCALHOST_USERNAME,
+//   password: process.env.LOCALHOST_PASSWORD,
+//   migrations: [path.join(__dirname, "./migrations/*")],
+//   entities: ["dist/entities/*.*"],
+//   logging: true,
+// });
 
 const connect2Database = async (): Promise<void> => {
   AppDataSource.initialize()
