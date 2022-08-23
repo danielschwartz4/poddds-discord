@@ -1,6 +1,7 @@
 import path from "path";
 import { DataSource } from "typeorm";
 import { __prod__ } from "./constants";
+import { User } from "./entities/User";
 
 const AppDataSource = __prod__
   ? new DataSource({
@@ -8,7 +9,8 @@ const AppDataSource = __prod__
       synchronize: true,
       database: process.env.DATABASE_URL,
       migrations: [path.join(__dirname, "./migrations/*")],
-      entities: ["dist/entities/*.*"],
+      // entities: ["dist/entities/*.*"],
+      entities: [User],
       logging: true,
       extra: {
         ssl: {
@@ -25,7 +27,8 @@ const AppDataSource = __prod__
       username: process.env.LOCALHOST_USERNAME,
       password: process.env.LOCALHOST_PASSWORD,
       migrations: [path.join(__dirname, "./migrations/*")],
-      entities: ["dist/entities/*.*"],
+      // entities: ["../dist/entities/*.*"],
+      entities: [User],
       logging: true,
       extra: {
         ssl: false,
