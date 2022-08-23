@@ -2,7 +2,6 @@ import { Client, Role } from "discord.js";
 import { User } from "../entities/User";
 
 // bot handling when a new member posts a new goal
-// how do I figure out what types these are?
 export const newMember = (client: Client<boolean>) => {
   client.on("guildMemberAdd", async (user) => {
     console.log("IN NEW MEMBER");
