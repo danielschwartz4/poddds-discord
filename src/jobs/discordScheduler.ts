@@ -5,13 +5,20 @@ import { reactToImages } from "./react";
 import cronScheduler from "./streak";
 import { newMember } from "./newMember";
 import { addExistingMembers } from "./addExistingMembers";
+import { __prod__ } from "../constants";
 
 async function discordBot() {
   // NOTE: Ensure that you invite the bot to every channel or make them admin
-  const SERVER_ID = "1011046440195330189";
-  const DAILY_UPDATES_CHAT_CHANNEL_ID = "1011046708211359935";
-  const WEEKLY_GOALS_SETTING_CHANNEL_ID = "1011047016886972447";
-  const ADMIN_USER_IDS = ["743590338337308754"]; // for updates
+  const SERVER_ID = !__prod__
+    ? process.env.TEST_SERVER_ID
+    : process.env.PROD_SERVER_ID;
+  const DAILY_UPDATES_CHAT_CHANNEL_ID = !__prod__
+    ? process.env.TEST_DAILY_UPDATES_CHAT_CHANNEL_ID
+    : process.env.PROD_DAILY_UPDATES_CHAT_CHANNEL_ID;
+  const WEEKLY_GOALS_SETTING_CHANNEL_ID = !__prod__
+    ? process.env.TEST_WEEKLY_GOALS_SETTING_CHANNEL_ID
+    : process.env.PROD_WEEKLY_GOALS_SETTING_CHANNEL_ID;
+  const ADMIN_USER_IDS = ["743590338337308754", "933066784867766342"]; // for updates
 
   // Add discord
   const client = new DiscordJS.Client({
@@ -26,14 +33,26 @@ async function discordBot() {
 
   client.on("ready", () => {
     console.log("The client bot is ready!");
-    addExistingMembers(client, SERVER_ID);
-    newGoalAlert(client, WEEKLY_GOALS_SETTING_CHANNEL_ID, ADMIN_USER_IDS);
-    reactToImages(client, DAILY_UPDATES_CHAT_CHANNEL_ID);
-    cronScheduler(client, SERVER_ID);
+    addExistingMembers(client, SERVER_ID as string);
+    newGoalAlert(
+      client,
+      WEEKLY_GOALS_SETTING_CHANNEL_ID as string,
+      ADMIN_USER_IDS
+    );
+    reactToImages(client, DAILY_UPDATES_CHAT_CHANNEL_ID as string);
+    cronScheduler(
+      client,
+      SERVER_ID as string,
+      DAILY_UPDATES_CHAT_CHANNEL_ID as string
+    );
     newMember(client);
   });
 
-  client.login(process.env.DISCORD_TOKEN);
+  if (__prod__) {
+    client.login(process.env.PROD_DISCORD_TOKEN);
+  } else {
+    client.login(process.env.TEST_DISCORD_TOKEN);
+  }
 }
 
 export default discordBot;

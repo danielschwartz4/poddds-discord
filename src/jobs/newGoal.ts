@@ -1,6 +1,6 @@
 // bot handling when a new member posts a new goal
 
-import { Client } from "discord.js";
+import { Client, Role } from "discord.js";
 import { User } from "../entities/User";
 import moment from "moment";
 
@@ -31,15 +31,18 @@ export const newGoalAlert = (
       const guild = client.guilds.cache.get(msg?.guildId as string);
       guild?.members.fetch(msg.author.id).then((user: any) => {
         let new_member_role_id = user.guild.roles.cache.find(
-          (r) => r.name === "new member"
+          (r: Role) => r.name === "new member"
         );
         let podmate_role_id = user.guild.roles.cache.find(
-          (r) => r.name === "podmate"
+          (r: Role) => r.name === "podmate"
         );
         user.roles.add(podmate_role_id);
         user.roles.remove(new_member_role_id);
-      })
-      await User.update({ discordId: msg.author.id }, { startedGoalAt: moment(new Date())});
+      });
+      await User.update(
+        { discordId: msg.author.id },
+        { startedGoalAt: moment(new Date()) }
+      );
     }
   });
 };

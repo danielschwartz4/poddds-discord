@@ -4,7 +4,6 @@ import { User } from "../entities/User";
 // bot handling when a new member posts a new goal
 export const newMember = (client: Client<boolean>) => {
   client.on("guildMemberAdd", async (user) => {
-    console.log("IN NEW MEMBER");
     // auto assign role of new member
     let new_member_role_id = user.guild.roles.cache.find(
       (r) => r.name === "new member"
@@ -21,6 +20,5 @@ export const newMember = (client: Client<boolean>) => {
         discordId: user.id,
       }).save();
     }
-    console.log("new user added: " + newUser);
   });
 };
