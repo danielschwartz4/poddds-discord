@@ -22,7 +22,6 @@ const AppDataSource = __prod__
   : new DataSource({
       type: "postgres",
       host: "localhost",
-      // port: 3306,
       synchronize: true,
       database: process.env.LOCALHOST_DATABASE,
       username: process.env.LOCALHOST_USERNAME,
