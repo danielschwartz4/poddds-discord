@@ -6,7 +6,7 @@ interface cronScheduler {
   guild?: Guild;
   role?: Role;
 }
-
+//
 // as example runs every min
 const cronScheduler = async (
   client: Client<boolean>,
