@@ -7,11 +7,10 @@ const AppDataSource = __prod__
   ? new DataSource({
       type: "postgres",
       synchronize: true,
-      // database: process.env.DATABASE_URL,
       url: process.env.DATABASE_URL,
       migrations: [path.join(__dirname, "./migrations/*")],
-      // entities: ["dist/entities/*.*"],
-      entities: [User],
+      entities: ["dist/entities/*.*"],
+      // entities: [User],
       logging: true,
       extra: {
         ssl: {
@@ -27,8 +26,8 @@ const AppDataSource = __prod__
       username: process.env.LOCALHOST_USERNAME,
       password: process.env.LOCALHOST_PASSWORD,
       migrations: [path.join(__dirname, "./migrations/*")],
-      // entities: ["../dist/entities/*.*"],
-      entities: [User],
+      entities: ["dist/entities/*.*"],
+      // entities: [User],
       logging: true,
       extra: {
         ssl: false,
