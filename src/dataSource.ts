@@ -1,7 +1,6 @@
 import path from "path";
 import { DataSource } from "typeorm";
 import { __prod__ } from "./constants";
-import { User } from "./entities/User";
 
 const AppDataSource = __prod__
   ? new DataSource({
