@@ -7,7 +7,8 @@ const AppDataSource = __prod__
   ? new DataSource({
       type: "postgres",
       synchronize: true,
-      database: process.env.DATABASE_URL,
+      // database: process.env.DATABASE_URL,
+      url: process.env.DATABASE_URL,
       migrations: [path.join(__dirname, "./migrations/*")],
       // entities: ["dist/entities/*.*"],
       entities: [User],
