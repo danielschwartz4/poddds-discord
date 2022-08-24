@@ -50,11 +50,6 @@ async function discordBot() {
       SERVER_ID as string,
       DAILY_UPDATES_CHAT_CHANNEL_ID as string
     );
-    updateStreaks(
-      client,
-      SERVER_ID as string,
-      DAILY_UPDATES_CHAT_CHANNEL_ID as string
-    );
     cron.schedule("0 0 * * *", async () => {
       updateGoalsToday(
         client,
