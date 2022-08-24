@@ -28,6 +28,10 @@ export class User extends BaseEntity {
   startedGoalAt!: Date;
 
   @Field()
+  @Column({ default: 0 })
+  misses: number;
+
+  @Field()
   @CreateDateColumn()
   createdAt: Date;
 

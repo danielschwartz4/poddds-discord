@@ -1,15 +1,14 @@
 import { Client } from "discord.js";
 
-export const goalCommand = (client: Client<boolean>) => {
-  const guild = client.guilds.cache.get(
-    process.env.WEEKLY_GOALS_SETTING_CHANNEL_ID as string
-  );
+export const goalCommand = (client: Client<boolean>, serverId: string) => {
+  const guild = client.guilds.cache.get(serverId);
   let commands;
   if (guild) {
     commands = guild.commands;
   } else {
     commands = client.application?.commands;
   }
+
   commands?.create({
     name: "new-goal",
     description: "create goal",
@@ -38,6 +37,20 @@ const newGoalOptions = [
       "What will you do this week? (e.g. I will run a mile on Mondays, Wednesdays, and Fridays)",
     type: 3,
     required: true,
+  },
+  {
+    name: "evidence",
+    description:
+      "How will you prove you completed your task? (e.g. I'll take a photo of my watch)",
+    type: 3,
+    required: true,
+  },
+  {
+    name: "sunday",
+    description: "Choose green for an ON day and red for an OFF day!",
+    type: 3,
+    required: true,
+    choices: completionChoices,
   },
   {
     name: "monday",
@@ -80,20 +93,6 @@ const newGoalOptions = [
     type: 3,
     required: true,
     choices: completionChoices,
-  },
-  {
-    name: "sunday",
-    description: "Choose green for an ON day and red for an OFF day!",
-    type: 3,
-    required: true,
-    choices: completionChoices,
-  },
-  {
-    name: "evidence",
-    description:
-      "How will you prove you completed your task? (e.g. I'll take a photo of my watch)",
-    type: 3,
-    required: true,
   },
   {
     name: "duration",
