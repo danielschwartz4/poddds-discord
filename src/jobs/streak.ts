@@ -1,21 +1,16 @@
 import { Client, Guild, Role, TextChannel } from "discord.js";
-import cron from "node-cron";
 import { User } from "../entities/User";
 
-interface cronScheduler {
+interface updateStreaks {
   guild?: Guild;
   role?: Role;
 }
-//
-// as example runs every min
-const cronScheduler = async (
+
+const updateStreaks = async (
   client: Client<boolean>,
   server_id: string,
   streak_channel_id: string
 ) => {
-  // update streaks daily from database numbers using cron, everyday @ midnight
-  cron.schedule("0 0 * * *", async () => {
-    console.log("running cron!");
     const guild = client.guilds.cache.get(server_id);
 
     const users = await User.find();
@@ -70,7 +65,6 @@ const cronScheduler = async (
         });
       }
     });
-  });
 };
 
-export default cronScheduler;
+export default updateStreaks;
