@@ -1,11 +1,13 @@
-require("dotenv").config();
 import DiscordJS, { GatewayIntentBits } from "discord.js";
+import { __prod__ } from "../constants";
+import { addExistingMembers } from "./addExistingMembers";
 import { newGoalAlert } from "./newGoal";
+import { newMember } from "./newMember";
 import { reactToImages } from "./react";
 import cronScheduler from "./streak";
-import { newMember } from "./newMember";
-import { addExistingMembers } from "./addExistingMembers";
-import { __prod__ } from "../constants";
+import { goalCommand } from "../commands/goalCommand";
+import { createGoal } from "./createGoal";
+require("dotenv").config();
 
 async function discordBot() {
   // NOTE: Ensure that you invite the bot to every channel or make them admin
@@ -28,11 +30,15 @@ async function discordBot() {
       GatewayIntentBits.MessageContent,
       GatewayIntentBits.GuildMembers,
       GatewayIntentBits.GuildPresences,
+      GatewayIntentBits.GuildMessages,
+      GatewayIntentBits.Guilds,
     ],
   });
 
   client.on("ready", () => {
     console.log("The client bot is ready!");
+    goalCommand(client);
+    createGoal(client);
     addExistingMembers(client, SERVER_ID as string);
     newGoalAlert(
       client,

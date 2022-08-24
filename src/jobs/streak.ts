@@ -39,7 +39,6 @@ const cronScheduler = async (
             let seven_streak_id = guild.roles.cache.find(
               (r) => r.name === "7 days active streak!"
             );
-
             if (user_streak > 3) {
               user.roles.add(three_streak_id as Role);
               (
