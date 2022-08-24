@@ -6,13 +6,13 @@ export const createGoal = (client: Client<boolean>) => {
     if (!interaction.isChatInputCommand()) return;
     console.log("BEFORE");
     if (interaction.commandName === "new-goal") {
-      await interaction.reply("Goal created! 🚀🚀🚀");
-      await wait(1000);
+      // await interaction.reply("Goal created! 🚀🚀🚀");
+      // await wait(1000);
       const resp = parseGoalResponse(
         interaction,
         interaction.options.data as GoalResponse[]
       );
-      await interaction.editReply(resp);
+      await interaction.reply(resp);
     }
   });
 };
@@ -22,38 +22,28 @@ const parseGoalResponse = (
   req: GoalResponse[]
 ) => {
   const cleanedData = transformInteractionData(req);
-  const user = interactionData.user.username;
+  const userId = interactionData.user.id;
 
   return (
-    user +
-    ` committed to a goal for ${cleanedData["duration"]} days! 🗓 \n` +
-    "Monday" +
-    ": " +
-    cleanedData["monday"] +
-    "\n" +
-    "Tuesday" +
-    ": " +
-    cleanedData["tuesday"] +
-    "\n" +
-    "Wednesday" +
-    ": " +
-    cleanedData["wednesday"] +
-    "\n" +
-    "Thursday" +
-    ": " +
-    cleanedData["thursday"] +
-    "\n" +
-    "Friday" +
-    ": " +
-    cleanedData["friday"] +
-    "\n" +
-    "Saturday" +
-    ": " +
-    cleanedData["saturday"] +
-    "\n" +
-    "Sunday" +
-    ": " +
-    cleanedData["sunday"]
+    "<@" +
+    userId +
+    ">" +
+    " created a new goal! \n" +
+    ` **Goal**: ${cleanedData["goal"]}. \n **Evidence:** ${cleanedData["evidence"]} \n **Commitment:** ${cleanedData["duration"]} days! \n` +
+    " S-" +
+    colorMapper(cleanedData["sunday"]) +
+    "  M-" +
+    colorMapper(cleanedData["monday"]) +
+    "  T-" +
+    colorMapper(cleanedData["tuesday"]) +
+    "  W-" +
+    colorMapper(cleanedData["wednesday"]) +
+    "  T-" +
+    colorMapper(cleanedData["thursday"]) +
+    "  F-" +
+    colorMapper(cleanedData["friday"]) +
+    "  S-" +
+    colorMapper(cleanedData["saturday"])
   );
 };
 
@@ -63,6 +53,10 @@ const transformInteractionData = (interactionData: GoalResponse[]) => {
     res[ele.name] = ele.value;
   });
   return res;
+};
+
+const colorMapper = (option: string) => {
+  return option == "off" ? "🔴" : "🟢";
 };
 
 type GoalResponse = {
