@@ -11,9 +11,15 @@ import { updateGoalsToday } from "./updateGoalsToday";
 
 async function discordBot() {
   // NOTE: Ensure that you invite the bot to every channel or make them admin
-  const SERVER_ID = !__prod__ ? process.env.TEST_SERVER_ID : process.env.PROD_SERVER_ID;
-  const DAILY_UPDATES_CHAT_CHANNEL_ID = !__prod__ ? process.env.TEST_DAILY_UPDATES_CHAT_CHANNEL_ID : process.env.PROD_DAILY_UPDATES_CHAT_CHANNEL_ID;
-  const WEEKLY_GOALS_SETTING_CHANNEL_ID = !__prod__ ? process.env.TEST_WEEKLY_GOALS_SETTING_CHANNEL_ID : process.env.PROD_WEEKLY_GOALS_SETTING_CHANNEL_ID;
+  const SERVER_ID = !__prod__
+    ? process.env.TEST_SERVER_ID
+    : process.env.PROD_SERVER_ID;
+  const DAILY_UPDATES_CHAT_CHANNEL_ID = !__prod__
+    ? process.env.TEST_DAILY_UPDATES_CHAT_CHANNEL_ID
+    : process.env.PROD_DAILY_UPDATES_CHAT_CHANNEL_ID;
+  const WEEKLY_GOALS_SETTING_CHANNEL_ID = !__prod__
+    ? process.env.TEST_WEEKLY_GOALS_SETTING_CHANNEL_ID
+    : process.env.PROD_WEEKLY_GOALS_SETTING_CHANNEL_ID;
   const ADMIN_USER_IDS = ["743590338337308754", "933066784867766342"]; // for updates
 
   // Add discord
