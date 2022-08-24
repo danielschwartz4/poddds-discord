@@ -11,17 +11,12 @@ export const clearGoalsToday = async (client: Client<boolean>) => {
       tasks_today[0].goalLeftChannelId
     );
     console.log(goal_left_channel?.id as string);
-    let parent_left_channel = client.channels.cache.get(
-      goal_left_channel?.parentId
-    ); // doesn't really catch bc goal_left_channel = "" sometimes
+    // doesn't really catch bc goal_left_channel = "" sometimes
     tasks_today.forEach(async (task: Task) => {
       const goal_left_channel = client.channels.cache.get(
         task.goalLeftChannelId
       );
       goal_left_channel?.delete();
     });
-    if (parent_left_channel) {
-      parent_left_channel.delete();
-    }
   }
 };
