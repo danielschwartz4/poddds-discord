@@ -22,8 +22,12 @@ export class Task extends BaseEntity {
   date: string; // moment().format('l'); 8/23/2022
 
   @Field({ nullable: true })
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: false })
   completed: boolean;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  skipped: boolean;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
@@ -36,4 +40,8 @@ export class Task extends BaseEntity {
   @Field({ nullable: true })
   @Column({ nullable: true })
   evidence: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  goalLeftChannelId: string;
 }

@@ -34,16 +34,4 @@ export class User extends BaseEntity {
   @Field()
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @Field()
-  @Column({ default: 0 })
-  skips: number;
-
-  @Field()
-  @Column({ default: 0 })
-  misses: number;
-
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  goalLeftChannelId: string;
 }

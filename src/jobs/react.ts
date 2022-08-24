@@ -3,6 +3,8 @@
 import { Client } from "discord.js";
 import { User } from "../entities/User";
 import { IsNull, Not } from "typeorm";
+import moment from "moment";
+import { Task } from "../entities/Task";
 
 export const reactToImages = (
   client: Client<boolean>,
@@ -16,18 +18,12 @@ export const reactToImages = (
 
       // delete goals left channel if the user has one
       const user_id = msg.author.id;
-      const user = await User.findOne({ where: { discordId: msg.author.id }});
-      if (user?.goalLeftChannelId) {
-        let goal_left_channel = client.channels.cache.get(user.goalLeftChannelId);
-        let parent_left_channel = client.channels.cache.get(goal_left_channel?.parentId);
-        User.update({ discordId: user_id }, { goalLeftChannelId: undefined });
+      const date_today = moment().format('l')
+      const task = await Task.findOne({ where: { discordId: msg.author.id, date: date_today }});
+      if (task?.goalLeftChannelId) {
+        let goal_left_channel = client.channels.cache.get(task.goalLeftChannelId);
+        Task.update({ discordId: user_id, date: date_today }, { completed: true, goalLeftChannelId: undefined });
         goal_left_channel?.delete();
-
-        const users_missed = await User.find({ where: {goalLeftChannelId: Not(undefined || IsNull())}});
-        if (!users_missed.length) {
-          console.log("deleting parent channel")
-          parent_left_channel?.delete()
-        }
       }
 
       console.log("An attachment was added!");
