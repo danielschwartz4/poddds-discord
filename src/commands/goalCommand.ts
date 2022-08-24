@@ -1,4 +1,4 @@
-import { Client, SlashCommandBuilder } from "discord.js";
+import { Client } from "discord.js";
 
 export const goalCommand = (client: Client<boolean>) => {
   const guild = client.guilds.cache.get(
@@ -11,27 +11,26 @@ export const goalCommand = (client: Client<boolean>) => {
     commands = client.application?.commands;
   }
 
+  // const data = new SlashCommandBuilder()
+  //   .setName("gif")
+  //   .setDescription("Sends a random gif!")
+  //   .addStringOption((option) =>
+  //     option
+  //       .setName("category")
+  //       .setDescription("The gif category")
+  //       .setRequired(true)
+  //       .addChoices(
+  //         { name: "Funny", value: "gif_funny" },
+  //         { name: "Meme", value: "gif_meme" },
+  //         { name: "Movie", value: "gif_movie" }
+  //       )
+  //   );
   commands?.create({
     name: "new-goal",
     description: "create goal",
     type: 1,
     options: newGoalOptions,
   });
-  const data = new SlashCommandBuilder()
-    .setName("gif")
-    .setDescription("Sends a random gif!")
-    .addStringOption((option) =>
-      option
-        .setName("category")
-        .setDescription("The gif category")
-        .setRequired(true)
-        .addChoices(
-          { name: "Funny", value: "gif_funny" },
-          { name: "Meme", value: "gif_meme" },
-          { name: "Movie", value: "gif_movie" }
-        )
-    );
-  commands?.create(data);
 };
 
 const newGoalOptions = [
