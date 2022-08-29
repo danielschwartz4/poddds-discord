@@ -32,6 +32,116 @@ const completionChoices = [
 
 const newGoalOptions = [
   {
+    name: "time-zone",
+    description:
+      "Enter your time zone! (important so we can contact you on time)",
+    type: 3,
+    required: true,
+    // Signs on names and values are opposite because value represents ETC/GMT time which is useful for conversion later
+    choices: [
+      {
+        name: "GMT-12:00",
+        value: "+12",
+      },
+      {
+        name: "GMT-11:00",
+        value: "+11",
+      },
+      {
+        name: "GMT-10:00",
+        value: "+10",
+      },
+      {
+        name: "GMT-09:00",
+        value: "+9",
+      },
+      {
+        name: "GMT-08:00",
+        value: "+8",
+      },
+      {
+        name: "GMT-07:00",
+        value: "+7",
+      },
+      {
+        name: "GMT-06:00",
+        value: "+6",
+      },
+      {
+        name: "GMT-05:00",
+        value: "+5",
+      },
+      {
+        name: "GMT-04:00",
+        value: "+4",
+      },
+      {
+        name: "GMT-03:00",
+        value: "+3",
+      },
+      {
+        name: "GMT-02:00",
+        value: "+2",
+      },
+      {
+        name: "GMT-01:00",
+        value: "+1",
+      },
+      {
+        name: "GMT+00:00",
+        value: "-0",
+      },
+      {
+        name: "GMT+01:00",
+        value: "-1",
+      },
+      {
+        name: "GMT+02:00",
+        value: "-2",
+      },
+      {
+        name: "GMT+03:00",
+        value: "-3",
+      },
+      {
+        name: "GMT+04:00",
+        value: "-4",
+      },
+      {
+        name: "GMT+05:00",
+        value: "-5",
+      },
+      {
+        name: "GMT+06:00",
+        value: "-6",
+      },
+      {
+        name: "GMT+07:00",
+        value: "-7",
+      },
+      {
+        name: "GMT+08:00",
+        value: "-8",
+      },
+      {
+        name: "GMT+09:00",
+        value: "-9",
+      },
+      {
+        name: "GMT+10:00",
+        value: "-10",
+      },
+      {
+        name: "GMT+11:00",
+        value: "-11",
+      },
+      {
+        name: "GMT+12:00",
+        value: "-12",
+      },
+    ],
+  },
+  {
     name: "goal",
     description:
       "What will you do this week? (e.g. I will run a mile on Mondays, Wednesdays, and Fridays)",

@@ -1,13 +1,38 @@
 import { CacheType, Client, Interaction, Role } from "discord.js";
-import moment from "moment";
-import { Task } from "../entities/Task";
-import { User } from "../entities/User";
+import moment, { duration } from "moment";
+import { Event } from "../entities/Event";
+import { WeeklyGoal } from "../entities/WeeklyGoal";
+import { buildDays } from "../utils/buildDaysUtil";
+import { addDays, changeTimeZone } from "../utils/timeZoneUtil";
 
 export const createGoal = (
   client: Client<boolean>,
   admin_ids: string[],
   server_id: string
 ) => {
+  const daysTest = {
+    0: {
+      isSelected: false,
+    },
+    1: {
+      isSelected: false,
+    },
+    2: {
+      isSelected: true,
+    },
+    3: {
+      isSelected: false,
+    },
+    4: {
+      isSelected: true,
+    },
+    5: {
+      isSelected: false,
+    },
+    6: {
+      isSelected: true,
+    },
+  };
   client.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName === "new-goal") {
@@ -20,12 +45,31 @@ export const createGoal = (
       //   resp
       // );
       if (cleanedData) {
+        console.log(cleanedData);
         // get day of the week
+        const daysObj = buildDays(cleanedData);
+        const startDate = changeTimeZone(
+          new Date(),
+          "Etc/GMT" + cleanedData["time-zone"]
+        );
+        const endDate = changeTimeZone(
+          addDays(parseInt(cleanedData["duration"])),
+          "Etc/GMT" + cleanedData["time-zone"]
+        );
+        console.log(startDate, endDate);
 
+        WeeklyGoal.create({
+          description: cleanedData["goal"],
+          evidence: cleanedData["evidence"],
+          discordId: interaction.user.id,
+          startDate: startDate,
+          endDate: endDate,
+          days: daysObj,
+          isActive: true,
+        });
         for (let i = 1; i <= parseInt(cleanedData["duration"]); i++) {
           const day = moment().add(i, "days").format("dddd").toLowerCase();
           const date = moment().add(i, "days").format("l");
-          console.log(date);
           const val = cleanedData[day];
           const description =
             "Goal: " +
@@ -34,10 +78,10 @@ export const createGoal = (
             "Evidence: " +
             cleanedData["evidence"];
           if (val === "on") {
-            Task.create({
+            Event.create({
               date: date,
               discordId: interaction.user.id,
-              description: description,
+              // description: description,
             }).save();
           }
         }
@@ -70,10 +114,10 @@ export const createGoal = (
           user.roles.add(podmate_role_id);
           user.roles.remove(new_member_role_id);
         });
-        await User.update(
-          { discordId: interaction.user.id },
-          { startedGoalAt: moment(new Date()) }
-        );
+        // await User.update(
+        //   { discordId: interaction.user.id },
+        //   { startedGoalAt: moment(new Date()) }
+        // );
       }
     }
   });

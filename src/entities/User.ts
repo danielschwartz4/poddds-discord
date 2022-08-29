@@ -23,14 +23,6 @@ export class User extends BaseEntity {
   @Column()
   discordUsername!: string;
 
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  startedGoalAt!: Date;
-
-  @Field()
-  @Column({ default: 0 })
-  misses: number;
-
   @Field()
   @CreateDateColumn()
   createdAt: Date;

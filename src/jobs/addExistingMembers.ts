@@ -1,5 +1,4 @@
 import { Client } from "discord.js";
-import moment from "moment";
 import { User } from "../entities/User";
 
 export const addExistingMembers = (
@@ -16,7 +15,7 @@ export const addExistingMembers = (
           await User.create({
             discordUsername: user.displayName,
             discordId: user.id,
-            startedGoalAt: moment(new Date()),
+            // startedGoalAt: moment(new Date()),
           }).save();
         } else if (
           user.roles.cache.some((role) => role.name === "new member")

@@ -6,7 +6,7 @@ import {
 } from "discord.js";
 import moment from "moment";
 import { IsNull } from "typeorm";
-import { Task } from "../entities/Task";
+import { Event } from "../entities/Event";
 import { User } from "../entities/User";
 import { updateGoalsYesterday } from "./goalsLeftToday/updateGoalsYesterday";
 
@@ -20,7 +20,7 @@ export const updateGoalsToday = async (
   // add goalsChannels for today if there is no channel id and if it's their day
   const guild = client.guilds.cache.get(server_id);
   const date_today = moment().format("l");
-  const tasks_for_day = await Task.find({
+  const events_for_day = await Event.find({
     where: {
       date: date_today,
       goalLeftChannelId: IsNull() || "",
@@ -55,9 +55,9 @@ export const updateGoalsToday = async (
     });
   }
 
-  // Create a channel for each task due today
-  tasks_for_day.forEach(async (task: Task) => {
-    let user_id = task.discordId;
+  // Create a channel for each event due today
+  events_for_day.forEach(async (event: Event) => {
+    let user_id = event.discordId;
     let user = await User.findOne({ where: { discordId: user_id } });
 
     if (user) {
@@ -69,17 +69,17 @@ export const updateGoalsToday = async (
           parent: category_channel?.id,
         })
         .then((goal_left_channel_id) => {
-          if (task.description) {
+          if (event.description) {
             (
               client.channels.cache.get(goal_left_channel_id.id) as TextChannel
             ).send(
               `<@${user?.discordId}>` +
                 "\nToday's your day! Complete part of your weekly goal by sending a picture of evidence in: " +
                 `<#${daily_updates_channel_id}>\n` +
-                task.description
+                event.description
             );
           }
-          Task.update(
+          Event.update(
             { discordId: user_id, date: date_today },
             { goalLeftChannelId: goal_left_channel_id.id as string }
           );

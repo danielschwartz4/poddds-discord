@@ -3,7 +3,7 @@
 import { Client } from "discord.js";
 import moment from "moment";
 import { User } from "../entities/User";
-import { Task } from "../entities/Task";
+import { Event } from "../entities/Event";
 
 export const reactToImages = (
   client: Client<boolean>,
@@ -17,14 +17,14 @@ export const reactToImages = (
       // delete goals left channel if the user has one
       const user_id = msg.author.id;
       const date_today = moment().format("l");
-      const task = await Task.findOne({
+      const task = await Event.findOne({
         where: { discordId: msg.author.id, date: date_today },
       });
       if (task?.goalLeftChannelId) {
         let goal_left_channel = client.channels.cache.get(
           task.goalLeftChannelId
         );
-        Task.update(
+        Event.update(
           { discordId: user_id, date: date_today },
           { completed: true, goalLeftChannelId: "" }
         );

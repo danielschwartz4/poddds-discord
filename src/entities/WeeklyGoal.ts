@@ -1,9 +1,11 @@
+import { GraphQLJSONObject } from "graphql-type-json";
+import { DaysType } from "../types/dbTypes";
 import { Field, Int, ObjectType } from "type-graphql";
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @ObjectType()
 @Entity()
-export class Task extends BaseEntity {
+export class WeeklyGoal extends BaseEntity {
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id!: number;
@@ -12,21 +14,17 @@ export class Task extends BaseEntity {
   @Column()
   discordId!: string;
 
-  @Field()
-  @Column()
-  date: string; // moment().format('l'); 8/23/2022
-
-  @Field({ nullable: true })
-  @Column({ nullable: true, default: false })
-  completed: boolean;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
-  skipped: boolean;
+  isActive: boolean;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
   description: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  evidence: string;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
@@ -35,4 +33,18 @@ export class Task extends BaseEntity {
   @Field({ nullable: true })
   @Column({ nullable: true })
   goalLeftChannelId: string;
+
+  @Field()
+  @Column({ default: 0 })
+  misses: number;
+
+  @Field(() => GraphQLJSONObject)
+  @Column("jsonb")
+  days!: DaysType;
+
+  @Column({ type: "timestamptz", nullable: true })
+  startDate: Date;
+
+  @Column({ type: "timestamptz", nullable: true })
+  endDate: Date;
 }
