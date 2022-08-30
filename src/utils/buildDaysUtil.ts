@@ -1,5 +1,4 @@
-import { ChatInputCommandInteraction } from "discord.js";
-import { DaysType } from "src/types/dbTypes";
+import { DaysType } from "../types/dbTypes";
 
 export const buildDays = (cleanedData: { [key: string]: string }) => {
   let daysDict = {

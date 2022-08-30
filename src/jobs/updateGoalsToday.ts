@@ -4,10 +4,11 @@ import {
   PermissionsBitField,
   TextChannel,
 } from "discord.js";
-import moment from "moment";
+import { mdyDate, todayAdjusted } from "../utils/timeZoneUtil";
 import { IsNull } from "typeorm";
 import { Event } from "../entities/Event";
 import { User } from "../entities/User";
+import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { updateGoalsYesterday } from "./goalsLeftToday/updateGoalsYesterday";
 
 export const updateGoalsToday = async (
@@ -19,10 +20,12 @@ export const updateGoalsToday = async (
 
   // add goalsChannels for today if there is no channel id and if it's their day
   const guild = client.guilds.cache.get(server_id);
-  const date_today = moment().format("l");
+  // const date_today = moment().format("l");
+  const date_today = mdyDate(new Date());
+
   const events_for_day = await Event.find({
     where: {
-      date: date_today,
+      adjustedDate: date_today,
       goalLeftChannelId: IsNull() || "",
       completed: false,
     },
@@ -59,6 +62,7 @@ export const updateGoalsToday = async (
   events_for_day.forEach(async (event: Event) => {
     let user_id = event.discordId;
     let user = await User.findOne({ where: { discordId: user_id } });
+    let weekly_goal = await WeeklyGoal.findOne({ where: { id: event.goalId } });
 
     if (user) {
       guild?.channels
@@ -69,18 +73,21 @@ export const updateGoalsToday = async (
           parent: category_channel?.id,
         })
         .then((goal_left_channel_id) => {
-          if (event.description) {
+          if (weekly_goal?.description) {
             (
               client.channels.cache.get(goal_left_channel_id.id) as TextChannel
             ).send(
               `<@${user?.discordId}>` +
                 "\nToday's your day! Complete part of your weekly goal by sending a picture of evidence in: " +
                 `<#${daily_updates_channel_id}>\n` +
-                event.description
+                weekly_goal?.description
             );
           }
+          const date_today = mdyDate(
+            todayAdjusted(weekly_goal?.timeZone as string)
+          );
           Event.update(
-            { discordId: user_id, date: date_today },
+            { discordId: user_id, adjustedDate: date_today },
             { goalLeftChannelId: goal_left_channel_id.id as string }
           );
         });

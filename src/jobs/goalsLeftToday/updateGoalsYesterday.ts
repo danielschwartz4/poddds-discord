@@ -1,15 +1,15 @@
-import { Event } from "../../entities/Event";
 import { Client } from "discord.js";
-import moment from "moment";
+import { addDays, mdyDate } from "../../utils/timeZoneUtil";
 import { IsNull, Not } from "typeorm";
-import { User } from "../../entities/User";
+import { Event } from "../../entities/Event";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
 
 export const updateGoalsYesterday = async (client: Client<boolean>) => {
-  const date_yesterday = moment().subtract(1, "days").format("l");
+  // const date_yesterday = moment().subtract(1, "days").format("l");
+  const date_yesterday = mdyDate(addDays(new Date(), -1));
   const events_missed_yesterday = await Event.find({
     where: {
-      date: date_yesterday,
+      adjustedDate: date_yesterday,
       goalLeftChannelId: Not(IsNull() || ""),
     },
   });
@@ -26,13 +26,13 @@ export const updateGoalsYesterday = async (client: Client<boolean>) => {
       if (!goal_left_channel) {
         // if the channel doesn't exist, exit
         Event.update(
-          { discordId: user_id, date: date_yesterday },
+          { discordId: user_id, adjustedDate: date_yesterday },
           { completed: true, goalLeftChannelId: "" }
         );
         WeeklyGoal.update({ discordId: user_id }, { misses: 0 });
       } else {
         Event.update(
-          { discordId: user_id, date: date_yesterday },
+          { discordId: user_id, adjustedDate: date_yesterday },
           { completed: false, goalLeftChannelId: "" }
         );
         const weekly_goal = await WeeklyGoal.findOne({

@@ -42,9 +42,13 @@ export class WeeklyGoal extends BaseEntity {
   @Column("jsonb")
   days!: DaysType;
 
-  @Column({ type: "timestamptz", nullable: true })
-  startDate: Date;
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  timeZone: string;
 
-  @Column({ type: "timestamptz", nullable: true })
-  endDate: Date;
+  @Column({ nullable: true })
+  adjustedStartDate: Date;
+
+  @Column({ nullable: true })
+  adjustedEndDate: Date;
 }

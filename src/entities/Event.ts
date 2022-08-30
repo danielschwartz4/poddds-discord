@@ -12,9 +12,13 @@ export class Event extends BaseEntity {
   @Column()
   discordId!: string;
 
-  @Field()
-  @Column()
-  date: string; // moment().format('l'); 8/23/2022
+  @Field(() => Int, { nullable: true })
+  @Column({ nullable: true })
+  goalId: number;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  adjustedDate: string;
 
   @Field({ nullable: true })
   @Column({ nullable: true, default: false })

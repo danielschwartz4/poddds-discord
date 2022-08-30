@@ -3,36 +3,19 @@ import moment, { duration } from "moment";
 import { Event } from "../entities/Event";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { buildDays } from "../utils/buildDaysUtil";
-import { addDays, changeTimeZone } from "../utils/timeZoneUtil";
+import {
+  addDays,
+  changeTimeZone,
+  flipSign,
+  int2day,
+  mdyDate,
+} from "../utils/timeZoneUtil";
 
 export const createGoal = (
   client: Client<boolean>,
   admin_ids: string[],
   server_id: string
 ) => {
-  const daysTest = {
-    0: {
-      isSelected: false,
-    },
-    1: {
-      isSelected: false,
-    },
-    2: {
-      isSelected: true,
-    },
-    3: {
-      isSelected: false,
-    },
-    4: {
-      isSelected: true,
-    },
-    5: {
-      isSelected: false,
-    },
-    6: {
-      isSelected: true,
-    },
-  };
   client.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName === "new-goal") {
@@ -45,7 +28,6 @@ export const createGoal = (
       //   resp
       // );
       if (cleanedData) {
-        console.log(cleanedData);
         // get day of the week
         const daysObj = buildDays(cleanedData);
         const startDate = changeTimeZone(
@@ -53,35 +35,37 @@ export const createGoal = (
           "Etc/GMT" + cleanedData["time-zone"]
         );
         const endDate = changeTimeZone(
-          addDays(parseInt(cleanedData["duration"])),
+          addDays(new Date(), parseInt(cleanedData["duration"])),
           "Etc/GMT" + cleanedData["time-zone"]
         );
         console.log(startDate, endDate);
 
-        WeeklyGoal.create({
+        const weekly_goal = await WeeklyGoal.create({
           description: cleanedData["goal"],
           evidence: cleanedData["evidence"],
           discordId: interaction.user.id,
-          startDate: startDate,
-          endDate: endDate,
+          adjustedStartDate: startDate,
+          adjustedEndDate: endDate,
           days: daysObj,
           isActive: true,
-        });
+          timeZone: flipSign(cleanedData["adjustedStartDate"]),
+        }).save();
         for (let i = 1; i <= parseInt(cleanedData["duration"]); i++) {
-          const day = moment().add(i, "days").format("dddd").toLowerCase();
-          const date = moment().add(i, "days").format("l");
-          const val = cleanedData[day];
-          const description =
-            "Goal: " +
-            cleanedData["goal"] +
-            " \n" +
-            "Evidence: " +
-            cleanedData["evidence"];
+          // const day = moment().add(i, "days").format("dddd").toLowerCase();
+          // const date = moment().add(i, "days").format("l");
+          const date = changeTimeZone(
+            new Date(addDays(new Date(), i)),
+            "Etc/GMT" + cleanedData["time-zone"]
+          );
+          const day = date.getDay();
+          const val = cleanedData[int2day(day)];
+          const formattedDate = mdyDate(date);
+
           if (val === "on") {
             Event.create({
-              date: date,
+              adjustedDate: formattedDate,
               discordId: interaction.user.id,
-              // description: description,
+              goalId: weekly_goal.id,
             }).save();
           }
         }

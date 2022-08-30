@@ -1,10 +1,14 @@
-import { Event } from "../../entities/Event";
 import { Client } from "discord.js";
-import moment from "moment";
+import { Event } from "../../entities/Event";
+import { mdyDate } from "../../utils/timeZoneUtil";
 
 export const clearGoalsToday = async (client: Client<boolean>) => {
-  const date_today = moment().format("l");
-  const events_today = await Event.find({ where: { date: date_today } });
+  // const date_today = moment().format("l");
+  const date_today = mdyDate(new Date());
+
+  const events_today = await Event.find({
+    where: { adjustedDate: date_today },
+  });
   console.log(events_today);
   if (events_today) {
     let goal_left_channel = client.channels.cache.get(
