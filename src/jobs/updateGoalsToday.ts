@@ -51,7 +51,6 @@ export const updateGoalsToday = async (
       name: "GOALS LEFT TODAY",
       type: ChannelType.GuildCategory,
       permissionOverwrites: channel_permission_overwrites,
-      position: 2,
     });
   }
 
