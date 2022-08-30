@@ -44,7 +44,7 @@ export const updateGoalsToday = async (
 
   // check if category channel exists
   let category_channel = guild?.channels.cache.find(
-    (channel) => channel.name === "GOALS LEFT TODAY"
+    (channel) => channel.name === "--- GOALS LEFT TODAY"
   );
   if (!category_channel) {
     category_channel = await guild?.channels.create({
