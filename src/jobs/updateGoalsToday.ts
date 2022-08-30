@@ -48,7 +48,7 @@ export const updateGoalsToday = async (
   );
   if (!category_channel) {
     category_channel = await guild?.channels.create({
-      name: "GOALS LEFT TODAY",
+      name: "--- GOALS LEFT TODAY",
       type: ChannelType.GuildCategory,
       permissionOverwrites: channel_permission_overwrites,
     });
