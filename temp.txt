@@ -1,0 +1,13 @@
+weeklyGoalId = create weekly goal
+
+
+create event
+- id: unique
+- discordId: discordId
+- goalId: weeklyGoalId
+- adjustedDate: date (? risk here)
+- completed: completed
+- skipped: null
+- timezone: null (go through and edit)
+- isActive: true (go through and edit)
+- goalLeftChannelId: goalLeftCHannelId
