@@ -20,13 +20,13 @@ export const migrateFromTaskDB = async () => {
       });
       if (!weeklyGoalId) {
         // create weekly goal
-        weeklyGoalId = WeeklyGoal.create({
+        weeklyGoalId = await WeeklyGoal.create({
           discordId: task.discordId,
           isActive: true,
           description: task.description,
           goalLeftChannelId: task.goalLeftChannelId,
           misses: 0,
-        });
+        }).save();
       }
 
       Event.create({
@@ -36,7 +36,7 @@ export const migrateFromTaskDB = async () => {
         completed: task.completed,
         isActive: true,
         goalLeftChannelId: task.goalLeftChannelId,
-      });
+      }).save();
     });
   });
 };
