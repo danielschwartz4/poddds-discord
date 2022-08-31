@@ -39,7 +39,7 @@ async function discordBot() {
 
   client.on("ready", () => {
     console.log("The client bot is ready!");
-    migrateFromTaskDB()
+    // migrateFromTaskDB()
 
     goalCommand(client, SERVER_ID as string);
     createGoal(client, ADMIN_USER_IDS, SERVER_ID as string);
