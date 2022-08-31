@@ -1,7 +1,6 @@
 import express from "express";
 import AppDataSource from "./dataSource";
 import discordScheduler from "./jobs/discordScheduler";
-import { migrateFromTaskDB } from "./utils/migrateFromTaskDB";
 
 const connect2Database = async (): Promise<void> => {
   AppDataSource.initialize()
@@ -14,8 +13,6 @@ const connect2Database = async (): Promise<void> => {
 };
 
 const main = async () => {
-  console.log("MIGRATING DB");
-  migrateFromTaskDB();
   connect2Database().then(async () => {
     console.log("Connected to database");
   });

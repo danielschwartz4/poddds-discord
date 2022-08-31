@@ -6,8 +6,9 @@ import { User } from "../entities/User";
 export const migrateFromTaskDB = async () => {
   //   const tasks = await Task.find();
 
+  console.log("in migrate db");
   const users = await User.find();
-
+  console.log("users");
   // iterate through all users in userDB
   users.forEach(async (user: User) => {
     const tasks = await Task.find({ where: { discordId: user.discordId } });
