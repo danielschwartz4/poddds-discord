@@ -1,6 +1,7 @@
 import express from "express";
 import AppDataSource from "./dataSource";
 import discordScheduler from "./jobs/discordScheduler";
+import moment from "moment";
 
 const connect2Database = async (): Promise<void> => {
   AppDataSource.initialize()
@@ -13,6 +14,7 @@ const connect2Database = async (): Promise<void> => {
 };
 
 const main = async () => {
+  console.log(moment().add(0, "days").format("l"));
   connect2Database().then(async () => {
     console.log("Connected to database");
   });
