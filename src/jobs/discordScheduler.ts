@@ -1,6 +1,5 @@
 import DiscordJS, { GatewayIntentBits } from "discord.js";
 import cron from "node-cron";
-import { migrateFromTaskDB } from "../utils/migrateFromTaskDB";
 import { goalCommand } from "../commands/goalCommand";
 import { __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
