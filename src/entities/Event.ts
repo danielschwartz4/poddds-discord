@@ -30,5 +30,13 @@ export class Event extends BaseEntity {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
+  timeZone: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  isActive: boolean;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   goalLeftChannelId: string;
 }

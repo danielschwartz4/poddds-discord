@@ -43,7 +43,6 @@ export class UserResolver {
   @Mutation(() => UserResponse)
   async updateUser(@Arg("user") user: User) {
     const id = user.id;
-    User.update({ id }, { startedGoalAt: user.startedGoalAt });
     User.update({ id }, { discordUsername: user.discordUsername });
     User.update({ id }, { discordId: user.discordId });
     return { user };

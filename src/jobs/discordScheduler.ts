@@ -2,11 +2,11 @@ import DiscordJS, { GatewayIntentBits } from "discord.js";
 import cron from "node-cron";
 import { goalCommand } from "../commands/goalCommand";
 import { __prod__ } from "../constants";
+import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { addExistingMembers } from "./addExistingMembers";
 import { createGoal } from "./createGoal";
 import { newMember } from "./newMember";
 import { reactToImages } from "./react";
-import updateStreaks from "./streak";
 import { updateGoalsToday } from "./updateGoalsToday";
 require("dotenv").config();
 
@@ -45,22 +45,30 @@ async function discordBot() {
     newMember(client);
 
     // update streaks daily from database numbers using cron, everyday @ midnight
+    const gmt0Hours = new Date().getUTCHours();
+    const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
+
     updateGoalsToday(
       client,
       SERVER_ID as string,
-      DAILY_UPDATES_CHAT_CHANNEL_ID as string
+      DAILY_UPDATES_CHAT_CHANNEL_ID as string,
+      timeZoneIsUTCMidnight
     );
-    cron.schedule("0 0 * * *", async () => {
+    cron.schedule("0 */1 * * *", async () => {
+      const gmt0Hours = new Date().getUTCHours();
+      const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
+
       updateGoalsToday(
         client,
         SERVER_ID as string,
-        DAILY_UPDATES_CHAT_CHANNEL_ID as string
+        DAILY_UPDATES_CHAT_CHANNEL_ID as string,
+        timeZoneIsUTCMidnight
       );
-      updateStreaks(
-        client,
-        SERVER_ID as string,
-        DAILY_UPDATES_CHAT_CHANNEL_ID as string
-      );
+      // updateStreaks(
+      //   client,
+      //   SERVER_ID as string,
+      //   DAILY_UPDATES_CHAT_CHANNEL_ID as string
+      // );
     });
   });
 

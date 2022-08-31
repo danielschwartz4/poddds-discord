@@ -46,9 +46,11 @@ export class WeeklyGoal extends BaseEntity {
   @Column({ nullable: true })
   timeZone: string;
 
-  @Column({ nullable: true })
+  @Field({ nullable: true })
+  @Column({ type: "timestamp with time zone", nullable: true })
   adjustedStartDate: Date;
 
-  @Column({ nullable: true })
+  @Field({ nullable: true })
+  @Column({ type: "timestamp with time zone", nullable: true })
   adjustedEndDate: Date;
 }

@@ -1,8 +1,9 @@
 // Change timezone given gmt (e.g. -6)
-export function changeTimeZone(date: Date, timeZone: string) {
+export function changeTimeZone(date: Date, _: string) {
   return new Date(
     date.toLocaleString("en-US", {
-      timeZone,
+      // timeZone,
+      timeZone: "Etc/GMT-1",
     })
   );
 }
@@ -44,4 +45,31 @@ export const mdyDate = (date: Date) => {
 export const todayAdjusted = (gmt: string) => {
   const date = new Date();
   return changeTimeZone(date, gmt);
+};
+
+export const timeZoneOffsetDict: { [i: number]: string } = {
+  0: "+0",
+  1: "-1",
+  2: "-2",
+  3: "-3",
+  4: "-4",
+  5: "-5",
+  6: "-6",
+  7: "-7",
+  8: "-8",
+  9: "-9",
+  10: "-10",
+  11: "-11",
+  12: "-12",
+  13: "+11",
+  14: "+10",
+  15: "+9",
+  16: "+8",
+  17: "+7",
+  18: "+6",
+  19: "+5",
+  20: "+4",
+  21: "+3",
+  22: "+2",
+  23: "+1",
 };

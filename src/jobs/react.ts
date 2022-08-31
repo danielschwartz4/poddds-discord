@@ -16,28 +16,30 @@ export const reactToImages = (
     ) {
       // delete goals left channel if the user has one
       const user_id = msg.author.id;
-      // ! Should really be finding specific task
       const weekly_goal = await WeeklyGoal.findOne({
-        where: { discordId: msg.author.id },
+        where: { discordId: msg.author.id, isActive: true },
       });
       const date_today = mdyDate(
         todayAdjusted(weekly_goal?.timeZone as string)
       );
-      const task = await Event.findOne({
+      const event = await Event.findOne({
         where: {
           discordId: msg.author.id,
           adjustedDate: date_today,
         },
       });
-      if (task?.goalLeftChannelId) {
+      if (event?.goalLeftChannelId) {
         let goal_left_channel = client.channels.cache.get(
-          task.goalLeftChannelId
+          event.goalLeftChannelId
         );
         Event.update(
-          { discordId: user_id, adjustedDate: date_today },
+          { discordId: user_id, adjustedDate: date_today, isActive: true },
           { completed: true, goalLeftChannelId: "" }
         );
-        WeeklyGoal.update({ discordId: user_id }, { misses: 0 });
+        WeeklyGoal.update(
+          { discordId: user_id, isActive: true },
+          { misses: 0 }
+        );
         setTimeout(() => {
           goal_left_channel?.delete();
         }, 1000 * 3);

@@ -1,5 +1,4 @@
 import { CacheType, Client, Interaction, Role } from "discord.js";
-import moment, { duration } from "moment";
 import { Event } from "../entities/Event";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { buildDays } from "../utils/buildDaysUtil";
@@ -10,6 +9,7 @@ import {
   int2day,
   mdyDate,
 } from "../utils/timeZoneUtil";
+import { deactivateGoalsAndEvents } from "./goalsLeftToday/deactivateGoals";
 
 export const createGoal = (
   client: Client<boolean>,
@@ -24,9 +24,6 @@ export const createGoal = (
       );
       const resp = parseGoalResponse(interaction, cleanedData);
       interaction.reply(resp);
-      // (client.channels.cache.get(weekly_goals_channel) as TextChannel).send(
-      //   resp
-      // );
       if (cleanedData) {
         // get day of the week
         const daysObj = buildDays(cleanedData);
@@ -38,8 +35,7 @@ export const createGoal = (
           addDays(new Date(), parseInt(cleanedData["duration"])),
           "Etc/GMT" + cleanedData["time-zone"]
         );
-        console.log(startDate, endDate);
-
+        deactivateGoalsAndEvents(interaction?.user?.id);
         const weekly_goal = await WeeklyGoal.create({
           description: cleanedData["goal"],
           evidence: cleanedData["evidence"],
@@ -48,11 +44,9 @@ export const createGoal = (
           adjustedEndDate: endDate,
           days: daysObj,
           isActive: true,
-          timeZone: flipSign(cleanedData["adjustedStartDate"]),
+          timeZone: flipSign(cleanedData["time-zone"]),
         }).save();
         for (let i = 1; i <= parseInt(cleanedData["duration"]); i++) {
-          // const day = moment().add(i, "days").format("dddd").toLowerCase();
-          // const date = moment().add(i, "days").format("l");
           const date = changeTimeZone(
             new Date(addDays(new Date(), i)),
             "Etc/GMT" + cleanedData["time-zone"]
@@ -66,6 +60,8 @@ export const createGoal = (
               adjustedDate: formattedDate,
               discordId: interaction.user.id,
               goalId: weekly_goal.id,
+              timeZone: flipSign(cleanedData["time-zone"]),
+              isActive: true,
             }).save();
           }
         }

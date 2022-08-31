@@ -4,21 +4,24 @@ import { IsNull, Not } from "typeorm";
 import { Event } from "../../entities/Event";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
 
-export const updateGoalsYesterday = async (client: Client<boolean>) => {
+export const updateGoalsYesterday = async (
+  client: Client<boolean>,
+  timeZoneIsUTCMidnight: string
+) => {
   // const date_yesterday = moment().subtract(1, "days").format("l");
   const date_yesterday = mdyDate(addDays(new Date(), -1));
   const events_missed_yesterday = await Event.find({
     where: {
       adjustedDate: date_yesterday,
       goalLeftChannelId: Not(IsNull() || ""),
+      timeZone: timeZoneIsUTCMidnight,
+      isActive: true,
     },
   });
 
   // Goes through all goalLeftChannels and then if the channel exists, it'll mark it as +1 misses, otherwise, it won't do anything
   if (events_missed_yesterday.length) {
     events_missed_yesterday.forEach(async (event: Event) => {
-      console.log("UPDATING MISSED LOG FOR THE FOLLOWING TASK");
-      console.log(event);
       let user_id = event.discordId;
       const goal_left_channel = client.channels.cache.get(
         event.goalLeftChannelId
@@ -26,20 +29,33 @@ export const updateGoalsYesterday = async (client: Client<boolean>) => {
       if (!goal_left_channel) {
         // if the channel doesn't exist, exit
         Event.update(
-          { discordId: user_id, adjustedDate: date_yesterday },
+          {
+            discordId: user_id,
+            adjustedDate: date_yesterday,
+            timeZone: timeZoneIsUTCMidnight,
+            isActive: true,
+          },
           { completed: true, goalLeftChannelId: "" }
         );
-        WeeklyGoal.update({ discordId: user_id }, { misses: 0 });
+        WeeklyGoal.update(
+          { discordId: user_id, isActive: true },
+          { misses: 0 }
+        );
       } else {
         Event.update(
-          { discordId: user_id, adjustedDate: date_yesterday },
+          {
+            discordId: user_id,
+            adjustedDate: date_yesterday,
+            timeZone: timeZoneIsUTCMidnight,
+            isActive: true,
+          },
           { completed: false, goalLeftChannelId: "" }
         );
         const weekly_goal = await WeeklyGoal.findOne({
-          where: { discordId: user_id },
+          where: { discordId: user_id, isActive: true },
         });
         WeeklyGoal.update(
-          { discordId: user_id },
+          { discordId: user_id, isActive: true },
           { misses: (weekly_goal?.misses as number) + 1 }
         );
         goal_left_channel?.delete();

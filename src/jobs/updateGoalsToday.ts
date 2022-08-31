@@ -14,20 +14,23 @@ import { updateGoalsYesterday } from "./goalsLeftToday/updateGoalsYesterday";
 export const updateGoalsToday = async (
   client: Client<boolean>,
   server_id: string,
-  daily_updates_channel_id: string
+  daily_updates_channel_id: string,
+  timeZoneIsUTCMidnight: string
 ) => {
-  updateGoalsYesterday(client);
+  updateGoalsYesterday(client, timeZoneIsUTCMidnight);
 
   // add goalsChannels for today if there is no channel id and if it's their day
   const guild = client.guilds.cache.get(server_id);
   // const date_today = moment().format("l");
   const date_today = mdyDate(new Date());
-
   const events_for_day = await Event.find({
     where: {
+      // NEED TO TRANSFORM DATE_TODAY BY THEIR GMT
       adjustedDate: date_today,
       goalLeftChannelId: IsNull() || "",
       completed: false,
+      timeZone: timeZoneIsUTCMidnight,
+      isActive: true,
     },
   });
 
@@ -62,8 +65,9 @@ export const updateGoalsToday = async (
   events_for_day.forEach(async (event: Event) => {
     let user_id = event.discordId;
     let user = await User.findOne({ where: { discordId: user_id } });
-    let weekly_goal = await WeeklyGoal.findOne({ where: { id: event.goalId } });
-
+    let weekly_goal = await WeeklyGoal.findOne({
+      where: { id: event.goalId, isActive: true },
+    });
     if (user) {
       guild?.channels
         .create({
@@ -87,7 +91,7 @@ export const updateGoalsToday = async (
             todayAdjusted(weekly_goal?.timeZone as string)
           );
           Event.update(
-            { discordId: user_id, adjustedDate: date_today },
+            { discordId: user_id, adjustedDate: date_today, isActive: true },
             { goalLeftChannelId: goal_left_channel_id.id as string }
           );
         });
