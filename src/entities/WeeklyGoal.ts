@@ -38,8 +38,8 @@ export class WeeklyGoal extends BaseEntity {
   @Column({ default: 0 })
   misses: number;
 
-  @Field(() => GraphQLJSONObject)
-  @Column("jsonb")
+  @Field(() => GraphQLJSONObject, { nullable: true })
+  @Column("jsonb", { nullable: true })
   days!: DaysType;
 
   @Field({ nullable: true })
