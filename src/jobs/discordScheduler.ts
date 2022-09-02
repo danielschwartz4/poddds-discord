@@ -4,6 +4,7 @@ import { goalCommand } from "../commands/goalCommand";
 import { __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { addExistingMembers } from "./addExistingMembers";
+import { autokick } from "./autokick";
 import { createGoal } from "./createGoal";
 import { newMember } from "./newMember";
 import { reactToImages } from "./react";
@@ -66,6 +67,11 @@ async function discordBot() {
         DAILY_UPDATES_CHAT_CHANNEL_ID as string,
         timeZoneIsUTCMidnight
       );
+      autokick(
+        client,
+        SERVER_ID as string,
+        timeZoneIsUTCMidnight
+      )
       // updateStreaks(
       //   client,
       //   SERVER_ID as string,
