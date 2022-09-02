@@ -43,7 +43,7 @@ export class WeeklyGoal extends BaseEntity {
   days!: DaysType;
 
   @Field({ nullable: true })
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: "+0" })
   timeZone: string;
 
   @Field({ nullable: true })
