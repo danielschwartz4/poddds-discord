@@ -10,7 +10,8 @@ export const goalCommand = (client: Client<boolean>, serverId: string) => {
   }
 
   commands?.create({
-    name: "new-goal",
+    // name: "new-goal",
+    name: "set-current-goal",
     description: "create goal",
     type: 1,
     options: newGoalOptions,
