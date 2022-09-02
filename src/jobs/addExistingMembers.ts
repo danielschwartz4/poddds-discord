@@ -1,11 +1,17 @@
 import { Client } from "discord.js";
+import { migrateFromTaskDB } from "../utils/migrateFromTaskDB";
 import { User } from "../entities/User";
 
-export const addExistingMembers = (
+export const addExistingMembers = async (
   client: Client<boolean>,
   server_id: string
 ) => {
   const guild = client.guilds.cache.get(server_id);
+  console.log("MIGRATING DB");
+  const users = await User.find();
+  console.log(users);
+  migrateFromTaskDB();
+
   guild?.members.fetch().then((members) => {
     members.forEach(async (user) => {
       // add member id and stuff to DB

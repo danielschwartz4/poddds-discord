@@ -1,6 +1,5 @@
 import DiscordJS, { GatewayIntentBits } from "discord.js";
 import cron from "node-cron";
-import { migrateFromTaskDB } from "../utils/migrateFromTaskDB";
 import { goalCommand } from "../commands/goalCommand";
 import { __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
@@ -39,7 +38,7 @@ async function discordBot() {
 
   client.on("ready", () => {
     console.log("The client bot is ready!");
-    migrateFromTaskDB()
+    // migrateFromTaskDB()
 
     goalCommand(client, SERVER_ID as string);
     createGoal(client, ADMIN_USER_IDS, SERVER_ID as string);

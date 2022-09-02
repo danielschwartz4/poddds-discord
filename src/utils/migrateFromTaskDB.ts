@@ -2,6 +2,7 @@ import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { Task } from "../entities/Task";
 import { Event } from "../entities/Event";
 import { User } from "../entities/User";
+import { User } from "../entities/User";
 
 export const migrateFromTaskDB = async () => {
     const users = await User.find();
