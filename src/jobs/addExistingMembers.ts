@@ -21,7 +21,6 @@ export const addExistingMembers = async (
           await User.create({
             discordUsername: user.displayName,
             discordId: user.id,
-            // startedGoalAt: moment(new Date()),
           }).save();
         } else if (
           user.roles.cache.some((role) => role.name === "new member")

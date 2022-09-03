@@ -1,3 +1,5 @@
+import { TODAY } from "../constants";
+
 // Change timezone given gmt (e.g. -6)
 export function changeTimeZone(date: Date, _: string) {
   return new Date(
@@ -10,9 +12,10 @@ export function changeTimeZone(date: Date, _: string) {
 
 // Add days to date
 export const addDays = (date: Date, days: number) => {
-  var date = new Date();
-  date.setDate(date.getDate() + days);
-  return date;
+  var tmpDate = new Date(date);
+
+  tmpDate.setDate(tmpDate.getDate() + days);
+  return tmpDate;
 };
 
 // mapping for for use converting Date's getDay method
@@ -43,7 +46,7 @@ export const mdyDate = (date: Date) => {
 };
 
 export const todayAdjusted = (gmt: string) => {
-  const date = new Date();
+  const date = TODAY;
   return changeTimeZone(date, gmt);
 };
 

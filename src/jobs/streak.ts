@@ -16,7 +16,7 @@ const updateStreaks = async () =>
     // users.forEach(async (user: User) => {
     //   let user_id = user.discordId;
     //   if (user.startedGoalAt) {
-    //     const curr_date = new Date();
+    //     const curr_date = TODAY;
     //     let user_streak_seconds =
     //       (user.startedGoalAt.getTime() - curr_date.getTime()) / 1000;
     //     let user_streak = user_streak_seconds / (60 * 60 * 24);

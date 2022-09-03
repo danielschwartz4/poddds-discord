@@ -4,11 +4,12 @@ import {
   PermissionsBitField,
   TextChannel,
 } from "discord.js";
-import { mdyDate, todayAdjusted } from "../utils/timeZoneUtil";
 import { IsNull } from "typeorm";
+import { TODAY } from "../constants";
 import { Event } from "../entities/Event";
 import { User } from "../entities/User";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
+import { mdyDate } from "../utils/timeZoneUtil";
 import { updateGoalsYesterday } from "./goalsLeftToday/updateGoalsYesterday";
 
 export const updateGoalsToday = async (
@@ -21,8 +22,9 @@ export const updateGoalsToday = async (
 
   // add goalsChannels for today if there is no channel id and if it's their day
   const guild = client.guilds.cache.get(server_id);
-  // const date_today = moment().format("l");
-  const date_today = mdyDate(new Date());
+  const date_today = mdyDate(TODAY);
+  console.log(date_today);
+
   const events_for_day = await Event.find({
     where: {
       // NEED TO TRANSFORM DATE_TODAY BY THEIR GMT
@@ -86,9 +88,7 @@ export const updateGoalsToday = async (
                 weekly_goal?.description
             );
           }
-          const date_today = mdyDate(
-            todayAdjusted(weekly_goal?.timeZone as string)
-          );
+          const date_today = mdyDate(TODAY);
           Event.update(
             { discordId: user_id, adjustedDate: date_today, isActive: true },
             { goalLeftChannelId: goal_left_channel_id.id as string }

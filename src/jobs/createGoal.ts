@@ -1,4 +1,5 @@
 import { CacheType, Client, Interaction, Role } from "discord.js";
+import { TODAY } from "../constants";
 import { Event } from "../entities/Event";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { buildDays } from "../utils/buildDaysUtil";
@@ -28,11 +29,11 @@ export const createGoal = (
         // get day of the week
         const daysObj = buildDays(cleanedData);
         const startDate = changeTimeZone(
-          new Date(),
+          TODAY,
           "Etc/GMT" + cleanedData["time-zone"]
         );
         const endDate = changeTimeZone(
-          addDays(new Date(), parseInt(cleanedData["duration"])),
+          addDays(TODAY, parseInt(cleanedData["duration"])),
           "Etc/GMT" + cleanedData["time-zone"]
         );
         deactivateGoalsAndEvents(interaction?.user?.id);
@@ -47,10 +48,12 @@ export const createGoal = (
           timeZone: flipSign(cleanedData["time-zone"]),
         }).save();
         for (let i = 1; i <= parseInt(cleanedData["duration"]); i++) {
-          const date = changeTimeZone(
-            new Date(addDays(new Date(), i)),
-            "Etc/GMT" + cleanedData["time-zone"]
-          );
+          console.log("i", i);
+          console.log("today", TODAY);
+          console.log("addDays(TODAY, i)", addDays(TODAY, i));
+          const date = addDays(TODAY, i);
+
+          console.log("date", date);
           const day = date.getDay();
           const val = cleanedData[int2day(day)];
           const formattedDate = mdyDate(date);
@@ -94,10 +97,6 @@ export const createGoal = (
           user.roles.add(podmate_role_id);
           user.roles.remove(new_member_role_id);
         });
-        // await User.update(
-        //   { discordId: interaction.user.id },
-        //   { startedGoalAt: moment(new Date()) }
-        // );
       }
     }
   });

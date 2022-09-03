@@ -3,13 +3,14 @@ import { addDays, mdyDate } from "../../utils/timeZoneUtil";
 import { IsNull, Not } from "typeorm";
 import { Event } from "../../entities/Event";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
+import { TODAY } from "../../constants";
 
 export const updateGoalsYesterday = async (
   client: Client<boolean>,
   timeZoneIsUTCMidnight: string
 ) => {
   // const date_yesterday = moment().subtract(1, "days").format("l");
-  const date_yesterday = mdyDate(addDays(new Date(), -1));
+  const date_yesterday = mdyDate(addDays(TODAY, -1));
   const events_missed_yesterday = await Event.find({
     where: {
       adjustedDate: date_yesterday,

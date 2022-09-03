@@ -1,9 +1,10 @@
 // react with some emojis if there's an image
 
 import { Client } from "discord.js";
+import { TODAY } from "../constants";
 import { Event } from "../entities/Event";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
-import { mdyDate, todayAdjusted } from "../utils/timeZoneUtil";
+import { mdyDate } from "../utils/timeZoneUtil";
 
 export const reactToImages = (
   client: Client<boolean>,
@@ -16,18 +17,16 @@ export const reactToImages = (
     ) {
       // delete goals left channel if the user has one
       const user_id = msg.author.id;
-      const weekly_goal = await WeeklyGoal.findOne({
-        where: { discordId: msg.author.id, isActive: true },
-      });
-      const date_today = mdyDate(
-        todayAdjusted(weekly_goal?.timeZone as string)
-      );
+
+      const date_today = mdyDate(TODAY);
       const event = await Event.findOne({
         where: {
           discordId: msg.author.id,
           adjustedDate: date_today,
+          isActive: true,
         },
       });
+
       if (event?.goalLeftChannelId) {
         let goal_left_channel = client.channels.cache.get(
           event.goalLeftChannelId
@@ -40,6 +39,7 @@ export const reactToImages = (
           { discordId: user_id, isActive: true },
           { misses: 0 }
         );
+        console.log("goal_left_channel", goal_left_channel);
         setTimeout(() => {
           goal_left_channel?.delete();
         }, 1000 * 3);
