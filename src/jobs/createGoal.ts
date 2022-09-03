@@ -18,7 +18,7 @@ export const createGoal = (
 ) => {
   client.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
-    if (interaction.commandName === "new-goal") {
+    if (interaction.commandName === "set-current-goal") {
       const cleanedData = transformInteractionData(
         interaction.options.data as GoalResponse[]
       );
