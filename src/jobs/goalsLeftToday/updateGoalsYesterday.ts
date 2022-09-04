@@ -7,18 +7,29 @@ import { TODAY } from "../../constants";
 
 export const updateGoalsYesterday = async (
   client: Client<boolean>,
-  timeZoneIsUTCMidnight: string
+  timeZoneIsUTCMidnight?: string
 ) => {
   // const date_yesterday = moment().subtract(1, "days").format("l");
   const date_yesterday = mdyDate(addDays(TODAY, -1));
-  const events_missed_yesterday = await Event.find({
-    where: {
-      adjustedDate: date_yesterday,
-      goalLeftChannelId: Not(IsNull() || ""),
-      timeZone: timeZoneIsUTCMidnight,
-      isActive: true,
-    },
-  });
+  let events_missed_yesterday;
+  if (timeZoneIsUTCMidnight) {
+    events_missed_yesterday = await Event.find({
+      where: {
+        adjustedDate: date_yesterday,
+        goalLeftChannelId: Not(IsNull() || ""),
+        timeZone: timeZoneIsUTCMidnight,
+        isActive: true,
+      },
+    });
+  } else {
+    events_missed_yesterday = await Event.find({
+      where: {
+        adjustedDate: date_yesterday,
+        goalLeftChannelId: Not(IsNull() || ""),
+        isActive: true,
+      },
+    });
+  }
 
   // Goes through all goalLeftChannels and then if the channel exists, it'll mark it as +1 misses, otherwise, it won't do anything
   if (events_missed_yesterday.length) {

@@ -16,23 +16,35 @@ export const updateGoalsToday = async (
   client: Client<boolean>,
   server_id: string,
   daily_updates_channel_id: string,
-  timeZoneIsUTCMidnight: string
+  timeZoneIsUTCMidnight?: string
 ) => {
   updateGoalsYesterday(client, timeZoneIsUTCMidnight);
 
   // add goalsChannels for today if there is no channel id and if it's their day
   const guild = client.guilds.cache.get(server_id);
   const date_today = mdyDate(TODAY);
+  let events_for_day;
 
-  const events_for_day = await Event.find({
-    where: {
-      adjustedDate: date_today,
-      goalLeftChannelId: IsNull() || "",
-      completed: false,
-      timeZone: timeZoneIsUTCMidnight,
-      isActive: true,
-    },
-  });
+  if (timeZoneIsUTCMidnight) {
+    events_for_day = await Event.find({
+      where: {
+        adjustedDate: date_today,
+        goalLeftChannelId: IsNull() || "",
+        completed: false,
+        timeZone: timeZoneIsUTCMidnight,
+        isActive: true,
+      },
+    });
+  } else {
+    events_for_day = await Event.find({
+      where: {
+        adjustedDate: date_today,
+        goalLeftChannelId: IsNull() || "",
+        completed: false,
+        isActive: true,
+      },
+    });
+  }
 
   // Create a channel in the "GOALS LEFT TODAY" category
   let podmate_role_id = guild?.roles.cache.find((r) => r.name === "podmate");

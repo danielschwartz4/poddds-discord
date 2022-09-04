@@ -46,14 +46,11 @@ async function discordBot() {
     newMember(client);
 
     // update streaks daily from database numbers using cron, everyday @ midnight
-    const gmt0Hours = TODAY.getUTCHours();
-    const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
 
     updateGoalsToday(
       client,
       SERVER_ID as string,
-      DAILY_UPDATES_CHAT_CHANNEL_ID as string,
-      timeZoneIsUTCMidnight
+      DAILY_UPDATES_CHAT_CHANNEL_ID as string
     );
 
     cron.schedule("0 */1 * * *", async () => {
