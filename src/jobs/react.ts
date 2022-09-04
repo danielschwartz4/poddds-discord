@@ -1,15 +1,18 @@
 // react with some emojis if there's an image
 
 import { Client } from "discord.js";
+import { readLastWeeklyGoal } from "../utils/WeeklyGoalResolvers";
 import { TODAY } from "../constants";
 import { Event } from "../entities/Event";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { mdyDate } from "../utils/timeZoneUtil";
+import { expiredGoalNotif } from "./expiredGoalNotif";
 
 export const reactToImages = (
   client: Client<boolean>,
   daily_updates_channel_id: String
 ) => {
+  console.log("REACT!")
   client.on("messageCreate", async (msg) => {
     if (
       msg.attachments.size > 0 &&
@@ -28,6 +31,7 @@ export const reactToImages = (
       });
 
       if (event?.goalLeftChannelId) {
+        console.log("THERE wAS A GOAL LEFT CHANNEL ID")
         let goal_left_channel = client.channels.cache.get(
           event.goalLeftChannelId
         );
@@ -43,6 +47,14 @@ export const reactToImages = (
         setTimeout(() => {
           goal_left_channel?.delete();
         }, 1000 * 3);
+
+        // check if they just completed their last weekly goal
+        readLastWeeklyGoal(user_id).then((res) => {
+          // compare only dates and not time
+          if (res?.adjustedEndDate.toISOString().split('T')[0] === TODAY.toISOString().split('T')[0]) {
+            expiredGoalNotif(client, user_id, res)
+          }          
+        })
       }
 
       console.log("An attachment was added!");

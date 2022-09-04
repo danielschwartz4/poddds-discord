@@ -99,7 +99,8 @@ export const updateGoalsToday = async (
               `<@${user?.discordId}>` +
                 "\nToday's your day! Complete part of your weekly goal by sending a picture of evidence in: " +
                 `<#${daily_updates_channel_id}>\n` +
-                weekly_goal?.description
+                "🚧 Goal: " + weekly_goal?.description + 
+                "\n🖼 Evidence: " + weekly_goal?.evidence
             );
           }
           const date_today = mdyDate(TODAY);

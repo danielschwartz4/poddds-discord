@@ -10,11 +10,12 @@ import { updateGoalsToday } from "./updateGoalsToday";
 import cron from "node-cron";
 require("dotenv").config();
 
-async function discordBot() {
-  // NOTE: Ensure that you invite the bot to every channel or make them admin
-  const SERVER_ID = !__prod__
+export const SERVER_ID = !__prod__
     ? process.env.TEST_SERVER_ID
     : process.env.PROD_SERVER_ID;
+
+async function discordBot() {
+  // NOTE: Ensure that you invite the bot to every channel or make them admin
   const DAILY_UPDATES_CHAT_CHANNEL_ID = !__prod__
     ? process.env.TEST_DAILY_UPDATES_CHAT_CHANNEL_ID
     : process.env.PROD_DAILY_UPDATES_CHAT_CHANNEL_ID;
