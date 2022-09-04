@@ -28,14 +28,8 @@ export const createGoal = (
       if (cleanedData) {
         // get day of the week
         const daysObj = buildDays(cleanedData);
-        const startDate = changeTimeZone(
-          TODAY,
-          "Etc/GMT" + cleanedData["time-zone"]
-        );
-        const endDate = changeTimeZone(
-          addDays(TODAY, parseInt(cleanedData["duration"])),
-          "Etc/GMT" + cleanedData["time-zone"]
-        );
+        const startDate = addDays(TODAY, 1);
+        const endDate = addDays(TODAY, parseInt(cleanedData["duration"]));
         deactivateGoalsAndEvents(interaction?.user?.id);
         const weekly_goal = await WeeklyGoal.create({
           description: cleanedData["goal"],
