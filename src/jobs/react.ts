@@ -12,7 +12,6 @@ export const reactToImages = (
   client: Client<boolean>,
   daily_updates_channel_id: String
 ) => {
-  console.log("REACT!")
   client.on("messageCreate", async (msg) => {
     if (
       msg.attachments.size > 0 &&
@@ -31,7 +30,6 @@ export const reactToImages = (
       });
 
       if (event?.goalLeftChannelId) {
-        console.log("THERE wAS A GOAL LEFT CHANNEL ID")
         let goal_left_channel = client.channels.cache.get(
           event.goalLeftChannelId
         );
@@ -43,7 +41,6 @@ export const reactToImages = (
           { discordId: user_id, isActive: true },
           { misses: 0 }
         );
-        console.log("goal_left_channel", goal_left_channel);
         setTimeout(() => {
           goal_left_channel?.delete();
         }, 1000 * 3);
@@ -57,7 +54,6 @@ export const reactToImages = (
         })
       }
 
-      console.log("An attachment was added!");
       setTimeout(() => {
         msg.react("🔥");
       }, 1000 * 3);
