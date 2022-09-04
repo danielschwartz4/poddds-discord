@@ -8,6 +8,7 @@ import { newMember } from "./newMember";
 import { reactToImages } from "./react";
 import { updateGoalsToday } from "./updateGoalsToday";
 import cron from "node-cron";
+import { autokick } from "./autokick";
 require("dotenv").config();
 
 export const SERVER_ID = !__prod__
@@ -63,7 +64,7 @@ async function discordBot() {
         DAILY_UPDATES_CHAT_CHANNEL_ID as string,
         timeZoneIsUTCMidnight
       );
-      // autokick(client, SERVER_ID as string, timeZoneIsUTCMidnight);
+      autokick(client, SERVER_ID as string, timeZoneIsUTCMidnight);
       // updateStreaks(
       //   client,
       //   SERVER_ID as string,
