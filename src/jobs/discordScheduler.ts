@@ -9,6 +9,7 @@ import { reactToImages } from "./react";
 import { updateGoalsToday } from "./updateGoalsToday";
 import cron from "node-cron";
 import { autokick } from "./autokick";
+import { createGoalReminder } from "./createGoalReminder";
 require("dotenv").config();
 
 export const SERVER_ID = !__prod__
@@ -55,6 +56,7 @@ async function discordBot() {
       DAILY_UPDATES_CHAT_CHANNEL_ID as string
     );
 
+    // update every hour
     cron.schedule("0 */1 * * *", async () => {
       const gmt0Hours = TODAY.getUTCHours();
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
@@ -71,6 +73,13 @@ async function discordBot() {
       //   DAILY_UPDATES_CHAT_CHANNEL_ID as string
       // );
     });
+
+    // update "At 00:00 on Sunday"
+    cron.schedule("0 0 * * 0", () => {
+      createGoalReminder(client)
+    });
+
+
   });
 
   if (__prod__) {
