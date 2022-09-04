@@ -26,6 +26,7 @@ export const updateGoalsToday = async (
   let events_for_day;
 
   if (timeZoneIsUTCMidnight) {
+    console.log("a");
     events_for_day = await Event.find({
       where: {
         adjustedDate: date_today,
@@ -36,6 +37,8 @@ export const updateGoalsToday = async (
       },
     });
   } else {
+    console.log("b");
+    console.log(date_today);
     events_for_day = await Event.find({
       where: {
         adjustedDate: date_today,
@@ -45,6 +48,7 @@ export const updateGoalsToday = async (
       },
     });
   }
+  console.log(events_for_day);
 
   // Create a channel in the "GOALS LEFT TODAY" category
   let podmate_role_id = guild?.roles.cache.find((r) => r.name === "podmate");
@@ -106,8 +110,4 @@ export const updateGoalsToday = async (
         });
     }
   });
-  console.log("--------------------");
-  console.log(events_for_day);
-  console.log(date_today);
-  console.log("--------------------");
 };
