@@ -1,7 +1,7 @@
 import { Client, TextChannel } from "discord.js";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { SERVER_ID } from "./discordScheduler";
-import { updateWeeklyGoalStatusToInactive } from "../utils/WeeklyGoalResolvers";
+import { updateWeeklyGoalStatusToInactive } from "../utils/weeklyGoalResolvers";
 
 export const expiredGoalNotif = async (
     client: Client<boolean>,

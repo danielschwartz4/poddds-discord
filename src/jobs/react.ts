@@ -1,7 +1,7 @@
 // react with some emojis if there's an image
 
 import { Client } from "discord.js";
-import { readLastWeeklyGoal } from "../utils/WeeklyGoalResolvers";
+import { readLastWeeklyGoal } from "../utils/weeklyGoalResolvers";
 import { TODAY } from "../constants";
 import { Event } from "../entities/Event";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
