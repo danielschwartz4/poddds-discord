@@ -106,4 +106,8 @@ export const updateGoalsToday = async (
         });
     }
   });
+  console.log("--------------------");
+  console.log(events_for_day);
+  console.log(date_today);
+  console.log("--------------------");
 };
