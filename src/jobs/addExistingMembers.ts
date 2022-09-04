@@ -6,7 +6,6 @@ export const addExistingMembers = async (
   server_id: string
 ) => {
   const guild = client.guilds.cache.get(server_id);
-  const users = await User.find();
 
   guild?.members.fetch().then((members) => {
     members.forEach(async (user) => {
