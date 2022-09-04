@@ -23,11 +23,9 @@ export const updateGoalsToday = async (
   // add goalsChannels for today if there is no channel id and if it's their day
   const guild = client.guilds.cache.get(server_id);
   const date_today = mdyDate(TODAY);
-  console.log(date_today);
 
   const events_for_day = await Event.find({
     where: {
-      // NEED TO TRANSFORM DATE_TODAY BY THEIR GMT
       adjustedDate: date_today,
       goalLeftChannelId: IsNull() || "",
       completed: false,
