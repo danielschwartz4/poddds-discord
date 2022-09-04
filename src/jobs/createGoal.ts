@@ -3,13 +3,7 @@ import { TODAY } from "../constants";
 import { Event } from "../entities/Event";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { buildDays } from "../utils/buildDaysUtil";
-import {
-  addDays,
-  changeTimeZone,
-  flipSign,
-  int2day,
-  mdyDate,
-} from "../utils/timeZoneUtil";
+import { addDays, flipSign, int2day, mdyDate } from "../utils/timeZoneUtil";
 import { deactivateGoalsAndEvents } from "./goalsLeftToday/deactivateGoals";
 
 export const createGoal = (
