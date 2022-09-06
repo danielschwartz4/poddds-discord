@@ -47,6 +47,14 @@ export const updateGoalsToday = async (
         isActive: true,
       },
     });
+    let events_for_day_check = await Event.find({
+      where: {
+        adjustedDate: date_today,
+        isActive: true,
+      },
+    });
+    console.log("events for today that are active")
+    console.log(events_for_day_check)
   }
   console.log(events_for_day);
 
