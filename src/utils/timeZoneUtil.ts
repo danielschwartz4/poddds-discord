@@ -42,7 +42,7 @@ export const mdyDate = (date: Date) => {
   var month = date.getUTCMonth() + 1; //months from 1-12
   var day = date.getUTCDate();
   var year = date.getUTCFullYear();
-  return year + "-" + month + "-" + day;
+  return month + "-" + day + "-" + year;
 };
 
 export const todayAdjusted = (gmt: string) => {
