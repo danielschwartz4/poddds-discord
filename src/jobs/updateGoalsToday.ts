@@ -53,7 +53,7 @@ export const updateGoalsToday = async (
         isActive: true,
       },
     });
-    console.log("events for today that are active")
+    console.log("Events for today that are active")
     console.log(events_for_day_check)
   }
   console.log(events_for_day);

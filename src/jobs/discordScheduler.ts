@@ -11,6 +11,7 @@ import cron from "node-cron";
 import { autokick } from "./autokick";
 import { createGoalReminder } from "./createGoalReminder";
 import { dailySummary } from "./dailySummary";
+import { cleanActiveEvents } from "./cleanActiveEvents";
 require("dotenv").config();
 
 export const SERVER_ID = !__prod__
@@ -50,7 +51,7 @@ async function discordBot() {
     newMember(client);
 
     // update streaks daily from database numbers using cron, everyday @ midnight
-
+    cleanActiveEvents()
     updateGoalsToday(
       client,
       SERVER_ID as string,
