@@ -10,11 +10,12 @@ import { updateGoalsToday } from "./updateGoalsToday";
 import cron from "node-cron";
 import { autokick } from "./autokick";
 import { createGoalReminder } from "./createGoalReminder";
+import { dailySummary } from "./dailySummary";
 require("dotenv").config();
 
 export const SERVER_ID = !__prod__
-    ? process.env.TEST_SERVER_ID
-    : process.env.PROD_SERVER_ID;
+  ? process.env.TEST_SERVER_ID
+  : process.env.PROD_SERVER_ID;
 
 async function discordBot() {
   // NOTE: Ensure that you invite the bot to every channel or make them admin
@@ -74,12 +75,15 @@ async function discordBot() {
       // );
     });
 
-    // update "At 00:00 on Sunday"
-    cron.schedule("0 0 * * 0", () => {
-      createGoalReminder(client)
+    // update every day at 7am EST
+    cron.schedule("0 12 */1 * *", () => {
+      dailySummary(client);
     });
 
-
+    // update "At 00:00 on Sunday"
+    cron.schedule("0 0 * * 0", () => {
+      createGoalReminder(client);
+    });
   });
 
   if (__prod__) {

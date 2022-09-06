@@ -1,4 +1,5 @@
 import { CacheType, Client, Interaction, Role } from "discord.js";
+import { User } from "../entities/User";
 import { TODAY } from "../constants";
 import { Event } from "../entities/Event";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
@@ -17,9 +18,14 @@ export const createGoal = (
       const cleanedData = transformInteractionData(
         interaction.options.data as GoalResponse[]
       );
+
       const resp = parseGoalResponse(interaction, cleanedData);
       interaction.reply(resp);
       if (cleanedData) {
+        // Get userId to pass into WeeklyGoal
+        const user = await User.findOne({
+          where: { discordId: interaction?.user?.id },
+        });
         // get day of the week
         const daysObj = buildDays(cleanedData);
         const startDate = addDays(TODAY, 1);
@@ -34,14 +40,10 @@ export const createGoal = (
           days: daysObj,
           isActive: true,
           timeZone: flipSign(cleanedData["time-zone"]),
+          userId: user?.id,
         }).save();
         for (let i = 1; i <= parseInt(cleanedData["duration"]); i++) {
-          console.log("i", i);
-          console.log("today", TODAY);
-          console.log("addDays(TODAY, i)", addDays(TODAY, i));
           const date = addDays(TODAY, i);
-
-          console.log("date", date);
           const day = date.getDay();
           const val = cleanedData[int2day(day)];
           const formattedDate = mdyDate(date);
