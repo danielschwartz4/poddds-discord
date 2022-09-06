@@ -37,8 +37,6 @@ export const updateGoalsToday = async (
       },
     });
   } else {
-    console.log("UPDATING GOALS LEFT TODAY FOR EVERYONE REGARDLESS OF TIMEZONE");
-    console.log(date_today);
     events_for_day = await Event.find({
       where: {
         adjustedDate: date_today,
@@ -47,15 +45,18 @@ export const updateGoalsToday = async (
         isActive: true,
       },
     });
-    let events_for_day_check = await Event.find({
-      where: {
-        adjustedDate: date_today,
-        isActive: true,
-      },
-    });
-    console.log("Events for today that are active")
-    console.log(events_for_day_check)
+    // let events_for_day_check = await Event.find({
+    //   where: {
+    //     adjustedDate: date_today,
+    //     isActive: true,
+    //   },
+    // });
+    // console.log("UPDATING GOALS LEFT TODAY FOR EVERYONE REGARDLESS OF TIMEZONE");
+    // console.log(date_today);
+    // console.log("Events for today that are active")
+    // console.log(events_for_day_check)
   }
+  console.log("HERE ARE EVENTS FOR TODAY")
   console.log(events_for_day);
 
   // Create a channel in the "GOALS LEFT TODAY" category
