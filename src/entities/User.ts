@@ -4,9 +4,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { WeeklyGoal } from "./WeeklyGoal";
 
 @ObjectType()
 @Entity()
@@ -30,4 +32,10 @@ export class User extends BaseEntity {
   @Field()
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @Field(() => [WeeklyGoal], { nullable: true })
+  @OneToMany(() => WeeklyGoal, (weeklyGoal) => weeklyGoal.user, {
+    nullable: true,
+  })
+  weeklyGoal: WeeklyGoal[];
 }
