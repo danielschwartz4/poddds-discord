@@ -26,7 +26,7 @@ export const updateGoalsToday = async (
   let events_for_day;
 
   if (timeZoneIsUTCMidnight) {
-    console.log("a");
+    console.log("UPDATING GOALS LEFT TODAY FOR TIME ZONE: ", timeZoneIsUTCMidnight);
     events_for_day = await Event.find({
       where: {
         adjustedDate: date_today,
@@ -37,7 +37,7 @@ export const updateGoalsToday = async (
       },
     });
   } else {
-    console.log("b");
+    console.log("UPDATING GOALS LEFT TODAY FOR EVERYONE REGARDLESS OF TIMEZONE");
     console.log(date_today);
     events_for_day = await Event.find({
       where: {
@@ -47,6 +47,14 @@ export const updateGoalsToday = async (
         isActive: true,
       },
     });
+    let events_for_day_check = await Event.find({
+      where: {
+        adjustedDate: date_today,
+        isActive: true,
+      },
+    });
+    console.log("events for today that are active")
+    console.log(events_for_day_check)
   }
   console.log(events_for_day);
 
