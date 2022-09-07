@@ -14,7 +14,8 @@ export const dailySummary = async (client: Client) => {
   console.log("IN DAILY SUMMARY");
   console.log(activeGoals);
 
-  let channel = client.channels.cache.get(DAILY_UPDATES_CHAT_CHANNEL_ID as string) as TextChannel;
+  // hardcoding test-channel id
+  let channel = client.channels.cache.get("1017044471071912006") as TextChannel;
   channel.send(buildSummary(activeGoals));
 };
 
