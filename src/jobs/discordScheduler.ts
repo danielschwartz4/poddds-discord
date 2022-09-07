@@ -1,4 +1,4 @@
-import DiscordJS, { GatewayIntentBits } from "discord.js";
+import DiscordJS, { GatewayIntentBits, time } from "discord.js";
 import { goalCommand } from "../commands/goalCommand";
 import { TODAY, __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
@@ -62,6 +62,7 @@ async function discordBot() {
     cron.schedule("0 */1 * * *", async () => {
       const gmt0Hours = TODAY.getUTCHours();
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
+      console.log("timeZoneIsUTCMidnight: ", timeZoneIsUTCMidnight);
       updateGoalsToday(
         client,
         SERVER_ID as string,
@@ -77,7 +78,8 @@ async function discordBot() {
     });
 
     // update every day at 7am EST
-    cron.schedule("0 12 */1 * *", () => {
+    cron.schedule("0 07 */1 * *", () => {
+      console.log("LOGGED DAILY SUMMARY");
       dailySummary(client);
     });
 
