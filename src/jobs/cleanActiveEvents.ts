@@ -13,7 +13,6 @@ export const cleanActiveEvents = async () => {
     allActiveGoals.forEach(async (active_goal: Event) => {
         let weeklyGoalMatch = await WeeklyGoal.findOne({ where: { id: active_goal.goalId}})
         if (!weeklyGoalMatch || !weeklyGoalMatch?.isActive) {
-            console.log("THIS WEEKLY EVENT " + active_goal.id + " HAS A GOAL THAT ISN'T ACTIVE: " + active_goal.goalId)
             await Event.update({ id: active_goal.id }, { isActive: false })
 
         }
@@ -52,6 +51,7 @@ export const cleanActiveEvents = async () => {
             // update top events based on date and active weekly goal id to true
             let mostRecentEventForWeeklyGoal = await Event.findOne({where: { adjustedDate: date, goalId: active_weekly_goal.id}, order: { id: "DESC" }})
             if (mostRecentEventForWeeklyGoal) {
+                if (!mostRecentEventForWeeklyGoal.isActive)
                 await Event.update( { id: mostRecentEventForWeeklyGoal.id }, { isActive: true})
             }
         })

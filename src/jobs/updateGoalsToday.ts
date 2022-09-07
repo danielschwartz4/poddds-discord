@@ -52,11 +52,11 @@ export const updateGoalsToday = async (
       },
     });
     console.log("UPDATING GOALS LEFT TODAY FOR EVERYONE REGARDLESS OF TIMEZONE");
-    console.log(date_today);
     console.log("Events for today that are active")
     console.log(events_for_day_check)
   }
   console.log("HERE ARE EVENTS FOR TODAY")
+  console.log(date_today);
   console.log(events_for_day);
 
   // Create a channel in the "GOALS LEFT TODAY" category

@@ -51,7 +51,7 @@ async function discordBot() {
     newMember(client);
 
     // update streaks daily from database numbers using cron, everyday @ midnight
-    cleanActiveEvents()
+    // cleanActiveEvents()
     updateGoalsToday(
       client,
       SERVER_ID as string,
