@@ -1,16 +1,16 @@
-import DiscordJS, { GatewayIntentBits, time } from "discord.js";
+import DiscordJS, { GatewayIntentBits } from "discord.js";
+import cron from "node-cron";
 import { goalCommand } from "../commands/goalCommand";
 import { TODAY, __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { addExistingMembers } from "./addExistingMembers";
+import { autokick } from "./autokick";
 import { createGoal } from "./createGoal";
+import { createGoalReminder } from "./createGoalReminder";
+import { dailySummary } from "./dailySummary";
 import { newMember } from "./newMember";
 import { reactToImages } from "./react";
 import { updateGoalsToday } from "./updateGoalsToday";
-import cron from "node-cron";
-import { autokick } from "./autokick";
-import { createGoalReminder } from "./createGoalReminder";
-import { dailySummary } from "./dailySummary";
 // import { cleanActiveEvents } from "./cleanActiveEvents";
 require("dotenv").config();
 
