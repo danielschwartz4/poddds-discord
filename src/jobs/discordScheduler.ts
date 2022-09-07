@@ -48,7 +48,7 @@ async function discordBot() {
 
     goalCommand(client, SERVER_ID as string);
     createGoal(client, ADMIN_USER_IDS, SERVER_ID as string);
-    addExistingMembers(client, SERVER_ID as string);
+    // addExistingMembers(client, SERVER_ID as string);
     reactToImages(client, DAILY_UPDATES_CHAT_CHANNEL_ID as string);
     newMember(client);
 
