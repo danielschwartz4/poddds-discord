@@ -18,11 +18,13 @@ export const SERVER_ID = !__prod__
   ? process.env.TEST_SERVER_ID
   : process.env.PROD_SERVER_ID;
 
-async function discordBot() {
-  // NOTE: Ensure that you invite the bot to every channel or make them admin
-  const DAILY_UPDATES_CHAT_CHANNEL_ID = !__prod__
+export const DAILY_UPDATES_CHAT_CHANNEL_ID = !__prod__
     ? process.env.TEST_DAILY_UPDATES_CHAT_CHANNEL_ID
     : process.env.PROD_DAILY_UPDATES_CHAT_CHANNEL_ID;
+
+async function discordBot() {
+  // NOTE: Ensure that you invite the bot to every channel or make them admin
+  
   const ADMIN_USER_IDS = ["743590338337308754", "933066784867766342"]; // for updates
 
   // Add discord
@@ -62,7 +64,7 @@ async function discordBot() {
     cron.schedule("0 */1 * * *", async () => {
       const gmt0Hours = TODAY.getUTCHours();
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
-      console.log("timeZoneIsUTCMidnight: ", timeZoneIsUTCMidnight);
+      console.log("UPDATING FOR timeZoneIsUTCMidnight: ", timeZoneIsUTCMidnight);
       updateGoalsToday(
         client,
         SERVER_ID as string,
@@ -77,18 +79,10 @@ async function discordBot() {
       // );
     });
 
-    // update every day at 7am EST
-    cron.schedule("0 07 */1 * *", () => {
-      console.log("LOGGED DAILY SUMMARY");
+    // update every day at 9am EST, 1pm UTC
+    cron.schedule("0 13 */1 * *", () => {
+      console.log("LOGGING DAILY SUMMARY");
       dailySummary(client);
-    });
-
-    cron.schedule("0 8 */1 * *", () => {
-      console.log("TIME 8 HIT");
-    });
-
-    cron.schedule("0 12 */1 * *", () => {
-      console.log("TIME 12 HIT");
     });
 
     // update "At 00:00 on Sunday"
