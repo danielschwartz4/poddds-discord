@@ -52,11 +52,11 @@ async function discordBot() {
 
     // update streaks daily from database numbers using cron, everyday @ midnight
     // cleanActiveEvents()
-    updateGoalsToday(
-      client,
-      SERVER_ID as string,
-      DAILY_UPDATES_CHAT_CHANNEL_ID as string
-    );
+    // updateGoalsToday(
+    //   client,
+    //   SERVER_ID as string,
+    //   DAILY_UPDATES_CHAT_CHANNEL_ID as string
+    // );
 
     // update every hour
     cron.schedule("0 */1 * * *", async () => {
@@ -81,6 +81,14 @@ async function discordBot() {
     cron.schedule("0 07 */1 * *", () => {
       console.log("LOGGED DAILY SUMMARY");
       dailySummary(client);
+    });
+
+    cron.schedule("0 8 */1 * *", () => {
+      console.log("TIME 8 HIT");
+    });
+
+    cron.schedule("0 12 */1 * *", () => {
+      console.log("TIME 12 HIT");
     });
 
     // update "At 00:00 on Sunday"
