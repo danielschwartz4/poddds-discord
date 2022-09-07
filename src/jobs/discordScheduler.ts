@@ -3,7 +3,7 @@ import cron from "node-cron";
 import { goalCommand } from "../commands/goalCommand";
 import { TODAY, __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
-import { addExistingMembers } from "./addExistingMembers";
+// import { addExistingMembers } from "./addExistingMembers";
 import { autokick } from "./autokick";
 import { createGoal } from "./createGoal";
 import { createGoalReminder } from "./createGoalReminder";
@@ -59,6 +59,10 @@ async function discordBot() {
     //   SERVER_ID as string,
     //   DAILY_UPDATES_CHAT_CHANNEL_ID as string
     // );
+
+    cron.schedule("*/10 * * * *", () => {
+      console.log("UPDATING EVERY 10 MINUTES TO GET CURRENT DATETIME: ", new Date())
+    })
 
     // update every hour
     cron.schedule("0 */1 * * *", async () => {
