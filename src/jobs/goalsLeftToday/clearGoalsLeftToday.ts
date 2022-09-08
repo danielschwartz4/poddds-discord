@@ -5,7 +5,7 @@ import { mdyDate } from "../../utils/timeZoneUtil";
 
 export const clearGoalsToday = async (client: Client<boolean>) => {
   // const date_today = moment().format("l");
-  const date_today = mdyDate(TODAY);
+  const date_today = mdyDate(TODAY());
 
   const events_today = await Event.find({
     where: { adjustedDate: date_today },

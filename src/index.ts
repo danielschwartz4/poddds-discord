@@ -14,7 +14,7 @@ const connect2Database = async (): Promise<void> => {
 };
 
 const main = async () => {
-  console.log("TODAY: ", TODAY)
+  console.log("TODAY: ", TODAY())
   connect2Database().then(async () => {
     console.log("Connected to database");
   });

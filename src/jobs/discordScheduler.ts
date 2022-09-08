@@ -57,12 +57,12 @@ async function discordBot() {
     //   SERVER_ID as string,
     //   DAILY_UPDATES_CHAT_CHANNEL_ID as string
     // );
-
+  
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
-      const gmt0Hours = TODAY.getUTCHours();
+      const gmt0Hours = TODAY().getUTCHours();
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
-      console.log("UPDATING GOALS LEFT TODAY FOR TIME ZONE: ", timeZoneIsUTCMidnight, " AND GMT0HOURS IS: ", gmt0Hours, " WITH CURRENT TIME: ", new Date());
+      console.log("UPDATING GOALS LEFT TODAY FOR TIME ZONE: ", timeZoneIsUTCMidnight, " AND GMT0HOURS IS: ", gmt0Hours, " WITH CURRENT TIME: ", new Date(), " AND TODAY AS: ", TODAY());
       updateGoalsToday(
         CLIENT,
         SERVER_ID as string,

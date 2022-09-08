@@ -20,7 +20,7 @@ export const reactToImages = (
       // delete goals left channel if the user has one
       const user_id = msg.author.id;
 
-      const date_today = mdyDate(TODAY);
+      const date_today = mdyDate(TODAY());
       const event = await Event.findOne({
         where: {
           discordId: msg.author.id,
@@ -51,7 +51,7 @@ export const reactToImages = (
         // check if they just completed their last weekly goal
         readLastWeeklyGoal(user_id).then((res) => {
           // compare only dates and not time
-          if (res?.adjustedEndDate.toISOString().split('T')[0] === TODAY.toISOString().split('T')[0]) {
+          if (res?.adjustedEndDate.toISOString().split('T')[0] === TODAY().toISOString().split('T')[0]) {
             expiredGoalNotif(client, user_id, res)
           }          
         })
