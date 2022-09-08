@@ -1,7 +1,6 @@
 import { Client, TextChannel } from "discord.js";
 import AppDataSource from "../dataSource";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
-// import { DAILY_UPDATES_CHAT_CHANNEL_ID } from "./discordScheduler";
 require("dotenv").config();
 
 export const dailySummary = async (client: Client) => {
@@ -16,7 +15,10 @@ export const dailySummary = async (client: Client) => {
 
   // hardcoding test-channel id
   let channel = client.channels.cache.get("1017044471071912006") as TextChannel;
-  channel.send(buildSummary(activeGoals));
+
+  const summary = buildSummary(activeGoals);
+  console.log(summary);
+  channel.send(summary);
 };
 
 const buildSummary = (activeGoals: WeeklyGoal[]) => {

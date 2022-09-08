@@ -19,7 +19,7 @@ export const autokick = async (
   );
 
   const activeGoals = await WeeklyGoal.find({
-    where: { isActive: true, timeZone: timeZoneIsUTCMidnight }
+    where: { isActive: true , timeZone: timeZoneIsUTCMidnight}
   });
 
   // // kick users that have no active weekly goals after 7 days, only updating and sending messages at midnight
@@ -100,9 +100,8 @@ export const autokick = async (
   // kick users that have active weekly goals after 3 misses
   activeGoals.forEach(async (goal: WeeklyGoal) => {
     const userId = goal.discordId;
-
-    // if 3 misses, DM the person with a warning message
-    if (goal.misses == 3) {
+    // if 2 misses, DM the person with a warning message
+    if (goal.misses == 2) {
       client.users.fetch(userId).then((user) => {
         user.send(
           "❕ Automatic warning message from poddds mod here! ❕\n\n 👀 You've missed your weekly goal for 3 days in a row \n 📝 Complete your next objective or note in the skip channel that it's an off day so you don't get moved to kicked! \n🌟 Consistency does not mean perfection! Therefore, by completing your task and posting in #daily-updates-chat, you'll get moved back to 0 misses immediately!\n\n **If you get moved to kicked, you'll have to message the mods to be let back into the server, once you decide to recommit.** Cheers! 🍻"
@@ -115,8 +114,8 @@ export const autokick = async (
       });
     }
 
-    // if more than 3 misses, change role of person to kicked
-    if (goal.misses > 3) {
+    // if more than 2 misses, change role of person to kicked
+    if (goal.misses > 2) {
       client.users.fetch(userId).then((user) => {
         user.send(
           "‼ You've been put into the kicked role in the poddds community ‼\n\n🤗 We know things happen, so **if the community has helped you and you want to join back in again, message the mods saying what happened once you decide to recommit** \n\nFeel free to reach out using the #general channel for support in the meantime 🙂"
