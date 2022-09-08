@@ -12,6 +12,7 @@ export const createBreak = (
   client.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName === "break") {
+      console.log("nknkjnkj");
       const cleanedData = transformInteractionData(
         interaction.options.data as GoalResponse[]
       );

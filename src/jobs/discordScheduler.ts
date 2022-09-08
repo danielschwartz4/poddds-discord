@@ -7,6 +7,7 @@ import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 // import { addExistingMembers } from "./addExistingMembers";
 import { autokick } from "./autokick";
 import { cleanWeeklyGoals } from "./cleanWeeklyGoals";
+import { createBreak } from "./createBreak";
 import { createGoal } from "./createGoal";
 import { createGoalReminder } from "./createGoalReminder";
 import { dailySummary } from "./dailySummary";
@@ -41,7 +42,6 @@ async function discordBot() {
 
   const ADMIN_USER_IDS = ["743590338337308754", "933066784867766342"]; // for updates
 
-<<<<<<< HEAD
   CLIENT.on("ready", () => {
     console.log("The CLIENT bot is ready!");
     // migrateFromTaskDB()
@@ -52,10 +52,30 @@ async function discordBot() {
     createGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
     breakCommand(CLIENT, SERVER_ID as string);
     createBreak(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
-
     // addExistingMembers(CLIENT, SERVER_ID as string);
     reactToImages(CLIENT, DAILY_UPDATES_CHAT_CHANNEL_ID as string);
     newMember(CLIENT);
+
+    // update streaks daily from database numbers using cron, everyday @ midnight
+    // cleanActiveEvents()
+    // updateGoalsToday(
+
+    //   CLIENT,
+    //   SERVER_ID as string,
+    //   DAILY_UPDATES_CHAT_CHANNEL_ID as string
+    // );
+  });
+  // dailySummary(CLIENT);
+  // update every day at 9am EST, 1pm UTC
+  dailySummary(CLIENT);
+  cron.schedule("0 13 */1 * *", () => {
+    console.log("LOGGING DAILY SUMMARY");
+    dailySummary(CLIENT);
+  });
+
+  // update "At 00:00 on Sunday"
+  cron.schedule("0 0 * * 0", () => {
+    createGoalReminder(CLIENT);
 
     cron.schedule("*/10 * * * *", () => {
       console.log(
@@ -80,111 +100,35 @@ async function discordBot() {
       );
       autokick(CLIENT, SERVER_ID as string, timeZoneIsUTCMidnight);
       // updateStreaks(
-=======
-  // Add discord
-  const CLIENT = new DiscordJS.Client({
-    intents: [
-      GatewayIntentBits.Guilds,
-      GatewayIntentBits.GuildMessages,
-      GatewayIntentBits.MessageContent,
-      GatewayIntentBits.GuildMembers,
-      GatewayIntentBits.GuildPresences,
-      GatewayIntentBits.GuildMessages,
-      GatewayIntentBits.Guilds,
-    ],
-  });
-
-  async function discordBot() {
-    CLIENT.on("ready", () => {
-      console.log("The CLIENT bot is ready!");
-      // migrateFromTaskDB()
-      const guilds = CLIENT.guilds.cache.map((guild) => guild.id);
-      console.log(guilds);
-
-      goalCommand(CLIENT, SERVER_ID as string);
-      createGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
-      // addExistingMembers(CLIENT, SERVER_ID as string);
-      reactToImages(CLIENT, DAILY_UPDATES_CHAT_CHANNEL_ID as string);
-      newMember(CLIENT);
-
-      // update streaks daily from database numbers using cron, everyday @ midnight
-      // cleanActiveEvents()
-      // updateGoalsToday(
->>>>>>> main
       //   CLIENT,
       //   SERVER_ID as string,
       //   DAILY_UPDATES_CHAT_CHANNEL_ID as string
       // );
-<<<<<<< HEAD
     });
-    // dailySummary(CLIENT);
-    // update every day at 9am EST, 1pm UTC
-    dailySummary(CLIENT);
+
+    // update every day at 9am EST (-5), 1pm UTC
     cron.schedule("0 13 */1 * *", () => {
       console.log("LOGGING DAILY SUMMARY");
+      cleanWeeklyGoals();
       dailySummary(CLIENT);
     });
 
     // update "At 00:00 on Sunday"
     cron.schedule("0 0 * * 0", () => {
       createGoalReminder(CLIENT);
-=======
-
-      cron.schedule("*/10 * * * *", () => {
-        console.log(
-          "UPDATING EVERY 10 MINUTES TO GET CURRENT DATETIME: ",
-          new Date()
-        );
-      });
-
-      // update every hour
-      cron.schedule("0 */1 * * *", async () => {
-        const gmt0Hours = TODAY.getUTCHours();
-        const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
-        console.log(
-          "UPDATING FOR timeZoneIsUTCMidnight: ",
-          timeZoneIsUTCMidnight
-        );
-        updateGoalsToday(
-          CLIENT,
-          SERVER_ID as string,
-          DAILY_UPDATES_CHAT_CHANNEL_ID as string,
-          timeZoneIsUTCMidnight
-        );
-        autokick(CLIENT, SERVER_ID as string, timeZoneIsUTCMidnight);
-        // updateStreaks(
-        //   CLIENT,
-        //   SERVER_ID as string,
-        //   DAILY_UPDATES_CHAT_CHANNEL_ID as string
-        // );
-      });
-
-      // update every day at 9am EST (-5), 1pm UTC
-      cron.schedule("0 13 */1 * *", () => {
-        console.log("LOGGING DAILY SUMMARY");
-        cleanWeeklyGoals();
-        dailySummary(CLIENT);
-      });
-
-      // update "At 00:00 on Sunday"
-      cron.schedule("0 0 * * 0", () => {
-        createGoalReminder(CLIENT);
-      });
->>>>>>> main
     });
+  });
 
-<<<<<<< HEAD
   if (__prod__) {
     CLIENT.login(process.env.PROD_DISCORD_TOKEN);
   } else {
     CLIENT.login(process.env.TEST_DISCORD_TOKEN);
-=======
+
     if (__prod__) {
       CLIENT.login(process.env.PROD_DISCORD_TOKEN);
     } else {
       CLIENT.login(process.env.TEST_DISCORD_TOKEN);
     }
->>>>>>> main
   }
 }
 

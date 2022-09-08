@@ -1,4 +1,6 @@
 import { Client } from "discord.js";
+import { TODAY } from "../constants";
+import { addDays } from "../utils/timeZoneUtil";
 
 export const breakCommand = (client: Client<boolean>, serverId: string) => {
   const guild = client.guilds.cache.get(serverId);
@@ -26,11 +28,11 @@ const newGoalOptions = [
     required: true,
     choices: [
       {
-        name: "sunday",
+        name: `${TODAY}`,
         value: "0",
       },
       {
-        name: "monday",
+        name: `${addDays(TODAY, 1)}`,
         value: "1",
       },
       {
