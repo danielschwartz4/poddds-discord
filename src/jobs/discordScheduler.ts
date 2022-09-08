@@ -6,7 +6,6 @@ import { TODAY, __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 // import { addExistingMembers } from "./addExistingMembers";
 import { autokick } from "./autokick";
-import { cleanWeeklyGoals } from "./cleanWeeklyGoals";
 import { createBreak } from "./createBreak";
 import { createGoal } from "./createGoal";
 import { createGoalReminder } from "./createGoalReminder";
@@ -92,8 +91,6 @@ async function discordBot() {
 
     // update every day at 9am EST (-5), 1pm UTC
     cron.schedule("0 13 */1 * *", () => {
-      console.log("LOGGING DAILY SUMMARY");
-      cleanWeeklyGoals();
       dailySummary(CLIENT);
     });
 

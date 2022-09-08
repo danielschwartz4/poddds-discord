@@ -23,3 +23,10 @@ export const createBreak = (client: Client<boolean>) => {
     }
   });
 };
+// goalCommand(CLIENT, SERVER_ID as string);
+// createGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
+// console.log("a");
+// breakCommand(CLIENT, SERVER_ID as string);
+// console.log("b");
+// createBreak(CLIENT);
+// console.log("c");
