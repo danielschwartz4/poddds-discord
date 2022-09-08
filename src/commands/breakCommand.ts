@@ -32,7 +32,7 @@ const newGoalOptions = [
         value: "0",
       },
       {
-        name: `${addDays(TODAY, 1)}`,
+        name: `${addDays(TODAY(), 1)}`,
         value: "1",
       },
       {
