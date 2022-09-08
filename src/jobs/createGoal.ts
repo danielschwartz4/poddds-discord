@@ -6,6 +6,10 @@ import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { buildDays } from "../utils/buildDaysUtil";
 import { addDays, flipSign, int2day, mdyDate } from "../utils/timeZoneUtil";
 import { deactivateGoalsAndEvents } from "./goalsLeftToday/deactivateGoals";
+import {
+  GoalResponse,
+  transformInteractionData,
+} from "../utils/interactionData";
 
 export const createGoal = (
   client: Client<boolean>,
@@ -124,20 +128,6 @@ const parseGoalResponse = (
   );
 };
 
-const transformInteractionData = (interactionData: GoalResponse[]) => {
-  const res: { [key: string]: string } = {};
-  interactionData.forEach((ele) => {
-    res[ele.name] = ele.value;
-  });
-  return res;
-};
-
 const colorMapper = (option: string) => {
   return option == "off" ? "🔴" : "🟢";
-};
-
-type GoalResponse = {
-  name: string;
-  type: number;
-  value: string;
 };

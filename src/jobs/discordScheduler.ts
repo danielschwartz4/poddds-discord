@@ -1,10 +1,12 @@
 import DiscordJS, { GatewayIntentBits } from "discord.js";
 import cron from "node-cron";
+import { breakCommand } from "../commands/breakCommand";
 import { goalCommand } from "../commands/goalCommand";
 import { TODAY, __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 // import { addExistingMembers } from "./addExistingMembers";
 import { autokick } from "./autokick";
+import { createBreak } from "./createBreak";
 import { createGoal } from "./createGoal";
 import { createGoalReminder } from "./createGoalReminder";
 import { dailySummary } from "./dailySummary";
@@ -19,12 +21,12 @@ export const SERVER_ID = !__prod__
   : process.env.PROD_SERVER_ID;
 
 export const DAILY_UPDATES_CHAT_CHANNEL_ID = !__prod__
-    ? process.env.TEST_DAILY_UPDATES_CHAT_CHANNEL_ID
-    : process.env.PROD_DAILY_UPDATES_CHAT_CHANNEL_ID;
+  ? process.env.TEST_DAILY_UPDATES_CHAT_CHANNEL_ID
+  : process.env.PROD_DAILY_UPDATES_CHAT_CHANNEL_ID;
 
 async function discordBot() {
   // NOTE: Ensure that you invite the bot to every channel or make them admin
-  
+
   const ADMIN_USER_IDS = ["743590338337308754", "933066784867766342"]; // for updates
 
   // Add discord
@@ -48,6 +50,9 @@ async function discordBot() {
 
     goalCommand(client, SERVER_ID as string);
     createGoal(client, ADMIN_USER_IDS, SERVER_ID as string);
+    breakCommand(client, SERVER_ID as string);
+    createBreak(client, ADMIN_USER_IDS, SERVER_ID as string);
+
     // addExistingMembers(client, SERVER_ID as string);
     reactToImages(client, DAILY_UPDATES_CHAT_CHANNEL_ID as string);
     newMember(client);
@@ -61,14 +66,20 @@ async function discordBot() {
     // );
 
     cron.schedule("*/10 * * * *", () => {
-      console.log("UPDATING EVERY 10 MINUTES TO GET CURRENT DATETIME: ", new Date())
-    })
+      console.log(
+        "UPDATING EVERY 10 MINUTES TO GET CURRENT DATETIME: ",
+        new Date()
+      );
+    });
 
     // update every hour
     cron.schedule("0 */1 * * *", async () => {
       const gmt0Hours = TODAY.getUTCHours();
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
-      console.log("UPDATING FOR timeZoneIsUTCMidnight: ", timeZoneIsUTCMidnight);
+      console.log(
+        "UPDATING FOR timeZoneIsUTCMidnight: ",
+        timeZoneIsUTCMidnight
+      );
       updateGoalsToday(
         client,
         SERVER_ID as string,
