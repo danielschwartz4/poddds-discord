@@ -29,7 +29,9 @@ export const reactToImages = (
         },
       });
 
+      console.log("REACTING TO: ", msg.author.username, " WITH GOALLEFTCHANELID: ", event?.goalLeftChannelId, " FOR TODAY: ", date_today)
       if (event?.goalLeftChannelId) {
+        console.log("updating stuffs and deleting")
         let goal_left_channel = client.channels.cache.get(
           event.goalLeftChannelId
         );
@@ -43,6 +45,7 @@ export const reactToImages = (
         );
         setTimeout(() => {
           goal_left_channel?.delete();
+          console.log("deleted!")
         }, 1000 * 3);
 
         // check if they just completed their last weekly goal
