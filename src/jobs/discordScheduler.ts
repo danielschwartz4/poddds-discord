@@ -24,46 +24,37 @@ export const DAILY_UPDATES_CHAT_CHANNEL_ID = !__prod__
   ? process.env.TEST_DAILY_UPDATES_CHAT_CHANNEL_ID
   : process.env.PROD_DAILY_UPDATES_CHAT_CHANNEL_ID;
 
+export const CLIENT = new DiscordJS.Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.Guilds,
+  ],
+});
+
 async function discordBot() {
   // NOTE: Ensure that you invite the bot to every channel or make them admin
 
   const ADMIN_USER_IDS = ["743590338337308754", "933066784867766342"]; // for updates
 
-  // Add discord
-  const client = new DiscordJS.Client({
-    intents: [
-      GatewayIntentBits.Guilds,
-      GatewayIntentBits.GuildMessages,
-      GatewayIntentBits.MessageContent,
-      GatewayIntentBits.GuildMembers,
-      GatewayIntentBits.GuildPresences,
-      GatewayIntentBits.GuildMessages,
-      GatewayIntentBits.Guilds,
-    ],
-  });
-
-  client.on("ready", () => {
-    console.log("The client bot is ready!");
+  CLIENT.on("ready", () => {
+    console.log("The CLIENT bot is ready!");
     // migrateFromTaskDB()
-    const guilds = client.guilds.cache.map((guild) => guild.id);
+    const guilds = CLIENT.guilds.cache.map((guild) => guild.id);
     console.log(guilds);
 
-    goalCommand(client, SERVER_ID as string);
-    createGoal(client, ADMIN_USER_IDS, SERVER_ID as string);
-    breakCommand(client, SERVER_ID as string);
-    createBreak(client, ADMIN_USER_IDS, SERVER_ID as string);
+    goalCommand(CLIENT, SERVER_ID as string);
+    createGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
+    breakCommand(CLIENT, SERVER_ID as string);
+    createBreak(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
 
-    // addExistingMembers(client, SERVER_ID as string);
-    reactToImages(client, DAILY_UPDATES_CHAT_CHANNEL_ID as string);
-    newMember(client);
-
-    // update streaks daily from database numbers using cron, everyday @ midnight
-    // cleanActiveEvents()
-    // updateGoalsToday(
-    //   client,
-    //   SERVER_ID as string,
-    //   DAILY_UPDATES_CHAT_CHANNEL_ID as string
-    // );
+    // addExistingMembers(CLIENT, SERVER_ID as string);
+    reactToImages(CLIENT, DAILY_UPDATES_CHAT_CHANNEL_ID as string);
+    newMember(CLIENT);
 
     cron.schedule("*/10 * * * *", () => {
       console.log(
@@ -81,35 +72,36 @@ async function discordBot() {
         timeZoneIsUTCMidnight
       );
       updateGoalsToday(
-        client,
+        CLIENT,
         SERVER_ID as string,
         DAILY_UPDATES_CHAT_CHANNEL_ID as string,
         timeZoneIsUTCMidnight
       );
-      autokick(client, SERVER_ID as string, timeZoneIsUTCMidnight);
+      autokick(CLIENT, SERVER_ID as string, timeZoneIsUTCMidnight);
       // updateStreaks(
-      //   client,
+      //   CLIENT,
       //   SERVER_ID as string,
       //   DAILY_UPDATES_CHAT_CHANNEL_ID as string
       // );
     });
-
+    // dailySummary(CLIENT);
     // update every day at 9am EST, 1pm UTC
+    dailySummary(CLIENT);
     cron.schedule("0 13 */1 * *", () => {
       console.log("LOGGING DAILY SUMMARY");
-      dailySummary(client);
+      dailySummary(CLIENT);
     });
 
     // update "At 00:00 on Sunday"
     cron.schedule("0 0 * * 0", () => {
-      createGoalReminder(client);
+      createGoalReminder(CLIENT);
     });
   });
 
   if (__prod__) {
-    client.login(process.env.PROD_DISCORD_TOKEN);
+    CLIENT.login(process.env.PROD_DISCORD_TOKEN);
   } else {
-    client.login(process.env.TEST_DISCORD_TOKEN);
+    CLIENT.login(process.env.TEST_DISCORD_TOKEN);
   }
 }
 
