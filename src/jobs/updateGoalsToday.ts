@@ -22,7 +22,7 @@ export const updateGoalsToday = async (
 
   // add goalsChannels for today if there is no channel id and if it's their day
   const guild = client.guilds.cache.get(server_id);
-  const date_today = mdyDate(TODAY);
+  const date_today = mdyDate(TODAY());
   let events_for_day;
 
   if (timeZoneIsUTCMidnight) {
@@ -101,7 +101,7 @@ export const updateGoalsToday = async (
                 "\n🖼 Evidence: " + weekly_goal?.evidence
             );
           }
-          const date_today = mdyDate(TODAY);
+          const date_today = mdyDate(TODAY());
           Event.update(
             { discordId: user_id, adjustedDate: date_today, isActive: true },
             { goalLeftChannelId: goal_left_channel_id.id as string }
