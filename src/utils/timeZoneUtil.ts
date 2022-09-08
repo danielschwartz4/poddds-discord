@@ -46,7 +46,7 @@ export const mdyDate = (date: Date) => {
 };
 
 export const todayAdjusted = (gmt: string) => {
-  const date = TODAY;
+  const date = (TODAY());
   return changeTimeZone(date, gmt);
 };
 

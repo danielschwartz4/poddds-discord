@@ -10,7 +10,7 @@ export const updateGoalsYesterday = async (
   timeZoneIsUTCMidnight?: string
 ) => {
   // const date_yesterday = moment().subtract(1, "days").format("l");
-  const date_yesterday = mdyDate(addDays(TODAY, -1));
+  const date_yesterday = mdyDate(addDays(TODAY(), -1));
   let events_missed_yesterday;
   if (timeZoneIsUTCMidnight) {
     events_missed_yesterday = await Event.find({

@@ -40,7 +40,7 @@ export const cleanActiveEvents = async () => {
     // update not completed events today or after with isActive = false with highest id
     let dates_array = []
     for (let i = 0; i <= 28; i++) {
-        const date = addDays(TODAY, i);
+        const date = addDays(TODAY(), i);
         const formattedDate = mdyDate(date);
         dates_array.push(formattedDate)
     }
