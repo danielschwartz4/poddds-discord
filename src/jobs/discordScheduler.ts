@@ -10,6 +10,7 @@ import { createGoal } from "./createGoal";
 import { createGoalReminder } from "./createGoalReminder";
 import { dailySummary } from "./dailySummary";
 import { newMember } from "./newMember";
+import { onMemberLeave } from "./onMemberLeave";
 import { reactToImages } from "./react";
 import { updateGoalsToday } from "./updateGoalsToday";
 // import { cleanActiveEvents } from "./cleanActiveEvents";
@@ -49,14 +50,7 @@ async function discordBot() {
     // addExistingMembers(client, SERVER_ID as string);
     reactToImages(CLIENT, DAILY_UPDATES_CHAT_CHANNEL_ID as string);
     newMember(CLIENT);
-
-    // update streaks daily from database numbers using cron, everyday @ midnight
-    // cleanActiveEvents()
-    // updateGoalsToday(
-    //   client,
-    //   SERVER_ID as string,
-    //   DAILY_UPDATES_CHAT_CHANNEL_ID as string
-    // );
+    onMemberLeave();
   
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
@@ -79,8 +73,6 @@ async function discordBot() {
 
     // update every day at 9am EST (-5), 1pm UTC
     cron.schedule("0 13 */1 * *", () => {
-      console.log("LOGGING DAILY SUMMARY");
-      cleanWeeklyGoals()
       dailySummary(CLIENT);
     });
 
