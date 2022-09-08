@@ -14,19 +14,16 @@ import { updateGoalsToday } from "./updateGoalsToday";
 // import { cleanActiveEvents } from "./cleanActiveEvents";
 require("dotenv").config();
 
+// NOTE: Ensure that you invite the bot to every channel or make them admin
 export const SERVER_ID = !__prod__
   ? process.env.TEST_SERVER_ID
   : process.env.PROD_SERVER_ID;
-
 export const DAILY_UPDATES_CHAT_CHANNEL_ID = !__prod__
     ? process.env.TEST_DAILY_UPDATES_CHAT_CHANNEL_ID
     : process.env.PROD_DAILY_UPDATES_CHAT_CHANNEL_ID;
+export const ADMIN_USER_IDS = ["743590338337308754", "933066784867766342"]; // for updates
 
 async function discordBot() {
-  // NOTE: Ensure that you invite the bot to every channel or make them admin
-  
-  const ADMIN_USER_IDS = ["743590338337308754", "933066784867766342"]; // for updates
-
   // Add discord
   const client = new DiscordJS.Client({
     intents: [

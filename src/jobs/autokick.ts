@@ -1,5 +1,6 @@
 import { Client, Role } from "discord.js";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
+import { ADMIN_USER_IDS } from "./discordScheduler";
 
 export const autokick = async (
   client: Client<boolean>,
@@ -106,6 +107,11 @@ export const autokick = async (
         user.send(
           "❕ Automatic warning message from poddds mod here! ❕\n\n 👀 You've missed your weekly goal for 3 days in a row \n 📝 Complete your next objective or note in the skip channel that it's an off day so you don't get moved to kicked! \n🌟 Consistency does not mean perfection! Therefore, by completing your task and posting in #daily-updates-chat, you'll get moved back to 0 misses immediately!\n\n **If you get moved to kicked, you'll have to message the mods to be let back into the server, once you decide to recommit.** Cheers! 🍻"
         );
+        ADMIN_USER_IDS.forEach((val) => {
+          client.users.fetch(val as string).then((user) => {
+            user.send("poddds -- AUTOMATIC WARNING MESSAGE sent to " + user.username + " because they missed their weekly goal 3 days in a row");
+          });
+        });
       });
     }
 
@@ -115,6 +121,11 @@ export const autokick = async (
         user.send(
           "‼ You've been put into the kicked role in the poddds community ‼\n\n🤗 We know things happen, so **if the community has helped you and you want to join back in again, message the mods saying what happened once you decide to recommit** \n\nFeel free to reach out using the #general channel for support in the meantime 🙂"
         );
+        ADMIN_USER_IDS.forEach((val) => {
+          client.users.fetch(val as string).then((user) => {
+            user.send("poddds -- AUTOMATIC KICK sent to " + user.username + " because they missed their weekly goal 4 days in a row");
+          });
+        });
       });
       const user = await guild?.members.fetch(userId);
       user?.roles.add(kicked_role_id as Role);
