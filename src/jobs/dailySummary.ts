@@ -12,12 +12,22 @@ export const dailySummary = async (client: Client) => {
     .orderBy("g.misses", "DESC")
     .where('g."isActive" = true');
   const activeGoals = await qb.getMany();
+  // const activeGoals = await WeeklyGoal.find({
+  //   where: {
+  //     isActive: true,
+  //   },
+  //   order: {
+  //     misses: {
+  //       direction: "DESC",
+  //     },
+  //   },
+  // });
   console.log("IN DAILY SUMMARY");
   console.log(activeGoals);
 
   // hardcoding test-channel id
   let channel = client.channels.cache.get("1017044471071912006") as TextChannel;
-  channel.send(buildSummary(activeGoals));
+  channel.send(await buildSummary(activeGoals));
 };
 
 const buildSummary = async (activeGoals: WeeklyGoal[]) => {

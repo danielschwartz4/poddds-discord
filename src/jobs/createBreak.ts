@@ -4,11 +4,7 @@ import {
   GoalResponse,
 } from "../utils/interactionData";
 
-export const createBreak = (
-  client: Client<boolean>,
-  admin_ids: string[],
-  server_id: string
-) => {
+export const createBreak = (client: Client<boolean>) => {
   client.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName === "break") {

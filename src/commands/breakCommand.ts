@@ -1,6 +1,6 @@
 import { Client } from "discord.js";
 import { TODAY } from "../constants";
-import { addDays } from "../utils/timeZoneUtil";
+import { addDays, int2day, mdyDate } from "../utils/timeZoneUtil";
 
 export const breakCommand = (client: Client<boolean>, serverId: string) => {
   const guild = client.guilds.cache.get(serverId);
@@ -22,37 +22,56 @@ export const breakCommand = (client: Client<boolean>, serverId: string) => {
 const newGoalOptions = [
   {
     name: "start-date",
-    description:
-      "When will your break start within the next week (including today)?",
+    description: "When will your break start within the next week?",
     type: 3,
     required: true,
     choices: [
       {
-        name: `${TODAY}`,
+        name: "Today",
         value: "0",
       },
       {
-        name: `${addDays(TODAY(), 1)}`,
+        name: "Tomorrow",
         value: "1",
       },
       {
-        name: "tuesday",
+        name: `${
+          int2day(addDays(TODAY(), 2).getDay()) +
+          ", " +
+          mdyDate(addDays(TODAY(), 2))
+        }`,
         value: "2",
       },
       {
-        name: "wednesday",
+        name: `${
+          int2day(addDays(TODAY(), 3).getDay()) +
+          ", " +
+          mdyDate(addDays(TODAY(), 3))
+        }`,
         value: "3",
       },
       {
-        name: "thursday",
+        name: `${
+          int2day(addDays(TODAY(), 4).getDay()) +
+          ", " +
+          mdyDate(addDays(TODAY(), 4))
+        }`,
         value: "4",
       },
       {
-        name: "friday",
+        name: `${
+          int2day(addDays(TODAY(), 5).getDay()) +
+          ", " +
+          mdyDate(addDays(TODAY(), 5))
+        }`,
         value: "5",
       },
       {
-        name: "saturday",
+        name: `${
+          int2day(addDays(TODAY(), 6).getDay()) +
+          ", " +
+          mdyDate(addDays(TODAY(), 6))
+        }`,
         value: "6",
       },
     ],
