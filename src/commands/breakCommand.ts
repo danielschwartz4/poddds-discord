@@ -1,4 +1,6 @@
 import { Client } from "discord.js";
+import { TODAY } from "../constants";
+import { addDays, int2day } from "../utils/timeZoneUtil";
 
 export const breakCommand = (client: Client<boolean>, serverId: string) => {
   const guild = client.guilds.cache.get(serverId);
@@ -20,38 +22,67 @@ export const breakCommand = (client: Client<boolean>, serverId: string) => {
 const newGoalOptions = [
   {
     name: "start-date",
-    description:
-      "When will your break start within the next week (including today)?",
+    description: "When will your break start within the next week?",
     type: 3,
     required: true,
     choices: [
       {
-        name: "sunday",
-        value: "0",
+        name: "today",
+        value: `${addDays(TODAY(), 0)}`,
       },
       {
-        name: "monday",
-        value: "1",
+        name: "tomorrow",
+        value: `${addDays(TODAY(), 1)}`,
       },
       {
-        name: "tuesday",
-        value: "2",
+        name: `${
+          int2day(addDays(TODAY(), 2).getDay()) +
+          ", " +
+          addDays(TODAY(), 2).getMonth() +
+          "/" +
+          addDays(TODAY(), 2).getDate()
+        }`,
+        value: `${addDays(TODAY(), 2)}`,
       },
       {
-        name: "wednesday",
-        value: "3",
+        name: `${
+          int2day(addDays(TODAY(), 3).getDay()) +
+          ", " +
+          addDays(TODAY(), 3).getMonth() +
+          "/" +
+          addDays(TODAY(), 3).getDate()
+        }`,
+        value: `${addDays(TODAY(), 3)}`,
       },
       {
-        name: "thursday",
-        value: "4",
+        name: `${
+          int2day(addDays(TODAY(), 4).getDay()) +
+          ", " +
+          addDays(TODAY(), 4).getMonth() +
+          "/" +
+          addDays(TODAY(), 4).getDate()
+        }`,
+        value: `${addDays(TODAY(), 4)}`,
       },
       {
-        name: "friday",
-        value: "5",
+        name: `${
+          int2day(addDays(TODAY(), 5).getDay()) +
+          ", " +
+          addDays(TODAY(), 5).getMonth() +
+          "/" +
+          addDays(TODAY(), 5).getDate()
+        }`,
+        value: `${addDays(TODAY(), 5)}`,
       },
       {
-        name: "saturday",
-        value: "6",
+        name: `${
+          int2day(addDays(TODAY(), 6).getDay()) +
+          ", " +
+          addDays(TODAY(), 6).getMonth() +
+          "/" +
+          addDays(TODAY(), 6).getDate()
+        }`,
+        value: `${addDays(TODAY(), 6)}`,
       },
     ],
   },
@@ -60,5 +91,35 @@ const newGoalOptions = [
     description: "How many days will your break be?",
     type: 4,
     required: true,
+    choices: [
+      {
+        name: "1 day",
+        value: 1,
+      },
+      {
+        name: "2 days",
+        value: 2,
+      },
+      {
+        name: "3 days",
+        value: 3,
+      },
+      {
+        name: "4 days",
+        value: 4,
+      },
+      {
+        name: "5 days",
+        value: 5,
+      },
+      {
+        name: "6 days",
+        value: 6,
+      },
+      {
+        name: "7 days",
+        value: 7,
+      },
+    ],
   },
 ];
