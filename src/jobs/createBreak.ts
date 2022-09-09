@@ -1,4 +1,5 @@
 import { Client } from "discord.js";
+import { TODAY } from "../constants";
 import AppDataSource from "../dataSource";
 import {
   GoalResponse,
@@ -34,14 +35,21 @@ export const createBreak = (client: Client<boolean>) => {
       // Get the UTC start day based on their timezone
       // Set isActive to false for all days from this start date to duration
       if (res) {
-        interaction.reply(
-          interaction.user.username +
-            " is taking a break for " +
-            cleanedData.duration +
-            " days, starting on " +
-            int2day(new Date(cleanedData["start-date"]).getDay()) +
-            "!"
-        );
+        new Date(cleanedData["start-date"]).getDay() == TODAY().getDay()
+          ? interaction.reply(
+              interaction.user.username +
+                " is taking a break for " +
+                cleanedData.duration +
+                " days, starting today!"
+            )
+          : interaction.reply(
+              interaction.user.username +
+                " is taking a break for " +
+                cleanedData.duration +
+                " days, starting on " +
+                int2day(new Date(cleanedData["start-date"]).getDay()) +
+                "!"
+            );
       }
     }
   });

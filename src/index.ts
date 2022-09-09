@@ -1,6 +1,7 @@
 import express from "express";
 import AppDataSource from "./dataSource";
 import discordScheduler from "./jobs/discordScheduler";
+import { changeTimeZone } from "./utils/timeZoneUtil";
 
 const connect2Database = async (): Promise<void> => {
   AppDataSource.initialize()
@@ -13,9 +14,8 @@ const connect2Database = async (): Promise<void> => {
 };
 
 const main = async () => {
-  console.log(new Date());
-  console.log("9-10-2022");
-  console.log(new Date("9-10-2022") > new Date());
+  console.log("hello");
+  console.log(changeTimeZone(new Date(), ""));
 
   connect2Database().then(async () => {
     console.log("Connected to database");
