@@ -1,6 +1,6 @@
 import { CacheType, Client, Interaction, Role } from "discord.js";
 import { User } from "../entities/User";
-import { TODAY } from "../constants";
+import { LOCAL_TODAY } from "../constants";
 import { Event } from "../entities/Event";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { buildDays } from "../utils/buildDaysUtil";
@@ -22,6 +22,8 @@ export const createGoal = (
       const cleanedData = transformInteractionData(
         interaction.options.data as GoalResponse[]
       );
+      const timeZone = cleanedData["time-zone"]
+      const localTodayWithTimeZone = LOCAL_TODAY(timeZone)
 
       const resp = parseGoalResponse(interaction, cleanedData);
       interaction.reply(resp);
@@ -32,8 +34,8 @@ export const createGoal = (
         });
         // get day of the week
         const daysObj = buildDays(cleanedData);
-        const startDate = addDays((TODAY()), 1);
-        const endDate = addDays(TODAY(), parseInt(cleanedData["duration"]));
+        const startDate = addDays((localTodayWithTimeZone), 1);
+        const endDate = addDays(localTodayWithTimeZone, parseInt(cleanedData["duration"]));
         deactivateGoalsAndEvents(interaction?.user?.id);
         const weekly_goal = await WeeklyGoal.create({
           description: cleanedData["goal"],
@@ -47,7 +49,7 @@ export const createGoal = (
           userId: user?.id,
         }).save();
         for (let i = 1; i <= parseInt(cleanedData["duration"]); i++) {
-          const date = addDays(TODAY(), i);
+          const date = addDays(localTodayWithTimeZone, i);
           const day = date.getDay();
           const val = cleanedData[int2day(day)];
           const formattedDate = mdyDate(date);

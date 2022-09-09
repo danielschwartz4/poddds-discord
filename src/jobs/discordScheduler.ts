@@ -1,7 +1,7 @@
 import DiscordJS, { GatewayIntentBits } from "discord.js";
 import cron from "node-cron";
 import { goalCommand } from "../commands/goalCommand";
-import { TODAY, __prod__ } from "../constants";
+import { LOCAL_TODAY, TODAY, __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { autokick } from "./autokick";
 import { createGoal } from "./createGoal";
@@ -77,7 +77,8 @@ async function discordBot() {
       // );
     });
 
-    // update every day at 9am EST (-5), 1pm UTC
+      
+    // update every day at 9am EST (-5), (EST + 4) 1pm UTC
     cron.schedule("0 13 */1 * *", () => {
       dailySummary(CLIENT);
     });
