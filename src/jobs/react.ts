@@ -29,7 +29,7 @@ export const reactToImages = (
         },
       });
 
-      console.log("REACTING TO: ", msg.author.username, " WITH GOALLEFTCHANELID: ", event?.goalLeftChannelId, " FOR TODAY: ", date_today)
+      console.log("REACTING TO: ", msg.author.username, " WITH GOALLEFTCHANELID: ", event?.goalLeftChannelId, " FOR TODAY: ", date_today, " FOR EVENT ID: ", event?.id)
       if (event?.goalLeftChannelId) {
         console.log("updating stuffs and deleting")
         let goal_left_channel = client.channels.cache.get(

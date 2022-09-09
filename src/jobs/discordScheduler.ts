@@ -3,7 +3,6 @@ import cron from "node-cron";
 import { goalCommand } from "../commands/goalCommand";
 import { TODAY, __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
-// import { addExistingMembers } from "./addExistingMembers";
 import { autokick } from "./autokick";
 import { createGoal } from "./createGoal";
 import { createGoalReminder } from "./createGoalReminder";
@@ -12,7 +11,6 @@ import { newMember } from "./newMember";
 import { onMemberLeave } from "./onMemberLeave";
 import { reactToImages } from "./react";
 import { updateGoalsToday } from "./updateGoalsToday";
-// import { cleanActiveEvents } from "./cleanActiveEvents";
 require("dotenv").config();
 
 // NOTE: Ensure that you invite the bot to every channel or make them admin
