@@ -2,7 +2,7 @@
 
 import { Client } from "discord.js";
 import { readLastWeeklyGoal } from "../utils/weeklyGoalResolvers";
-import { LOCAL_TODAY, TODAY } from "../constants";
+import { LOCAL_TODAY } from "../constants";
 import { Event } from "../entities/Event";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { mdyDate } from "../utils/timeZoneUtil";
