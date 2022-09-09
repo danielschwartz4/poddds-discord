@@ -1,14 +1,15 @@
 import DiscordJS, { GatewayIntentBits } from "discord.js";
 import cron from "node-cron";
+import { breakCommand } from "../commands/breakCommand";
 import { goalCommand } from "../commands/goalCommand";
 import { LOCAL_TODAY, TODAY, __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { autokick } from "./autokick";
+import { createBreak } from "./createBreak";
 import { createGoal } from "./createGoal";
 import { createGoalReminder } from "./createGoalReminder";
 import { dailySummary } from "./dailySummary";
 import { newMember } from "./newMember";
-import { onMemberLeave } from "./onMemberLeave";
 import { reactToImages } from "./react";
 import { updateGoalsToday } from "./updateGoalsToday";
 require("dotenv").config();
@@ -37,17 +38,27 @@ export const CLIENT = new DiscordJS.Client({
 
 async function discordBot() {
   CLIENT.on("ready", () => {
-    console.log("The CLIENT bot is ready!");
+    console.log("The client bot is ready!");
+    console.log("LOCAL TIME RIGHT NOW: ", LOCAL_TODAY("-4")) // in EST
     // migrateFromTaskDB()
     const guilds = CLIENT.guilds.cache.map((guild) => guild.id);
     console.log(guilds);
 
     goalCommand(CLIENT, SERVER_ID as string);
     createGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
+    breakCommand(CLIENT, SERVER_ID as string);
+    createBreak(CLIENT);
     // addExistingMembers(client, SERVER_ID as string);
     reactToImages(CLIENT, DAILY_UPDATES_CHAT_CHANNEL_ID as string);
     newMember(CLIENT);
-    onMemberLeave();
+
+    // update streaks daily from database numbers using cron, everyday @ midnight
+    // cleanActiveEvents()
+    // updateGoalsToday(
+    //   client,
+    //   SERVER_ID as string,
+    //   DAILY_UPDATES_CHAT_CHANNEL_ID as string
+    // );
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {

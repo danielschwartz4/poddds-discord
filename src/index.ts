@@ -1,5 +1,4 @@
 import express from "express";
-import { TODAY } from "./constants";
 import AppDataSource from "./dataSource";
 import discordScheduler from "./jobs/discordScheduler";
 
@@ -14,7 +13,10 @@ const connect2Database = async (): Promise<void> => {
 };
 
 const main = async () => {
-  console.log("TODAY: ", TODAY())
+  console.log(new Date());
+  console.log("9-10-2022");
+  console.log(new Date("9-10-2022") > new Date());
+
   connect2Database().then(async () => {
     console.log("Connected to database");
   });
