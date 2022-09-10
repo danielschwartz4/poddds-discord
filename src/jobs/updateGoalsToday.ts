@@ -5,7 +5,7 @@ import {
   TextChannel,
 } from "discord.js";
 import { IsNull } from "typeorm";
-import { LOCAL_TODAY, TODAY } from "../constants";
+import { LOCAL_TODAY } from "../constants";
 import { Event } from "../entities/Event";
 import { User } from "../entities/User";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
