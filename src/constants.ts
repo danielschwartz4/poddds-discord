@@ -16,8 +16,8 @@ export const LOCAL_TODAY = (timeZone: string) => {
     let splitDateTime = localDateObject.split(", ")
     let splitDate = splitDateTime[0].split("/")
     let Y = splitDate[2]
-    let D = splitDate[1]
-    let M = splitDate[0]
+    let D = splitDate[0]
+    let M = splitDate[1]
     let date = Y + "-" + M + "-" + D
     let localTime = splitDateTime[1]
     let newLocalDateObject = new Date(date + "T" + localTime + "Z")
