@@ -5,7 +5,7 @@ import {
   TextChannel,
 } from "discord.js";
 import { IsNull } from "typeorm";
-import { TODAY } from "../constants";
+import { LOCAL_TODAY, TODAY } from "../constants";
 import { Event } from "../entities/Event";
 import { User } from "../entities/User";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
@@ -22,7 +22,7 @@ export const updateGoalsToday = async (
 
   // add goalsChannels for today if there is no channel id and if it's their day
   const guild = client.guilds.cache.get(server_id);
-  const date_today = mdyDate(TODAY());
+  const date_today = mdyDate(LOCAL_TODAY(timeZoneIsUTCMidnight as string)); // use local today because you want to find the local date based on the timezone and update and display that
   let events_for_day;
 
   if (timeZoneIsUTCMidnight) {
@@ -45,7 +45,7 @@ export const updateGoalsToday = async (
       },
     });
   }
-  console.log("HERE ARE EVENTS FOR DATE: ", date_today)
+  console.log("HERE ARE EVENTS THAT WILL BE UPDATED TO IS ACTIVE AND POSTED WHERE TODAY IS: ", date_today)
   console.log(events_for_day);
 
   // Create a channel in the "GOALS LEFT TODAY" category
@@ -101,7 +101,6 @@ export const updateGoalsToday = async (
                 "\n🖼 Evidence: " + weekly_goal?.evidence
             );
           }
-          const date_today = mdyDate(TODAY());
           Event.update(
             { discordId: user_id, adjustedDate: date_today, isActive: true },
             { goalLeftChannelId: goal_left_channel_id.id as string }

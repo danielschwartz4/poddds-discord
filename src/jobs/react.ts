@@ -20,7 +20,6 @@ export const reactToImages = (
       // delete goals left channel if the user has one
       const user_id = msg.author.id;
 
-      
       const weekly_goal = await WeeklyGoal.findOne({ where: { discordId: user_id }, order: {id: "DESC" }})
       const localTodayWithTimeZone = LOCAL_TODAY(weekly_goal?.timeZone as string)
       const date_today = mdyDate(localTodayWithTimeZone);

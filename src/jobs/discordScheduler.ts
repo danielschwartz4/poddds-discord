@@ -64,6 +64,7 @@ async function discordBot() {
     cron.schedule("1 */1 * * *", async () => {
       const gmt0Hours = TODAY().getUTCHours();
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
+      
       console.log(
         "UPDATING GOALS LEFT TODAY FOR TIME ZONE: ",
         timeZoneIsUTCMidnight,
