@@ -39,7 +39,7 @@ export const CLIENT = new DiscordJS.Client({
 async function discordBot() {
   CLIENT.on("ready", () => {
     console.log("The client bot is ready!");
-    console.log("LOCAL TIME RIGHT NOW: ", LOCAL_TODAY("-4")) // in EST
+    console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-4")) // in EST
     // migrateFromTaskDB()
     const guilds = CLIENT.guilds.cache.map((guild) => guild.id);
     console.log(guilds);
