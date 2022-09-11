@@ -4,13 +4,15 @@ import { IsNull, Not } from "typeorm";
 import { Event } from "../../entities/Event";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { LOCAL_TODAY } from "../../constants";
+import { readLastWeeklyGoal } from "../../utils/weeklyGoalResolvers";
+import { expiredGoalNotif } from "../expiredGoalNotif";
 
 export const updateGoalsYesterday = async (
   client: Client<boolean>,
   timeZoneIsUTCMidnight?: string
 ) => {
-  // const date_yesterday = moment().subtract(1, "days").format("l");
-  const date_yesterday = mdyDate(addDays(LOCAL_TODAY(timeZoneIsUTCMidnight as string), -1));
+  const localTodayWithTimeZone = LOCAL_TODAY(timeZoneIsUTCMidnight as string)
+  const date_yesterday = mdyDate(addDays(localTodayWithTimeZone, -1));
   let events_missed_yesterday;
   if (timeZoneIsUTCMidnight) {
     events_missed_yesterday = await Event.find({
@@ -72,6 +74,14 @@ export const updateGoalsYesterday = async (
         );
         goal_left_channel?.delete();
       }
+
+      // check if they just completed their last weekly goal
+      readLastWeeklyGoal(user_id).then((res) => {
+        // compare only dates and not time
+        if (res?.adjustedEndDate.toISOString().split('T')[0] === localTodayWithTimeZone.toISOString().split('T')[0]) {
+          expiredGoalNotif(client, user_id, res)
+        }          
+      })
     });
   }
 };
