@@ -25,6 +25,10 @@ export class User extends BaseEntity {
   @Column()
   discordUsername!: string;
 
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  podId: number;
+
   @Field()
   @CreateDateColumn()
   createdAt: Date;

@@ -39,10 +39,6 @@ export class WeeklyGoal extends BaseEntity {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  podId: number;
-
-  @Field({ nullable: true })
-  @Column({ nullable: true })
   goalLeftChannelId: string;
 
   @Field()
