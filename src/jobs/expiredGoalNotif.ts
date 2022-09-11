@@ -8,10 +8,10 @@ export const expiredGoalNotif = async (
     discordId: string,
     weekly_goal: WeeklyGoal
 ) => {
-    console.log("expiredGoalNotif!!")
+    console.log("EXPIRED GOAL: ", weekly_goal)
     var Difference_In_Time = weekly_goal.adjustedEndDate.getTime() - weekly_goal.adjustedStartDate.getTime();
     // To calculate the no. of days between two dates
-    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+    var Difference_In_Days = (Difference_In_Time / (1000 * 3600 * 24)) + 1;
 
     const guild = client.guilds.cache.get(SERVER_ID as string);
     let selfPromoChannel = guild?.channels.cache.find(
@@ -21,7 +21,7 @@ export const expiredGoalNotif = async (
     let msg = await (
         client.channels.cache.get(selfPromoChannel?.id as string) as TextChannel
     ).send(
-    "🎉 " + `<@${discordId}>` + " has completed their " + Difference_In_Days + " days goal! 🎉\n" +
+    "🎉 " + `<@${discordId}>` + " has finished their " + Difference_In_Days + " days goal! 🎉\n" +
         "🚧 Goal: " + weekly_goal?.description + 
         "\n🖼 Evidence: " + weekly_goal?.evidence
     );

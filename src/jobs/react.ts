@@ -7,6 +7,7 @@ import { Event } from "../entities/Event";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { mdyDate } from "../utils/timeZoneUtil";
 import { expiredGoalNotif } from "./expiredGoalNotif";
+import { readLastActiveUserEvent } from "../utils/eventResolvers";
 
 export const reactToImages = (
   client: Client<boolean>,
@@ -52,10 +53,11 @@ export const reactToImages = (
         }, 1000 * 3);
 
         // check if they just completed their last weekly goal
-        readLastWeeklyGoal(user_id).then((res) => {
+        readLastActiveUserEvent(user_id).then(async (res) => {
           // compare only dates and not time
-          if (res?.adjustedEndDate.toISOString().split('T')[0] === localTodayWithTimeZone.toISOString().split('T')[0]) {
-            expiredGoalNotif(client, user_id, res)
+          if (res?.adjustedDate === date_today) {
+            let weekly_goal_res = await readLastWeeklyGoal(user_id)
+            expiredGoalNotif(client, user_id, weekly_goal_res as WeeklyGoal)
           }          
         })
       }

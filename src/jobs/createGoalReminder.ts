@@ -1,7 +1,7 @@
 import { Client } from "discord.js"
+import { readLastActiveUserEvent } from "../utils/eventResolvers"
 import { User } from "../entities/User"
 import { readAllUsers } from "../utils/userResolvers"
-import { readLastWeeklyGoal } from "../utils/weeklyGoalResolvers"
 
 export const createGoalReminder = async (
     client: Client<boolean>
@@ -12,7 +12,7 @@ export const createGoalReminder = async (
     users.forEach(async (userObject: User) => {
         let userOnServer = await client.users.fetch(userObject.discordId)
         if (userOnServer && !userOnServer.bot) {
-            const weeklyGoal = await readLastWeeklyGoal(userObject.discordId)
+            const weeklyGoal = await readLastActiveUserEvent(userObject.discordId)
 
             console.log("Weekly reminder being set to the following users")
             // if the user does not have an active weekly goal, send them this reminder
