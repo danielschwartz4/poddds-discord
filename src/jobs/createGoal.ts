@@ -55,7 +55,7 @@ export const createGoal = (
           const formattedDate = mdyDate(date);
 
           if (val === "on") {
-            Event.create({
+            await Event.create({
               adjustedDate: formattedDate,
               discordId: interaction.user.id,
               goalId: weekly_goal.id,
