@@ -18,7 +18,7 @@ export const updateGoalsToday = async (
   daily_updates_channel_id: string,
   timeZoneIsUTCMidnight?: string
 ) => {
-  updateGoalsYesterday(client, timeZoneIsUTCMidnight);
+  updateGoalsYesterday(timeZoneIsUTCMidnight);
 
   // add goalsChannels for today if there is no channel id and if it's their day
   const guild = client.guilds.cache.get(server_id);
