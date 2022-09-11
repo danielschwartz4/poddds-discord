@@ -2,8 +2,8 @@ import { ADMIN_USER_IDS, CLIENT } from "./discordScheduler";
 
 export const routeBotDMs = () => {
     // route DMs to bot to admins
-  CLIENT.on("messageCreate", async (msg) => {
-    if (!msg.author.bot) {
+  CLIENT.on("messageCreate", (msg) => {
+    if (!msg.author.bot && msg.guildId === null) {
       ADMIN_USER_IDS.forEach((val: string) => {
         CLIENT.users.fetch(val as string).then((user) => {
           user.send(
