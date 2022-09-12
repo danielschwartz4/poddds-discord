@@ -5,13 +5,6 @@ import { DAILY_UPDATES_CHAT_CHANNEL_ID } from "./discordScheduler";
 require("dotenv").config();
 
 export const dailySummary = async (client: Client) => {
-  console.log("HERE");
-  // const qb = AppDataSource.getRepository(WeeklyGoal)
-  //   .createQueryBuilder("g")
-  //   .innerJoinAndSelect("g.user", "u", 'u.id=g."userId"')
-  //   .orderBy("g.misses", "DESC")
-  //   .where('g."isActive" = true');
-  // const activeGoals = await qb.getMany();
   const activeGoals = await WeeklyGoal.find({
     where: {
       isActive: true,
