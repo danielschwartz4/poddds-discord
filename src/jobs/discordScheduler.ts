@@ -9,7 +9,8 @@ import { createBreak } from "./createBreak";
 import { createGoal } from "./createGoal";
 import { createGoalReminder } from "./createGoalReminder";
 import { dailySummary } from "./dailySummary";
-import { newMember } from "./newMember";
+import { assignPod } from "./newMember/assignPod";
+import { newMember } from "./newMember/newMember";
 import { reactToImages } from "./react";
 import { routeBotDMs } from "./routeBotDMs";
 import { updateGoalsToday } from "./updateGoalsToday";
@@ -38,17 +39,19 @@ export const CLIENT = new DiscordJS.Client({
     GatewayIntentBits.DirectMessageTyping,
     GatewayIntentBits.DirectMessageReactions,
   ],
-  partials: [Partials.Channel]
+  partials: [Partials.Channel],
 });
 
 async function discordBot() {
   CLIENT.on("ready", () => {
     console.log("The client bot is ready!");
-    console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-4")) // in EST
+    console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-4")); // in EST
 
     // migrateFromTaskDB()
     const guilds = CLIENT.guilds.cache.map((guild) => guild.id);
+    console.log("HERE");
     console.log(guilds);
+    assignPod(CLIENT);
 
     goalCommand(CLIENT, SERVER_ID as string);
     createGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
@@ -71,7 +74,7 @@ async function discordBot() {
     cron.schedule("1 */1 * * *", async () => {
       const gmt0Hours = TODAY().getUTCHours();
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
-      
+
       console.log(
         "UPDATING GOALS LEFT TODAY FOR TIME ZONE: ",
         timeZoneIsUTCMidnight,

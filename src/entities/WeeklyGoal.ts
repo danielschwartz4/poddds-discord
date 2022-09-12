@@ -1,5 +1,5 @@
 import { GraphQLJSONObject } from "graphql-type-json";
-import { DaysType } from "../types/dbTypes";
+import { DaysType, GoalType } from "../types/dbTypes";
 import { Field, Int, ObjectType } from "type-graphql";
 import {
   BaseEntity,
@@ -47,7 +47,15 @@ export class WeeklyGoal extends BaseEntity {
 
   @Field(() => GraphQLJSONObject, { nullable: true })
   @Column("jsonb", { nullable: true })
-  days!: DaysType;
+  days: DaysType;
+
+  @Field()
+  @Column({
+    type: "enum",
+    enum: ["exercise", "study"],
+    default: "exercise",
+  })
+  type: GoalType;
 
   @Field({ nullable: true })
   @Column({ nullable: true, default: "-5" })
