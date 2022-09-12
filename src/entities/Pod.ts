@@ -1,18 +1,11 @@
-import { GraphQLJSONObject } from "graphql-type-json";
-import { DaysType, GoalType } from "../types/dbTypes";
+import { GoalType } from "../types/dbTypes";
+
 import { Field, Int, ObjectType } from "type-graphql";
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
-import { User } from "./User";
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @ObjectType()
 @Entity()
-export class WeeklyGoal extends BaseEntity {
+export class Pod extends BaseEntity {
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id!: number;
@@ -36,8 +29,4 @@ export class WeeklyGoal extends BaseEntity {
   @Field({ nullable: true })
   @Column({ type: "timestamp with time zone", nullable: true })
   adjustedEndDate: Date;
-
-  @Field(() => User)
-  @ManyToOne(() => User, (user) => user.weeklyGoal)
-  user: User;
 }

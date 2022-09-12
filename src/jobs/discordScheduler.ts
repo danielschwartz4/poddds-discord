@@ -85,13 +85,13 @@ async function discordBot() {
         " AND TODAY AS: ",
         TODAY()
       );
-      updateGoalsToday(
+      await updateGoalsToday(
         CLIENT,
         SERVER_ID as string,
         DAILY_UPDATES_CHAT_CHANNEL_ID as string,
         timeZoneIsUTCMidnight
       );
-      autokick(CLIENT, SERVER_ID as string, timeZoneIsUTCMidnight);
+      await autokick(CLIENT, SERVER_ID as string, timeZoneIsUTCMidnight);
       // updateStreaks(
       //   client,
       //   SERVER_ID as string,
