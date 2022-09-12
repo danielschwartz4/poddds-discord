@@ -60,6 +60,7 @@ export const autokick = async (
       const user = await guild?.members.fetch(userId);
       user?.roles.add(kicked_role_id as Role);
       user?.roles.remove(podmate_role_id as Role);
+      WeeklyGoal.update({ discordId: userId }, { isActive: false });
     }
   });
 };
