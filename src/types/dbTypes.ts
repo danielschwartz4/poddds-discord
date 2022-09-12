@@ -7,3 +7,5 @@ export type DaysType = {
   friday: boolean;
   saturday: boolean;
 };
+
+export type GoalType = "exercise" | "study";
