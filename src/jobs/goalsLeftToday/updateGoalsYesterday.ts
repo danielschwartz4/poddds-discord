@@ -1,16 +1,18 @@
-import { Client } from "discord.js";
 import { addDays, mdyDate } from "../../utils/timeZoneUtil";
 import { IsNull, Not } from "typeorm";
 import { Event } from "../../entities/Event";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
-import { TODAY } from "../../constants";
+import { LOCAL_TODAY } from "../../constants";
+import { readLastWeeklyGoal } from "../../utils/weeklyGoalResolvers";
+import { expiredGoalNotif } from "../expiredGoalNotif";
+import { readLastActiveUserEvent } from "../../utils/eventResolvers";
+import { CLIENT } from "../discordScheduler";
 
 export const updateGoalsYesterday = async (
-  client: Client<boolean>,
   timeZoneIsUTCMidnight?: string
 ) => {
-  // const date_yesterday = moment().subtract(1, "days").format("l");
-  const date_yesterday = mdyDate(addDays(TODAY(), -1));
+  const localTodayWithTimeZone = LOCAL_TODAY(timeZoneIsUTCMidnight as string)
+  const date_yesterday = mdyDate(addDays(localTodayWithTimeZone, -1));
   let events_missed_yesterday;
   if (timeZoneIsUTCMidnight) {
     events_missed_yesterday = await Event.find({
@@ -35,7 +37,7 @@ export const updateGoalsYesterday = async (
   if (events_missed_yesterday.length) {
     events_missed_yesterday.forEach(async (event: Event) => {
       let user_id = event.discordId;
-      const goal_left_channel = client.channels.cache.get(
+      const goal_left_channel = CLIENT.channels.cache.get(
         event.goalLeftChannelId
       );
       if (!goal_left_channel) {
@@ -72,6 +74,17 @@ export const updateGoalsYesterday = async (
         );
         goal_left_channel?.delete();
       }
+
+      // check if they just completed their last weekly goal
+      readLastActiveUserEvent(user_id).then(async (res) => {
+        // compare only dates and not time
+        if (res?.adjustedDate === date_yesterday) {
+          let weekly_goal_res = await readLastWeeklyGoal(user_id)
+          if (weekly_goal_res) { // if weekly goal is already set to inactive, don't send it
+            expiredGoalNotif(CLIENT, user_id, weekly_goal_res as WeeklyGoal)
+          }
+        }          
+      })
     });
   }
 };

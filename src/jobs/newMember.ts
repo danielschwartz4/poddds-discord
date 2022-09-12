@@ -11,6 +11,14 @@ export const newMember = (client: Client<boolean>) => {
 
     user.roles.add(new_member_role_id as Role);
 
+    // intro message
+    client.users.fetch(user.id).then(async (user) => {
+      user.send(
+        "what’s up " + `<@${user.id}>` +
+        "! mod from poddds here 👋\nmake a goal in #💪weekly-goals-setting to get access to the rest of the server. let me know if you have any questions 🎉"
+      );
+    });
+
     // add member id and stuff to DB
     const newUser = await User.find({ where: { discordId: user.id } });
     console.log(newUser);
