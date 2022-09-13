@@ -89,7 +89,7 @@ export const updateGoalsToday = async (
           permissionOverwrites: channel_permission_overwrites,
           parent: category_channel?.id,
         })
-        .then((goal_left_channel_id) => {
+        .then(async (goal_left_channel_id) => {
           if (weekly_goal?.description) {
             (
               client.channels.cache.get(goal_left_channel_id.id) as TextChannel
@@ -101,10 +101,12 @@ export const updateGoalsToday = async (
                 "\n🖼 Evidence: " + weekly_goal?.evidence
             );
           }
-          Event.update(
+          let res = await Event.update(
             { discordId: user_id, adjustedDate: date_today, isActive: true },
             { goalLeftChannelId: goal_left_channel_id.id as string }
           );
+          console.log("NEW EVENT FOR USER ", user_id)
+          console.log(res)
         });
     }
   });

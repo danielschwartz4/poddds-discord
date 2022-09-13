@@ -11,6 +11,7 @@ import { CLIENT } from "../discordScheduler";
 export const updateGoalsYesterday = async (
   timeZoneIsUTCMidnight?: string
 ) => {
+  console.log("updating goals yesterday for timezone ", timeZoneIsUTCMidnight)
   const localTodayWithTimeZone = LOCAL_TODAY(timeZoneIsUTCMidnight as string)
   const date_yesterday = mdyDate(addDays(localTodayWithTimeZone, -1));
   let events_missed_yesterday;
@@ -68,10 +69,13 @@ export const updateGoalsYesterday = async (
         const weekly_goal = await WeeklyGoal.findOne({
           where: { discordId: user_id, isActive: true },
         });
-        WeeklyGoal.update(
-          { discordId: user_id, isActive: true },
-          { misses: (weekly_goal?.misses as number) + 1 }
-        );
+        if (weekly_goal) {
+          WeeklyGoal.update(
+            { discordId: user_id, isActive: true },
+            { misses: (weekly_goal?.misses as number) + 1 }
+          );
+        }
+        
         goal_left_channel?.delete();
       }
 
