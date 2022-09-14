@@ -1,7 +1,14 @@
 import { GoalType } from "../types/dbTypes";
 
 import { Field, Int, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
 @ObjectType()
 @Entity()
@@ -22,11 +29,11 @@ export class Pod extends BaseEntity {
   })
   type: GoalType;
 
-  @Field({ nullable: true })
-  @Column({ type: "timestamp with time zone", nullable: true })
-  adjustedStartDate: Date;
+  @Field()
+  @CreateDateColumn()
+  createdAt: Date;
 
-  @Field({ nullable: true })
-  @Column({ type: "timestamp with time zone", nullable: true })
-  adjustedEndDate: Date;
+  @Field()
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

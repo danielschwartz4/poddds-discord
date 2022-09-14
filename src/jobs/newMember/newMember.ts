@@ -11,9 +11,6 @@ export const newMember = (client: Client<boolean>) => {
 
     user.roles.add(new_member_role_id as Role);
 
-    // assign member to pod
-    // assignPod(client);
-
     // intro message
     client.users.fetch(user.id).then(async (user) => {
       user.send(

@@ -27,7 +27,11 @@ export class User extends BaseEntity {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  podId: number;
+  exercisePodId: number;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  studyPodId: number;
 
   @Field()
   @CreateDateColumn()
