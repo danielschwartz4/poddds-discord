@@ -33,7 +33,7 @@ export const autokick = async (
           client.users.fetch(val as string).then((user) => {
             user.send(
               "poddds -- AUTOMATIC WARNING MESSAGE sent to " +
-                user.username +
+                userId +
                 " because they missed their weekly goal 3 days in a row"
             );
           });

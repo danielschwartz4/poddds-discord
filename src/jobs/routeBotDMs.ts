@@ -1,15 +1,16 @@
 import { ADMIN_USER_IDS, CLIENT } from "./discordScheduler";
 
 export const routeBotDMs = () => {
-    // route DMs to bot to admins
+  // route DMs to bot to admins
   CLIENT.on("messageCreate", (msg) => {
     if (!msg.author.bot && msg.guildId === null) {
       ADMIN_USER_IDS.forEach((val: string) => {
         CLIENT.users.fetch(val as string).then((user) => {
           user.send(
             "poddds -- DM message to bot from " +
-              user.username +
-              " that said: \n" + msg.content
+              msg.author.username +
+              " that said: \n" +
+              msg.content
           );
         });
       });
@@ -17,5 +18,5 @@ export const routeBotDMs = () => {
         msg.react("👍");
       }, 1000 * 3);
     }
-  })
-}
+  });
+};
