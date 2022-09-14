@@ -1,4 +1,5 @@
 import { Client, GuildMember, Role } from "discord.js";
+import { GoalType } from "src/types/dbTypes";
 import { LOCAL_TODAY } from "../../constants";
 import { Event } from "../../entities/Event";
 import { User } from "../../entities/User";
@@ -13,15 +14,23 @@ import { deactivateGoalsAndEvents } from "../goalsLeftToday/deactivateGoals";
 import { assignPod } from "../newMember/assignPod";
 import { parseGoalResponse } from "./goalUtils";
 
-export const createExerciseGoal = (
+export const createGoal = (
   client: Client<boolean>,
   admin_ids: string[],
   server_id: string
 ) => {
   client.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
-    // !! Do type thing
+    let type;
     if (interaction.commandName === "set-current-exercise-goal") {
+      type = "exercise";
+    } else if (interaction.commandName === "set-current-study-goal") {
+      type = "study";
+    }
+    if (
+      interaction.commandName === "set-current-exercise-goal" ||
+      interaction.commandName === "set-current-study-goal"
+    ) {
       const cleanedData = transformInteractionData(
         interaction.options.data as GoalResponse[]
       );
@@ -53,7 +62,7 @@ export const createExerciseGoal = (
           isActive: true,
           timeZone: flipSign(cleanedData["time-zone"]),
           userId: user?.id,
-          type: "exercise",
+          type: type as GoalType,
         }).save();
         for (let i = 1; i <= parseInt(cleanedData["duration"]); i++) {
           const date = addDays(localTodayWithTimeZone, i);
@@ -76,7 +85,8 @@ export const createExerciseGoal = (
       const guild = client.guilds.cache.get(server_id);
       const user = await guild?.members.fetch(interaction.user.id);
       console.log("BEFORE ASSIGN POD");
-      assignPod("exercise", user as GuildMember);
+      // Assign user to pod
+      assignPod(type as GoalType, user as GuildMember);
       if (user?.roles.cache.some((role) => role.name === "new member")) {
         // Notify admins of new podmate
         admin_ids.forEach((val) => {

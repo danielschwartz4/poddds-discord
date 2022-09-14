@@ -1,9 +1,6 @@
 import { Client } from "discord.js";
 
-export const exerciseGoalCommand = (
-  client: Client<boolean>,
-  serverId: string
-) => {
+export const studyGoalCommand = (client: Client<boolean>, serverId: string) => {
   const guild = client.guilds.cache.get(serverId);
   let commands;
   if (guild) {

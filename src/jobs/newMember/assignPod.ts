@@ -37,8 +37,9 @@ export const assignPod = async (type: GoalType, user: GuildMember) => {
     }).save();
     if (pod) {
       console.log(pod?.id);
-      // !! Change for study type
-      User.update({ discordId: user.id }, { exercisePodId: pod?.id });
+      type == "exercise"
+        ? User.update({ discordId: user?.id }, { exercisePodId: pod?.id })
+        : User.update({ discordId: user?.id }, { studyPodId: pod?.id });
       const role_id = await user?.guild?.roles.create({
         name: type + pod?.id,
         color: "Random",
@@ -49,11 +50,16 @@ export const assignPod = async (type: GoalType, user: GuildMember) => {
   } else {
     // 1. Change users podId and increment pod numMembers
     // !! 2. Assign user role BY TIMEZONE
-    User.update({ discordId: user.id }, { exercisePodId: pod?.id });
+    type == "exercise"
+      ? User.update({ discordId: user?.id }, { exercisePodId: pod?.id })
+      : User.update({ discordId: user?.id }, { studyPodId: pod?.id });
     Pod.update({ id: pod?.id }, { numMembers: pod?.numMembers + 1 });
+    console.log("type + pod?.id");
+    console.log(type + pod?.id);
     let role_id = user?.guild?.roles?.cache.find(
       (r) => r.name === type + pod?.id
     );
+    console.log(role_id);
     user?.roles?.add(role_id as Role);
   }
 };

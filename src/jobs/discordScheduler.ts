@@ -1,14 +1,14 @@
 import DiscordJS, { GatewayIntentBits, Partials } from "discord.js";
 import cron from "node-cron";
-import { exerciseGoalCommand } from "../commands/exerciseGoalCommand";
 import { breakCommand } from "../commands/breakCommand";
-import { goalCommand } from "../commands/goalCommand";
+import { exerciseGoalCommand } from "../commands/exerciseGoalCommand";
+import { studyGoalCommand } from "../commands/studyGoalCommand";
+
 import { LOCAL_TODAY, TODAY, __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { autokick } from "./autokick";
 import { createBreak } from "./createBreak";
-import { createGoal } from "./createGoal";
-import { createExerciseGoal } from "./createGoal/createExerciseGoal";
+import { createGoal } from "./createGoal/createExerciseGoal";
 import { createGoalReminder } from "./createGoalReminder";
 import { dailySummary } from "./dailySummary";
 import { newMember } from "./newMember/newMember";
@@ -49,14 +49,10 @@ async function discordBot() {
     console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-4")); // in EST
 
     // migrateFromTaskDB()
-    const guilds = CLIENT.guilds.cache.map((guild) => guild.id);
 
-    // assignPod(CLIENT);
-
-    // goalCommand(CLIENT, SERVER_ID as string);
-    // createGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
     exerciseGoalCommand(CLIENT, SERVER_ID as string);
-    createExerciseGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
+    studyGoalCommand(CLIENT, SERVER_ID as string);
+    createGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
     breakCommand(CLIENT, SERVER_ID as string);
     createBreak(CLIENT);
     // addExistingMembers(client, SERVER_ID as string);
