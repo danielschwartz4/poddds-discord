@@ -23,7 +23,7 @@ export const createGoal = (
         interaction.options.data as GoalResponse[]
       );
       const timeZone = cleanedData["time-zone"]
-      const localTodayWithTimeZone = LOCAL_TODAY(timeZone)
+      const localTodayWithTimeZone = LOCAL_TODAY(flipSign(timeZone))
 
       const resp = parseGoalResponse(interaction, cleanedData);
       interaction.reply(resp);
@@ -34,7 +34,7 @@ export const createGoal = (
         });
         // get day of the week
         const daysObj = buildDays(cleanedData);
-        const startDate = addDays((localTodayWithTimeZone), 1);
+        const startDate = localTodayWithTimeZone;
         const endDate = addDays(localTodayWithTimeZone, parseInt(cleanedData["duration"]));
         deactivateGoalsAndEvents(interaction?.user?.id);
         const weekly_goal = await WeeklyGoal.create({

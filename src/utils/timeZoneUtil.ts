@@ -1,14 +1,24 @@
 import { TODAY } from "../constants";
 
 // Change timezone given gmt (e.g. -6)
-export function changeTimeZone(date: Date, timeZone: string) {
-  let timeZoneString = "Etc/GMT" + timeZone;
-  let returnObject = date.toLocaleString("en-US", {
-    timeZone: timeZoneString,
-    // timeZone: "Etc/GMT-1",
-  });
+export function changeTimeZone(dateUTC: Date, timeZone: string) {
+  let timeZoneFlipped = flipSign(timeZone)
+    let localDateObject = dateUTC.toLocaleString("en-GB", {
+        timeZone: "Etc/GMT" + timeZoneFlipped,
+    })
 
-  return returnObject;
+    // reformat into ISO time
+    let splitDateTime = localDateObject.split(", ")
+    let splitDate = splitDateTime[0].split("/")
+    let Y = splitDate[2]
+    let D = splitDate[0]
+    let M = splitDate[1]
+    let date = Y + "-" + M + "-" + D
+    let localTime = splitDateTime[1]
+    let newLocalDateObject = new Date(date + "T" + localTime + "Z")
+
+    return newLocalDateObject;
+}
 }
 
 // Add days to date

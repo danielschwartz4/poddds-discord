@@ -8,7 +8,7 @@ export const TODAY = () => {
 
 export const LOCAL_TODAY = (timeZone: string) => {
     let timeZoneFlipped = flipSign(timeZone)
-    let localDateObject = new Date().toLocaleString("en-GB", {
+    let localDateObject = addDays(new Date(), 0).toLocaleString("en-GB", {
         timeZone: "Etc/GMT" + timeZoneFlipped,
     })
 

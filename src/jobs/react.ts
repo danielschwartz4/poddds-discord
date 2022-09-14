@@ -1,13 +1,11 @@
 // react with some emojis if there's an image
 
 import { Client } from "discord.js";
-import { readLastWeeklyGoal } from "../utils/weeklyGoalResolvers";
 import { LOCAL_TODAY } from "../constants";
 import { Event } from "../entities/Event";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { mdyDate } from "../utils/timeZoneUtil";
-import { expiredGoalNotif } from "./expiredGoalNotif";
-import { readLastActiveUserEvent } from "../utils/eventResolvers";
+import { checkIfLastGoal } from "./goalsLeftToday/checkIfLastGoal";
 
 export const reactToImages = (
   client: Client<boolean>,
@@ -53,13 +51,7 @@ export const reactToImages = (
         }, 1000 * 3);
 
         // check if they just completed their last weekly goal
-        readLastActiveUserEvent(user_id).then(async (res) => {
-          // compare only dates and not time
-          if (res?.adjustedDate === date_today) {
-            let weekly_goal_res = await readLastWeeklyGoal(user_id)
-            expiredGoalNotif(client, user_id, weekly_goal_res as WeeklyGoal)
-          }          
-        })
+        checkIfLastGoal(user_id, date_today)
       }
 
       setTimeout(() => {

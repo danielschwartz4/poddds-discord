@@ -11,7 +11,7 @@ export const expiredGoalNotif = async (
     console.log("EXPIRED GOAL: ", weekly_goal)
     var Difference_In_Time = weekly_goal.adjustedEndDate.getTime() - weekly_goal.adjustedStartDate.getTime();
     // To calculate the no. of days between two dates
-    var Difference_In_Days = (Difference_In_Time / (1000 * 3600 * 24)) + 1;
+    var Difference_In_Days = (Difference_In_Time / (1000 * 3600 * 24));
 
     const guild = client.guilds.cache.get(SERVER_ID as string);
     let selfPromoChannel = guild?.channels.cache.find(

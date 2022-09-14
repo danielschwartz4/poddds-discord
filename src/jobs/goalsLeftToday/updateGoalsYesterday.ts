@@ -3,10 +3,8 @@ import { IsNull, Not } from "typeorm";
 import { Event } from "../../entities/Event";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { LOCAL_TODAY } from "../../constants";
-import { readLastWeeklyGoal } from "../../utils/weeklyGoalResolvers";
-import { expiredGoalNotif } from "../expiredGoalNotif";
-import { readLastActiveUserEvent } from "../../utils/eventResolvers";
 import { CLIENT } from "../discordScheduler";
+import { checkIfLastGoal } from "./checkIfLastGoal";
 
 export const updateGoalsYesterday = async (
   timeZoneIsUTCMidnight?: string
@@ -33,6 +31,19 @@ export const updateGoalsYesterday = async (
       },
     });
   }
+
+  // COMPLETED GOAL NOTIFICATION: check all users weekly goal in that time zone just in case they had a break
+  let activeWeeklyGoalsInTimezone = await WeeklyGoal.find({ where: {
+    isActive: true,
+    timeZone: timeZoneIsUTCMidnight
+  }})
+  activeWeeklyGoalsInTimezone.forEach((res) => {
+    checkIfLastGoal(res.discordId, date_yesterday)
+  })
+
+  // debugging messages
+  console.log("HERE WERE THE EVENTS MISSED YESTERDAY:")
+  console.log(events_missed_yesterday)
 
   // Goes through all goalLeftChannels and then if the channel exists, it'll mark it as +1 misses, otherwise, it won't do anything
   if (events_missed_yesterday.length) {
@@ -78,17 +89,6 @@ export const updateGoalsYesterday = async (
         
         goal_left_channel?.delete();
       }
-
-      // check if they just completed their last weekly goal
-      readLastActiveUserEvent(user_id).then(async (res) => {
-        // compare only dates and not time
-        if (res?.adjustedDate === date_yesterday) {
-          let weekly_goal_res = await readLastWeeklyGoal(user_id)
-          if (weekly_goal_res) { // if weekly goal is already set to inactive, don't send it
-            expiredGoalNotif(CLIENT, user_id, weekly_goal_res as WeeklyGoal)
-          }
-        }          
-      })
     });
   }
 };

@@ -18,7 +18,7 @@ export const updateGoalsToday = async (
   daily_updates_channel_id: string,
   timeZoneIsUTCMidnight?: string
 ) => {
-  updateGoalsYesterday(timeZoneIsUTCMidnight);
+  await updateGoalsYesterday(timeZoneIsUTCMidnight);
 
   // add goalsChannels for today if there is no channel id and if it's their day
   const guild = client.guilds.cache.get(server_id);
@@ -45,7 +45,7 @@ export const updateGoalsToday = async (
       },
     });
   }
-  console.log("HERE ARE EVENTS THAT WILL BE UPDATED TO IS ACTIVE AND POSTED WHERE TODAY IS: ", date_today)
+  console.log("HERE ARE EVENTS THAT WILL BE UPDATED TO IS ACTIVE AND POSTED WHERE TODAY IS: ", date_today, " FOR TIMEZONE ", timeZoneIsUTCMidnight)
   console.log(events_for_day);
 
   // Create a channel in the "GOALS LEFT TODAY" category
@@ -105,7 +105,7 @@ export const updateGoalsToday = async (
             { discordId: user_id, adjustedDate: date_today, isActive: true },
             { goalLeftChannelId: goal_left_channel_id.id as string }
           );
-          console.log("NEW EVENT FOR USER ", user_id)
+          console.log("NEW EVENT WITH GOAL LEFT CHANNEL ID UPDATED FOR USER ", user_id, " ON ", date_today)
           console.log(res)
         });
     }
