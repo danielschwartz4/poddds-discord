@@ -50,7 +50,7 @@ async function discordBot() {
     console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-4")); // in EST
 
     // migrateFromTaskDB()
-    const guilds = CLIENT.guilds.cache.map((guild) => guild.id);
+    // const guilds = CLIENT.guilds.cache.map((guild) => guild.id);
 
     goalCommand(CLIENT, SERVER_ID as string);
     createGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
