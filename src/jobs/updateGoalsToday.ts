@@ -10,6 +10,7 @@ import { Event } from "../entities/Event";
 import { User } from "../entities/User";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { mdyDate } from "../utils/timeZoneUtil";
+import { deactivateGoalsAndEvents } from "./goalsLeftToday/deactivateGoals";
 import { updateGoalsYesterday } from "./goalsLeftToday/updateGoalsYesterday";
 
 export const updateGoalsToday = async (
@@ -77,11 +78,18 @@ export const updateGoalsToday = async (
   // Create a channel for each event due today
   events_for_day.forEach(async (event: Event) => {
     let user_id = event.discordId;
+
+    // if their role isn't a podmate, then deactivate their goals
+    let userDiscordObject = await guild?.members.fetch(user_id);
+    if (userDiscordObject && userDiscordObject?.roles.cache.some((role) => role.name !== "podmate")) {
+      deactivateGoalsAndEvents(user_id)
+    }
+
     let user = await User.findOne({ where: { discordId: user_id } });
     let weekly_goal = await WeeklyGoal.findOne({
       where: { id: event.goalId, isActive: true },
     });
-    if (user) {
+    if (user && weekly_goal) {
       guild?.channels
         .create({
           name: user.discordUsername,
