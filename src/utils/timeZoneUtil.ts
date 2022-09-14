@@ -19,7 +19,6 @@ export function changeTimeZone(dateUTC: Date, timeZone: string) {
 
     return newLocalDateObject;
 }
-}
 
 // Add days to date
 export const addDays = (date: Date, days: number) => {
