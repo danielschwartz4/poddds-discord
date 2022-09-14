@@ -102,8 +102,8 @@ export const updateGoalsToday = async (
             (
               client.channels.cache.get(goal_left_channel_id.id) as TextChannel
             ).send(
-              `<@${user?.discordId}>` +
-                "\nToday's your day! Complete part of your weekly goal by sending a picture of evidence in: " +
+              // `<@${user?.discordId}>` +
+                "Today's your day! Complete part of your weekly goal by sending a picture of evidence in: " +
                 `<#${daily_updates_channel_id}>\n` +
                 "🚧 Goal: " + weekly_goal?.description + 
                 "\n🖼 Evidence: " + weekly_goal?.evidence
