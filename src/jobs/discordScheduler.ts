@@ -6,15 +6,15 @@ import { studyGoalCommand } from "../commands/studyGoalCommand";
 
 import { LOCAL_TODAY, TODAY, __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
-import { autokick } from "./autokick";
+import { autokick } from "./member/kickMember";
 import { createBreak } from "./createBreak";
-import { createGoal } from "./createGoal/createExerciseGoal";
-import { createGoalReminder } from "./createGoalReminder";
+import { createGoal } from "./goal/createGoal";
+import { createGoalReminder } from "./goal/createGoalReminder";
 import { dailySummary } from "./dailySummary";
-import { newMember } from "./newMember/newMember";
+import { newMember } from "./member/newMember";
 import { reactToImages } from "./react";
 import { routeBotDMs } from "./routeBotDMs";
-import { updateGoalsToday } from "./updateGoalsToday";
+import { updateGoalsToday } from "./goal/updateGoalsToday";
 require("dotenv").config();
 
 // NOTE: Ensure that you invite the bot to every channel or make them admin

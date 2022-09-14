@@ -1,6 +1,6 @@
 import { Client, Role } from "discord.js";
-import { WeeklyGoal } from "../entities/WeeklyGoal";
-import { ADMIN_USER_IDS } from "./discordScheduler";
+import { WeeklyGoal } from "../../entities/WeeklyGoal";
+import { ADMIN_USER_IDS } from "../discordScheduler";
 
 export const autokick = async (
   client: Client<boolean>,

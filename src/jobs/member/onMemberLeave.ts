@@ -1,7 +1,7 @@
-import { WeeklyGoal } from "../entities/WeeklyGoal";
-import { Event } from "../entities/Event";
+import { WeeklyGoal } from "../../entities/WeeklyGoal";
+import { Event } from "../../entities/Event";
 
-import { ADMIN_USER_IDS, CLIENT } from "./discordScheduler";
+import { ADMIN_USER_IDS, CLIENT } from "../discordScheduler";
 
 export const onMemberLeave = () => {
   CLIENT.on("guildMemberRemove", (member) => {

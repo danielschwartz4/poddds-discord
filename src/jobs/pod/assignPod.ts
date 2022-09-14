@@ -3,8 +3,13 @@ import { LessThan } from "typeorm";
 import { Pod } from "../../entities/Pod";
 import { User } from "../../entities/User";
 import { GoalType } from "../../types/dbTypes";
+import { createPodCategory } from "./createPodCategory";
 
-export const assignPod = async (type: GoalType, user: GuildMember) => {
+export const assignPod = async (
+  type: GoalType,
+  user: GuildMember,
+  resp: string
+) => {
   const dbUser = await User.findOne({
     where: {
       discordId: user?.id,
@@ -31,24 +36,26 @@ export const assignPod = async (type: GoalType, user: GuildMember) => {
     // 2. Change user's podId
     // 3. Add new pod role
     // 4. Assign user role
+    // !! send resp to goals channel
     const pod = await Pod.create({
       numMembers: 1,
       type: type,
     }).save();
     if (pod) {
-      console.log(pod?.id);
       type == "exercise"
-        ? User.update({ discordId: user?.id }, { exercisePodId: pod?.id })
-        : User.update({ discordId: user?.id }, { studyPodId: pod?.id });
+        ? await User.update({ discordId: user?.id }, { exercisePodId: pod?.id })
+        : await User.update({ discordId: user?.id }, { studyPodId: pod?.id });
       const role_id = await user?.guild?.roles.create({
         name: type + pod?.id,
         color: "Random",
         reason: "This pod is for " + type + "!",
       });
-      user?.roles?.add(role_id as Role);
+      const userRole = await user?.roles?.add(role_id as Role);
+      await createPodCategory(type, pod?.id);
     }
   } else {
     // 1. Change users podId and increment pod numMembers
+    // !! send resp to goals channel
     // !! 2. Assign user role BY TIMEZONE
     type == "exercise"
       ? User.update({ discordId: user?.id }, { exercisePodId: pod?.id })
@@ -59,7 +66,6 @@ export const assignPod = async (type: GoalType, user: GuildMember) => {
     let role_id = user?.guild?.roles?.cache.find(
       (r) => r.name === type + pod?.id
     );
-    console.log(role_id);
-    user?.roles?.add(role_id as Role);
+    await user?.roles?.add(role_id as Role);
   }
 };

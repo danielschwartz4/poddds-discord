@@ -11,7 +11,7 @@ import {
 } from "../../utils/interactionData";
 import { addDays, flipSign, int2day, mdyDate } from "../../utils/timeZoneUtil";
 import { deactivateGoalsAndEvents } from "../goalsLeftToday/deactivateGoals";
-import { assignPod } from "../newMember/assignPod";
+import { assignPod } from "../pod/assignPod";
 import { parseGoalResponse } from "./goalUtils";
 
 export const createGoal = (
@@ -85,8 +85,8 @@ export const createGoal = (
       const guild = client.guilds.cache.get(server_id);
       const user = await guild?.members.fetch(interaction.user.id);
       console.log("BEFORE ASSIGN POD");
-      // Assign user to pod
-      assignPod(type as GoalType, user as GuildMember);
+      // Assign user to pod and send resp to that goals channel
+      assignPod(type as GoalType, user as GuildMember, resp);
       if (user?.roles.cache.some((role) => role.name === "new member")) {
         // Notify admins of new podmate
         admin_ids.forEach((val) => {

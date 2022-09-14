@@ -5,12 +5,12 @@ import {
   TextChannel,
 } from "discord.js";
 import { IsNull } from "typeorm";
-import { LOCAL_TODAY } from "../constants";
-import { Event } from "../entities/Event";
-import { User } from "../entities/User";
-import { WeeklyGoal } from "../entities/WeeklyGoal";
-import { mdyDate } from "../utils/timeZoneUtil";
-import { updateGoalsYesterday } from "./goalsLeftToday/updateGoalsYesterday";
+import { LOCAL_TODAY } from "../../constants";
+import { Event } from "../../entities/Event";
+import { User } from "../../entities/User";
+import { WeeklyGoal } from "../../entities/WeeklyGoal";
+import { mdyDate } from "../../utils/timeZoneUtil";
+import { updateGoalsYesterday } from "../goalsLeftToday/updateGoalsYesterday";
 
 export const updateGoalsToday = async (
   client: Client<boolean>,
@@ -45,7 +45,10 @@ export const updateGoalsToday = async (
       },
     });
   }
-  console.log("HERE ARE EVENTS THAT WILL BE UPDATED TO IS ACTIVE AND POSTED WHERE TODAY IS: ", date_today)
+  console.log(
+    "HERE ARE EVENTS THAT WILL BE UPDATED TO IS ACTIVE AND POSTED WHERE TODAY IS: ",
+    date_today
+  );
   console.log(events_for_day);
 
   // Create a channel in the "GOALS LEFT TODAY" category
@@ -97,8 +100,10 @@ export const updateGoalsToday = async (
               `<@${user?.discordId}>` +
                 "\nToday's your day! Complete part of your weekly goal by sending a picture of evidence in: " +
                 `<#${daily_updates_channel_id}>\n` +
-                "🚧 Goal: " + weekly_goal?.description + 
-                "\n🖼 Evidence: " + weekly_goal?.evidence
+                "🚧 Goal: " +
+                weekly_goal?.description +
+                "\n🖼 Evidence: " +
+                weekly_goal?.evidence
             );
           }
           Event.update(

@@ -4,14 +4,12 @@ import { Event } from "../../entities/Event";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { LOCAL_TODAY } from "../../constants";
 import { readLastWeeklyGoal } from "../../utils/weeklyGoalResolvers";
-import { expiredGoalNotif } from "../expiredGoalNotif";
+import { expiredGoalNotif } from "../goal/expiredGoalNotif";
 import { readLastActiveUserEvent } from "../../utils/eventResolvers";
 import { CLIENT } from "../discordScheduler";
 
-export const updateGoalsYesterday = async (
-  timeZoneIsUTCMidnight?: string
-) => {
-  const localTodayWithTimeZone = LOCAL_TODAY(timeZoneIsUTCMidnight as string)
+export const updateGoalsYesterday = async (timeZoneIsUTCMidnight?: string) => {
+  const localTodayWithTimeZone = LOCAL_TODAY(timeZoneIsUTCMidnight as string);
   const date_yesterday = mdyDate(addDays(localTodayWithTimeZone, -1));
   let events_missed_yesterday;
   if (timeZoneIsUTCMidnight) {
@@ -79,12 +77,13 @@ export const updateGoalsYesterday = async (
       readLastActiveUserEvent(user_id).then(async (res) => {
         // compare only dates and not time
         if (res?.adjustedDate === date_yesterday) {
-          let weekly_goal_res = await readLastWeeklyGoal(user_id)
-          if (weekly_goal_res) { // if weekly goal is already set to inactive, don't send it
-            expiredGoalNotif(CLIENT, user_id, weekly_goal_res as WeeklyGoal)
+          let weekly_goal_res = await readLastWeeklyGoal(user_id);
+          if (weekly_goal_res) {
+            // if weekly goal is already set to inactive, don't send it
+            expiredGoalNotif(CLIENT, user_id, weekly_goal_res as WeeklyGoal);
           }
-        }          
-      })
+        }
+      });
     });
   }
 };
