@@ -17,17 +17,19 @@ export const updateGoalsYesterday = async (
     events_missed_yesterday = await Event.find({
       where: {
         adjustedDate: date_yesterday,
-        goalLeftChannelId: Not(IsNull() || ""),
+        goalLeftChannelId: Not(IsNull() || ''),
         timeZone: timeZoneIsUTCMidnight,
         isActive: true,
+        completed: false,
       },
     });
   } else {
     events_missed_yesterday = await Event.find({
       where: {
         adjustedDate: date_yesterday,
-        goalLeftChannelId: Not(IsNull() || ""),
+        goalLeftChannelId: Not(IsNull() || ''),
         isActive: true,
+        completed: false,
       },
     });
   }

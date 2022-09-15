@@ -1,5 +1,6 @@
-import DiscordJS, { GatewayIntentBits, Partials } from "discord.js";
+import DiscordJS, {  GatewayIntentBits, Partials } from "discord.js";
 import cron from "node-cron";
+import { updateWeeklyGoalAndEventsActive } from "src/utils/weeklyGoalResolvers";
 import { breakCommand } from "../commands/breakCommand";
 import { goalCommand } from "../commands/goalCommand";
 import { LOCAL_TODAY, TODAY, __prod__ } from "../constants";
@@ -52,6 +53,34 @@ async function discordBot() {
     // migrateFromTaskDB()
     // const guilds = CLIENT.guilds.cache.map((guild) => guild.id);
 
+    // set goal ids of people to active that were mistakenly set to inactive
+    const goal_ids_to_reset = [
+      175,
+174,
+173,
+172,
+171,
+170,
+169,
+168,
+167, 
+166,
+165,
+163,
+162,
+160,
+157,
+150, 
+149,
+82,
+63,
+110,
+    ]
+    goal_ids_to_reset.forEach((goal_id) => {
+      console.log("updating this goal", goal_id)
+      updateWeeklyGoalAndEventsActive(goal_id)
+    })
+
     goalCommand(CLIENT, SERVER_ID as string);
     createGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
     breakCommand(CLIENT, SERVER_ID as string);
@@ -85,9 +114,6 @@ async function discordBot() {
         TODAY()
       );
       await updateGoalsToday(
-        CLIENT,
-        SERVER_ID as string,
-        DAILY_UPDATES_CHAT_CHANNEL_ID as string,
         timeZoneIsUTCMidnight
       );
       await autokick(CLIENT, SERVER_ID as string, timeZoneIsUTCMidnight);

@@ -1,6 +1,5 @@
 import {
   ChannelType,
-  Client,
   PermissionsBitField,
   TextChannel,
 } from "discord.js";
@@ -10,19 +9,17 @@ import { Event } from "../entities/Event";
 import { User } from "../entities/User";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { mdyDate } from "../utils/timeZoneUtil";
+import { CLIENT, DAILY_UPDATES_CHAT_CHANNEL_ID, SERVER_ID } from "./discordScheduler";
 import { deactivateGoalsAndEvents } from "./goalsLeftToday/deactivateGoals";
 import { updateGoalsYesterday } from "./goalsLeftToday/updateGoalsYesterday";
 
 export const updateGoalsToday = async (
-  client: Client<boolean>,
-  server_id: string,
-  daily_updates_channel_id: string,
   timeZoneIsUTCMidnight?: string
 ) => {
   await updateGoalsYesterday(timeZoneIsUTCMidnight);
 
   // add goalsChannels for today if there is no channel id and if it's their day
-  const guild = client.guilds.cache.get(server_id);
+  const guild = CLIENT.guilds.cache.get(SERVER_ID as string);
   const date_today = mdyDate(LOCAL_TODAY(timeZoneIsUTCMidnight as string)); // use local today because you want to find the local date based on the timezone and update and display that
   let events_for_day;
 
@@ -79,10 +76,14 @@ export const updateGoalsToday = async (
   events_for_day.forEach(async (event: Event) => {
     let user_id = event.discordId;
 
-    // if their role isn't a podmate, then deactivate their goals
+    // if their role isn't a podmate, then deactivate their goals !! issue here (need to create a helper function to activate goals and events given a discord id now :/)
     let userDiscordObject = await guild?.members.fetch(user_id);
-    if (userDiscordObject && userDiscordObject?.roles.cache.some((role) => role.name !== "podmate")) {
-      deactivateGoalsAndEvents(user_id)
+    if (userDiscordObject) {
+      if (userDiscordObject?.roles.cache.some((role) => role.name === "podmate")) {
+        '' // just checking if ONE of their roles is podmate
+      } else {
+        deactivateGoalsAndEvents(user_id) // none of their roles is podmate
+      }
     }
 
     let user = await User.findOne({ where: { discordId: user_id } });
@@ -100,11 +101,11 @@ export const updateGoalsToday = async (
         .then(async (goal_left_channel_id) => {
           if (weekly_goal?.description) {
             (
-              client.channels.cache.get(goal_left_channel_id.id) as TextChannel
+              CLIENT.channels.cache.get(goal_left_channel_id.id) as TextChannel
             ).send(
               // `<@${user?.discordId}>` +
                 "Today's your day! Complete part of your weekly goal by sending a picture of evidence in: " +
-                `<#${daily_updates_channel_id}>\n` +
+                `<#${DAILY_UPDATES_CHAT_CHANNEL_ID}>\n` +
                 "🚧 Goal: " + weekly_goal?.description + 
                 "\n🖼 Evidence: " + weekly_goal?.evidence
             );
