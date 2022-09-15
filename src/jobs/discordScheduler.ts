@@ -1,6 +1,5 @@
 import DiscordJS, {  GatewayIntentBits, Partials } from "discord.js";
 import cron from "node-cron";
-import { updateWeeklyGoalAndEventsActive } from "../utils/weeklyGoalResolvers";
 import { breakCommand } from "../commands/breakCommand";
 import { goalCommand } from "../commands/goalCommand";
 import { LOCAL_TODAY, TODAY, __prod__ } from "../constants";
@@ -54,32 +53,10 @@ async function discordBot() {
     // const guilds = CLIENT.guilds.cache.map((guild) => guild.id);
 
     // set goal ids of people to active that were mistakenly set to inactive, delete this after
-    const goal_ids_to_reset = [
-      175,
-174,
-173,
-172,
-171,
-170,
-169,
-168,
-167, 
-166,
-165,
-163,
-162,
-160,
-157,
-150, 
-149,
-82,
-63,
-110,
-    ]
-    goal_ids_to_reset.forEach((goal_id) => {
-      console.log("updating this goal", goal_id)
-      updateWeeklyGoalAndEventsActive(goal_id)
-    })
+    // const goal_ids_to_reset = []
+    // goal_ids_to_reset.forEach((goal_id) => {
+    //   updateWeeklyGoalAndEventsActive(goal_id)
+    // })
 
     goalCommand(CLIENT, SERVER_ID as string);
     createGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
