@@ -26,16 +26,11 @@ export const autokick = async (
     // if 2 misses, DM the person with a warning message
     if (goal.misses == 2) {
       client.users.fetch(userId).then(async (user_to_kick) => {
-        user_to_kick.send(
-          "❕ Automatic warning message from poddds mod here! ❕\n\n 👀 You've missed your weekly goal for 3 days in a row \n 📝 Complete your next objective or note in the skip channel that it's an off day so you don't get moved to kicked! \n🌟 Consistency does not mean perfection! Therefore, by completing your task and posting in #daily-updates-chat, you'll get moved back to 0 misses immediately!\n\n **If you get moved to kicked, you'll have to message the mods to be let back into the server, once you decide to recommit.** Cheers! 🍻"
-        );
+        let kick_msg = "❕ Automatic warning message from poddds mod here! ❕\n\n 👀 You've missed your weekly goal for 3 days in a row \n 📝 Complete your next objective or note in the skip channel that it's an off day so you don't get moved to kicked! \n🌟 Consistency does not mean perfection! Therefore, by completing your task and posting in #daily-updates-chat, you'll get moved back to 0 misses immediately!\n\n **If you get moved to kicked, you'll have to message the mods to be let back into the server, once you decide to recommit.** Cheers! 🍻"
+        user_to_kick.send(kick_msg);
         ADMIN_USER_IDS.forEach((val: string) => {
           client.users.fetch(val as string).then((user) => {
-            user.send(
-              "poddds -- AUTOMATIC WARNING MESSAGE sent to " +
-                user_to_kick.username +
-                " because they missed their weekly goal 3 days in a row"
-            );
+            user.send("poddds bot sent to " + user_to_kick.username + ":\n" + kick_msg);
           });
         });
       });
@@ -44,16 +39,11 @@ export const autokick = async (
     // if more than 2 misses, change role of person to kicked
     if (goal.misses > 2) {
       client.users.fetch(userId).then((user_to_kick) => {
-        user_to_kick.send(
-          "‼ You've been put into the kicked role in the poddds community ‼\n\n🤗 We know things happen, so **if the community has helped you and you want to join back in again, message the mods saying what happened once you decide to recommit** \n\nFeel free to reach out using the #general channel for support in the meantime 🙂"
-        );
+        let kick_msg = "‼ You've been put into the kicked role in the poddds community ‼\n\n🤗 We know things happen, so **if the community has helped you and you want to join back in again, message the mods saying what happened once you decide to recommit** \n\nFeel free to reach out using the #general channel for support in the meantime 🙂"
+        user_to_kick.send(kick_msg);
         ADMIN_USER_IDS.forEach((val: string) => {
           client.users.fetch(val as string).then((user) => {
-            user.send(
-              "poddds -- AUTOMATIC KICK sent to " +
-              user_to_kick.username +
-                " because they missed their weekly goal 4 days in a row"
-            );
+            user.send("poddds bot sent to " + user_to_kick.username + ":\n" + kick_msg);
           });
         });
       });
