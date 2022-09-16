@@ -3,7 +3,7 @@ import { LessThan } from "typeorm";
 import { Pod } from "../../entities/Pod";
 import { User } from "../../entities/User";
 import { GoalType } from "../../types/dbTypes";
-import { CLIENT } from "../discordScheduler";
+import { CLIENT, SERVER_ID } from "../discordScheduler";
 import { createPodCategory } from "./createPodCategory";
 
 export const assignPod = async (
@@ -36,7 +36,7 @@ export const assignPod = async (
     // 2. Change user's podId
     // 3. Add new pod role
     // 4. Assign user role
-    // !! send resp to goals channel
+    // 5. send resp to goals channel
     const pod = await Pod.create({
       numMembers: 1,
       type: type,
@@ -51,10 +51,10 @@ export const assignPod = async (
         reason: "This pod is for " + type + "!",
       });
       await user?.roles?.add(role_id as Role);
-      const c = await createPodCategory(type, pod?.id);
+      const category = await createPodCategory(type, pod?.id);
       // Get weekly-goals-setting channel id
-      const channelId = c?.children.cache
-        ?.filter((c) => c.name == "🏁weekly-goals-setting")
+      const channelId = category?.children.cache
+        ?.filter((channel) => channel.name == "🏁weekly-goals-setting")
         .keys()
         .next().value;
 
@@ -77,6 +77,25 @@ export const assignPod = async (
       (r) => r.name === type + pod?.id
     );
     await user?.roles?.add(role_id as Role);
+    const guild = CLIENT.guilds.cache.get(SERVER_ID as string);
+    console.log("----------------");
+    console.log(guild?.channels);
+    console.log(guild?.channels?.cache);
+    const categoryId = guild?.channels?.cache?.filter(
+      (category) =>
+        category.name ==
+        (type === "exercise"
+          ? "💪 " + type + " pod " + pod?.id
+          : "📚 " + type + " pod " + pod?.id)
+    );
+    console.log(categoryId);
+    console.log(categoryId?.keys().next().value);
+    let cat = CLIENT.channels.cache.get(categoryId?.keys().next().value);
+    console.log("-----------------");
+    console.log(cat);
+    // .keys()
+    // .next().value;
+
     // !! Get pod category from guild with type + pod.id
   }
 };
