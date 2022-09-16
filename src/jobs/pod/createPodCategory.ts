@@ -1,4 +1,4 @@
-import { ChannelType, PermissionsBitField, Role } from "discord.js";
+import { ChannelType, PermissionsBitField } from "discord.js";
 import { GoalType } from "src/types/dbTypes";
 import { CLIENT, SERVER_ID } from "../discordScheduler";
 
@@ -28,28 +28,36 @@ export const createPodCategory = async (type: GoalType, podId: number) => {
     permissionOverwrites: channel_permission_overwrites,
   });
 
-  await guild?.channels.create({
-    name: "🚩daily-updates-chat",
-    type: ChannelType.GuildText,
-    permissionOverwrites: channel_permission_overwrites,
-    parent: pod_category?.id,
-  });
+  // await guild?.channels.create({
+  //   name: "💬general",
+  //   type: ChannelType.GuildText,
+  //   permissionOverwrites: channel_permission_overwrites,
+  //   parent: pod_category?.id,
+  // });
+  // await guild?.channels.create({
+  //   name: "🚩daily-updates-chat",
+  //   type: ChannelType.GuildText,
+  //   permissionOverwrites: channel_permission_overwrites,
+  //   parent: pod_category?.id,
+  // });
   await guild?.channels.create({
     name: "🏁weekly-goals-setting",
     type: ChannelType.GuildText,
     permissionOverwrites: channel_permission_overwrites,
     parent: pod_category?.id,
   });
-  await guild?.channels.create({
-    name: "🛑break",
-    type: ChannelType.GuildText,
-    permissionOverwrites: channel_permission_overwrites,
-    parent: pod_category?.id,
-  });
-  await guild?.channels.create({
-    name: "🔥self-promo",
-    type: ChannelType.GuildText,
-    permissionOverwrites: channel_permission_overwrites,
-    parent: pod_category?.id,
-  });
+  // await guild?.channels.create({
+  //   name: "🛑break",
+  //   type: ChannelType.GuildText,
+  //   permissionOverwrites: channel_permission_overwrites,
+  //   parent: pod_category?.id,
+  // });
+  // await guild?.channels.create({
+  //   name: "🔥self-promo",
+  //   type: ChannelType.GuildText,
+  //   permissionOverwrites: channel_permission_overwrites,
+  //   parent: pod_category?.id,
+  // });
+
+  return pod_category;
 };

@@ -1,8 +1,9 @@
-import { GuildMember, Role } from "discord.js";
+import { GuildMember, Role, TextChannel } from "discord.js";
 import { LessThan } from "typeorm";
 import { Pod } from "../../entities/Pod";
 import { User } from "../../entities/User";
 import { GoalType } from "../../types/dbTypes";
+import { CLIENT } from "../discordScheduler";
 import { createPodCategory } from "./createPodCategory";
 
 export const assignPod = async (
@@ -15,7 +16,6 @@ export const assignPod = async (
       discordId: user?.id,
     },
   });
-  // !! Check this
   if (type == "exercise" && dbUser?.exercisePodId) {
     return;
   }
@@ -50,8 +50,18 @@ export const assignPod = async (
         color: "Random",
         reason: "This pod is for " + type + "!",
       });
-      const userRole = await user?.roles?.add(role_id as Role);
-      await createPodCategory(type, pod?.id);
+      await user?.roles?.add(role_id as Role);
+      const c = await createPodCategory(type, pod?.id);
+      // Get weekly-goals-setting channel id
+      const channelId = c?.children.cache
+        ?.filter((c) => c.name == "🏁weekly-goals-setting")
+        .keys()
+        .next().value;
+
+      let channel = CLIENT.channels.cache.get(
+        channelId as string
+      ) as TextChannel;
+      await channel.send(resp);
     }
   } else {
     // 1. Change users podId and increment pod numMembers
@@ -67,5 +77,6 @@ export const assignPod = async (
       (r) => r.name === type + pod?.id
     );
     await user?.roles?.add(role_id as Role);
+    // !! Get pod category from guild with type + pod.id
   }
 };
