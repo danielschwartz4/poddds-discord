@@ -9,10 +9,10 @@ import { createBreak } from "./createBreak";
 import { createGoal } from "./createGoal";
 import { createGoalReminder } from "./createGoalReminder";
 import { dailySummary } from "./dailySummary";
-import { newMember } from "./newMember";
-import { reactToImages } from "./react";
+import { newMember } from "./newMember/newMember";
+import { reactToImages } from "./react/react";
 import { routeBotDMs } from "./routeBotDMs";
-import { updateGoalsToday } from "./updateGoalsToday";
+import { updateGoalsToday } from "./goalsLeftToday/updateGoalsToday";
 require("dotenv").config();
 
 // NOTE: Ensure that you invite the bot to every channel or make them admin
@@ -45,7 +45,7 @@ export const CLIENT = new DiscordJS.Client({
 });
 
 async function discordBot() {
-  CLIENT.on("ready", () => {
+  CLIENT.on("ready", async () => {
     console.log("The client bot is ready!");
     console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-4")); // in EST
 

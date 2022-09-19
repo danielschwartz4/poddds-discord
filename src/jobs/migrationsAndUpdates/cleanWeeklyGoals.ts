@@ -1,5 +1,5 @@
-import { WeeklyGoal } from "../entities/WeeklyGoal"
-import { CLIENT, SERVER_ID } from "./discordScheduler";
+import { WeeklyGoal } from "../../entities/WeeklyGoal"
+import { CLIENT, SERVER_ID } from "../discordScheduler";
 
 export const cleanWeeklyGoals = async () => {
     const guild = CLIENT.guilds.cache.get(SERVER_ID as string);

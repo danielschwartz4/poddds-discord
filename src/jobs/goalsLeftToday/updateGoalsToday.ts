@@ -4,14 +4,14 @@ import {
   TextChannel,
 } from "discord.js";
 import { IsNull } from "typeorm";
-import { LOCAL_TODAY } from "../constants";
-import { Event } from "../entities/Event";
-import { User } from "../entities/User";
-import { WeeklyGoal } from "../entities/WeeklyGoal";
-import { mdyDate } from "../utils/timeZoneUtil";
-import { CLIENT, DAILY_UPDATES_CHAT_CHANNEL_ID, SERVER_ID } from "./discordScheduler";
-import { deactivateGoalsAndEvents } from "./goalsLeftToday/deactivateGoals";
-import { updateGoalsYesterday } from "./goalsLeftToday/updateGoalsYesterday";
+import { LOCAL_TODAY } from "../../constants";
+import { Event } from "../../entities/Event";
+import { User } from "../../entities/User";
+import { WeeklyGoal } from "../../entities/WeeklyGoal";
+import { mdyDate } from "../../utils/timeZoneUtil";
+import { CLIENT, DAILY_UPDATES_CHAT_CHANNEL_ID, SERVER_ID } from "../discordScheduler";
+import { deactivateGoalsAndEvents } from "./deactivateGoals";
+import { updateGoalsYesterday } from "./updateGoalsYesterday";
 
 export const updateGoalsToday = async (
   timeZoneIsUTCMidnight?: string
