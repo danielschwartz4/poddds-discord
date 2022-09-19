@@ -5,6 +5,7 @@ import { LOCAL_TODAY } from "../../constants";
 import { Event } from "../../entities/Event";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { mdyDate } from "../../utils/timeZoneUtil";
+import { SERVER_ID } from "../discordScheduler";
 import { checkIfLastGoal } from "../goalsLeftToday/checkIfLastGoal";
 import { nudge } from "./nudge";
 
@@ -34,20 +35,33 @@ export const reactToImages = (
       });
 
       console.log("REACTING TO: ", msg.author.username, " WITH GOALLEFTCHANNELID: ", event?.goalLeftChannelId, " FOR TODAY: ", date_today, " FOR EVENT ID: ", event?.id, " AND DISCORD ID: ", msg.author.id, " AND DATE WITHOUT MDY DATE FUNCTION IS: ", localTodayWithTimeZone)
-      if (event?.goalLeftChannelId) {
+      
+      const guild = client.guilds.cache.get(SERVER_ID as string);
+      let userCustomChannel = guild?.channels.cache.find(
+          (channel) => channel.name === msg.author.username
+      );
+      console.log("HERE IS THE CUSTOM CHANNEL ", userCustomChannel, " FOR ", msg.author.username)
+      if (event?.goalLeftChannelId || userCustomChannel) {
         setTimeout(() => {
           nudge(user_id) // to delete and only show once
         }, 250 * 1);  
 
         console.log("updating stuffs and deleting")
-        let goal_left_channel = client.channels.cache.get(
-          event.goalLeftChannelId
-        );
+        if (event?.goalLeftChannelId) { // delete their identified goal left channel id
+          console.log("deleting goal left channel id")
+          let goal_left_channel = client.channels.cache.get(
+            event.goalLeftChannelId
+          );
 
-        setTimeout(() => {
-          goal_left_channel?.delete();
-          console.log("deleted!")
-        }, 1000 * 3);
+          setTimeout(() => {
+            goal_left_channel?.delete();
+          }, 1000 * 3);
+        } else if (userCustomChannel) { // delete their named channel
+          console.log("deleting user custom created channel")
+          setTimeout(() => {
+            userCustomChannel?.delete();
+          }, 1000 * 3);
+        }
 
         // check if they just completed their last weekly goal
         checkIfLastGoal(user_id, date_today)
