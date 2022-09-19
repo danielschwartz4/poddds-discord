@@ -33,7 +33,7 @@ export const reactToImages = (
         },
       });
 
-      console.log("REACTING TO: ", msg.author.username, " WITH GOALLEFTCHANELID: ", event?.goalLeftChannelId, " FOR TODAY: ", date_today, " FOR EVENT ID: ", event?.id, " AND DISCORD ID: ", msg.author.id, " AND DATE WITHOUT MDY DATE FUNCTION IS: ", localTodayWithTimeZone)
+      console.log("REACTING TO: ", msg.author.username, " WITH GOALLEFTCHANNELID: ", event?.goalLeftChannelId, " FOR TODAY: ", date_today, " FOR EVENT ID: ", event?.id, " AND DISCORD ID: ", msg.author.id, " AND DATE WITHOUT MDY DATE FUNCTION IS: ", localTodayWithTimeZone)
       if (event?.goalLeftChannelId) {
         setTimeout(() => {
           nudge(user_id) // to delete and only show once
@@ -42,14 +42,6 @@ export const reactToImages = (
         console.log("updating stuffs and deleting")
         let goal_left_channel = client.channels.cache.get(
           event.goalLeftChannelId
-        );
-        Event.update(
-          { discordId: user_id, adjustedDate: date_today, isActive: true },
-          { completed: true, goalLeftChannelId: "" }
-        );
-        WeeklyGoal.update(
-          { discordId: user_id, isActive: true },
-          { misses: 0 }
         );
 
         setTimeout(() => {
@@ -60,6 +52,16 @@ export const reactToImages = (
         // check if they just completed their last weekly goal
         checkIfLastGoal(user_id, date_today)
       }
+
+      // just in case they don't have a channel id but we still want to update
+      Event.update(
+        { discordId: user_id, adjustedDate: date_today, isActive: true },
+        { completed: true, goalLeftChannelId: "" }
+      );
+      WeeklyGoal.update(
+        { discordId: user_id, isActive: true },
+        { misses: 0 }
+      );
 
       setTimeout(() => {
         msg.react("🔥");
