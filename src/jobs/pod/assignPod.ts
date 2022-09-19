@@ -1,4 +1,4 @@
-import { GuildMember, Role, TextChannel } from "discord.js";
+import { CategoryChannel, GuildMember, Role, TextChannel } from "discord.js";
 import { LessThan } from "typeorm";
 import { Pod } from "../../entities/Pod";
 import { User } from "../../entities/User";
@@ -65,36 +65,37 @@ export const assignPod = async (
     }
   } else {
     // 1. Change users podId and increment pod numMembers
-    // !! send resp to goals channel
-    // !! 2. Assign user role BY TIMEZONE
+    // 2. send resp to goals channel
+    // TODO 3. Assign user role BY TIMEZONE
     type == "exercise"
       ? User.update({ discordId: user?.id }, { exercisePodId: pod?.id })
       : User.update({ discordId: user?.id }, { studyPodId: pod?.id });
     Pod.update({ id: pod?.id }, { numMembers: pod?.numMembers + 1 });
-    console.log("type + pod?.id");
-    console.log(type + pod?.id);
     let role_id = user?.guild?.roles?.cache.find(
       (r) => r.name === type + pod?.id
     );
     await user?.roles?.add(role_id as Role);
     const guild = CLIENT.guilds.cache.get(SERVER_ID as string);
-    console.log("----------------");
-    console.log(guild?.channels);
-    console.log(guild?.channels?.cache);
-    const categoryId = guild?.channels?.cache?.filter(
+
+    let category = guild?.channels?.cache?.filter(
       (category) =>
         category.name ==
         (type === "exercise"
           ? "💪 " + type + " pod " + pod?.id
           : "📚 " + type + " pod " + pod?.id)
     );
-    console.log(categoryId);
-    console.log(categoryId?.keys().next().value);
-    let cat = CLIENT.channels.cache.get(categoryId?.keys().next().value);
-    console.log("-----------------");
-    console.log(cat);
-    // .keys()
-    // .next().value;
+    const categoryId = category?.keys().next().value;
+    let categoryChannel = CLIENT.channels.cache.get(
+      categoryId
+    ) as CategoryChannel;
+
+    const channelId = categoryChannel?.children.cache
+      ?.filter((channel) => channel.name == "🏁weekly-goals-setting")
+      .keys()
+      .next().value;
+
+    let channel = CLIENT.channels.cache.get(channelId as string) as TextChannel;
+    await channel.send(resp);
 
     // !! Get pod category from guild with type + pod.id
   }
