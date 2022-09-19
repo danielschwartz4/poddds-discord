@@ -36,7 +36,7 @@ export const createGoal = (
         const daysObj = buildDays(cleanedData);
         const startDate = localTodayWithTimeZone;
         const endDate = addDays(localTodayWithTimeZone, parseInt(cleanedData["duration"]));
-        deactivateGoalsAndEvents(interaction?.user?.id);
+        await deactivateGoalsAndEvents(interaction?.user?.id);
         const weekly_goal = await WeeklyGoal.create({
           description: cleanedData["goal"],
           evidence: cleanedData["evidence"],

@@ -14,6 +14,6 @@ export const deactivateGoalsAndEvents = async (discordId: string) => {
     }
   })
 
-  Event.update({ discordId: discordId }, { isActive: false });
-  WeeklyGoal.update({ discordId: discordId }, { isActive: false });
+  await Event.update({ discordId: discordId }, { isActive: false });
+  await WeeklyGoal.update({ discordId: discordId }, { isActive: false });
 };
