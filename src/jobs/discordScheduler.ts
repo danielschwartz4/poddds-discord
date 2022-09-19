@@ -49,11 +49,6 @@ async function discordBot() {
     console.log("The client bot is ready!");
     console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-4")); // in EST
 
-    let res1 = CLIENT?.application?.commands.cache.find(c => c.name === 'new-goal')
-    console.log(res1)
-    let res = CLIENT?.application?.commands.cache.find(c => c.name === 'new-goal')?.delete()
-    console.log(res)
-
     // migrateFromTaskDB()
     // const guilds = CLIENT.guilds.cache.map((guild) => guild.id);
 
