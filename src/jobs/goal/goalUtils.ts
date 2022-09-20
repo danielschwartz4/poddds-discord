@@ -1,6 +1,6 @@
 import { CacheType, Interaction } from "discord.js";
 
-export const parseGoalResponse = (
+export const parseInteractionResponse = (
   interactionData: Interaction<CacheType>,
   cleanedData: {
     [key: string]: string;

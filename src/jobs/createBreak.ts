@@ -2,7 +2,7 @@ import { Client } from "discord.js";
 import { TODAY } from "../constants";
 import AppDataSource from "../dataSource";
 import {
-  GoalResponse,
+  InteractionResponse,
   transformInteractionData,
 } from "../utils/interactionData";
 import { addDays, int2day, mdyDate } from "../utils/timeZoneUtil";
@@ -12,7 +12,7 @@ export const createBreak = (client: Client<boolean>) => {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName === "break") {
       const cleanedData = transformInteractionData(
-        interaction.options.data as GoalResponse[]
+        interaction.options.data as InteractionResponse[]
       );
 
       const res = await AppDataSource.query(

@@ -22,38 +22,44 @@ export const createPodCategory = async (type: GoalType, podId: number) => {
   const pod_category = await guild?.channels.create({
     name:
       type === "exercise"
-        ? "💪 " + type + " pod " + podId
-        : "📚 " + type + " pod " + podId,
+        ? "--- 💪 " + type + " pod " + podId
+        : "--- 📚 " + type + " pod " + podId,
     type: ChannelType.GuildCategory,
     permissionOverwrites: channel_permission_overwrites,
   });
 
-  await guild?.channels.create({
-    name: "💬general",
-    type: ChannelType.GuildText,
-    permissionOverwrites: channel_permission_overwrites,
-    parent: pod_category?.id,
-  });
-  await guild?.channels.create({
-    name: "🚩daily-updates-chat",
-    type: ChannelType.GuildText,
-    permissionOverwrites: channel_permission_overwrites,
-    parent: pod_category?.id,
-  });
+  // await guild?.channels.create({
+  //   name: "💬general",
+  //   type: ChannelType.GuildText,
+  //   permissionOverwrites: channel_permission_overwrites,
+  //   parent: pod_category?.id,
+  // });
+  // await guild?.channels.create({
+  //   name: "🚩daily-updates-chat",
+  //   type: ChannelType.GuildText,
+  //   permissionOverwrites: channel_permission_overwrites,
+  //   parent: pod_category?.id,
+  // });
   await guild?.channels.create({
     name: "🏁weekly-goals-setting",
     type: ChannelType.GuildText,
     permissionOverwrites: channel_permission_overwrites,
     parent: pod_category?.id,
   });
+  // await guild?.channels.create({
+  //   name: "🛑break",
+  //   type: ChannelType.GuildText,
+  //   permissionOverwrites: channel_permission_overwrites,
+  //   parent: pod_category?.id,
+  // });
+  // await guild?.channels.create({
+  //   name: "🔥self-promo",
+  //   type: ChannelType.GuildText,
+  //   permissionOverwrites: channel_permission_overwrites,
+  //   parent: pod_category?.id,
+  // });
   await guild?.channels.create({
-    name: "🛑break",
-    type: ChannelType.GuildText,
-    permissionOverwrites: channel_permission_overwrites,
-    parent: pod_category?.id,
-  });
-  await guild?.channels.create({
-    name: "🔥self-promo",
+    name: "🚪leave-pod",
     type: ChannelType.GuildText,
     permissionOverwrites: channel_permission_overwrites,
     parent: pod_category?.id,

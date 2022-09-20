@@ -6,13 +6,13 @@ import { User } from "../../entities/User";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { buildDays } from "../../utils/buildDaysUtil";
 import {
-  GoalResponse,
+  InteractionResponse,
   transformInteractionData,
 } from "../../utils/interactionData";
 import { addDays, flipSign, int2day, mdyDate } from "../../utils/timeZoneUtil";
 import { deactivateGoalsAndEvents } from "../goalsLeftToday/deactivateGoals";
 import { assignPod } from "../pod/assignPod";
-import { parseGoalResponse } from "./goalUtils";
+import { parseInteractionResponse } from "./goalUtils";
 
 export const createGoal = (
   client: Client<boolean>,
@@ -32,12 +32,12 @@ export const createGoal = (
       interaction.commandName === "set-current-study-goal"
     ) {
       const cleanedData = transformInteractionData(
-        interaction.options.data as GoalResponse[]
+        interaction.options.data as InteractionResponse[]
       );
       const timeZone = cleanedData["time-zone"];
       const localTodayWithTimeZone = LOCAL_TODAY(timeZone);
 
-      const resp = parseGoalResponse(interaction, cleanedData);
+      const resp = parseInteractionResponse(interaction, cleanedData);
       interaction.reply(resp);
       if (cleanedData) {
         // Get userId to pass into WeeklyGoal

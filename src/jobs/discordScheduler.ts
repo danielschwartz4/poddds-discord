@@ -15,6 +15,8 @@ import { newMember } from "./member/newMember";
 import { reactToImages } from "./react";
 import { routeBotDMs } from "./routeBotDMs";
 import { updateGoalsToday } from "./goal/updateGoalsToday";
+import { leavePodCommand } from "../commands/leavePodCommand";
+import { leavePod } from "./pod/leavePod";
 require("dotenv").config();
 
 // NOTE: Ensure that you invite the bot to every channel or make them admin
@@ -55,6 +57,8 @@ async function discordBot() {
     createGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
     breakCommand(CLIENT, SERVER_ID as string);
     createBreak(CLIENT);
+    leavePodCommand(CLIENT, SERVER_ID as string);
+    leavePod();
     // addExistingMembers(client, SERVER_ID as string);
     reactToImages(CLIENT, DAILY_UPDATES_CHAT_CHANNEL_ID as string);
     newMember(CLIENT);

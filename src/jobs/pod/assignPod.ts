@@ -81,8 +81,8 @@ export const assignPod = async (
       (category) =>
         category.name ==
         (type === "exercise"
-          ? "💪 " + type + " pod " + pod?.id
-          : "📚 " + type + " pod " + pod?.id)
+          ? "--- 💪 " + type + " pod " + pod?.id
+          : "--- 📚 " + type + " pod " + pod?.id)
     );
     const categoryId = category?.keys().next().value;
     let categoryChannel = CLIENT.channels.cache.get(
