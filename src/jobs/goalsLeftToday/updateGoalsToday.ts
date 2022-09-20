@@ -109,21 +109,24 @@ export const updateGoalsToday = async (
               days_left_message = "1 day left! 🏁 🏃‍♂️"
             }
 
-            let dates = "S-" +
-            colorBooleanMapper(weekly_goal.days["sunday"]) +
-            "  M-" +
-            colorBooleanMapper(weekly_goal.days["monday"]) +
-            "  T-" +
-            colorBooleanMapper(weekly_goal.days["tuesday"]) +
-            "  W-" +
-            colorBooleanMapper(weekly_goal.days["wednesday"]) +
-            "  T-" +
-            colorBooleanMapper(weekly_goal.days["thursday"]) +
-            "  F-" +
-            colorBooleanMapper(weekly_goal.days["friday"]) +
-            "  S-" +
-            colorBooleanMapper(weekly_goal.days["saturday"]);
-
+            let dates = ""
+            if (weekly_goal.days) {
+              dates = "S-" +
+              colorBooleanMapper(weekly_goal.days["sunday"]) +
+              "  M-" +
+              colorBooleanMapper(weekly_goal.days["monday"]) +
+              "  T-" +
+              colorBooleanMapper(weekly_goal.days["tuesday"]) +
+              "  W-" +
+              colorBooleanMapper(weekly_goal.days["wednesday"]) +
+              "  T-" +
+              colorBooleanMapper(weekly_goal.days["thursday"]) +
+              "  F-" +
+              colorBooleanMapper(weekly_goal.days["friday"]) +
+              "  S-" +
+              colorBooleanMapper(weekly_goal.days["saturday"]);
+            }
+            
             (
               CLIENT.channels.cache.get(goal_left_channel_id.id) as TextChannel
             ).send(
