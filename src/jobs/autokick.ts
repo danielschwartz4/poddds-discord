@@ -46,7 +46,7 @@ export const autokick = async (
         }).catch((err) => {
           console.log("ERROR! Assuming user has left server", err)
           deactivateMember(userId)
-        });;
+        });
       }
     }
 

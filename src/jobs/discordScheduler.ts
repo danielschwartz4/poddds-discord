@@ -85,7 +85,7 @@ async function discordBot() {
 
     // update every day at 9am EST (-5), (EST + 4) 1pm UTC
     cron.schedule("0 13 */1 * *", () => {
-      dailySummary(CLIENT);
+      dailySummary();
     });
 
     // update "At 00:00 on Sunday"
