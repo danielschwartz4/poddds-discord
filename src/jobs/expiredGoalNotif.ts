@@ -22,8 +22,8 @@ export const expiredGoalNotif = async (
         client.channels.cache.get(selfPromoChannel?.id as string) as TextChannel
     ).send(
     "🎉 " + `<@${discordId}>` + " has finished their " + Difference_In_Days + " days goal! 🎉\n" +
-        "🚧 Goal: " + weekly_goal?.description + 
-        "\n🖼 Evidence: " + weekly_goal?.evidence
+        "🚧 **Goal**: " + weekly_goal?.description + 
+        "\n🖼 **Evidence**: " + weekly_goal?.evidence
     );
     msg.react("🔥");
     
