@@ -93,7 +93,7 @@ async function discordBot() {
       await updateGoalsToday(
         timeZoneIsUTCMidnight
       );
-      await autokick(CLIENT, SERVER_ID as string, timeZoneIsUTCMidnight);
+      await autokick(timeZoneIsUTCMidnight);
       // updateStreaks(
       //   client,
       //   SERVER_ID as string,
