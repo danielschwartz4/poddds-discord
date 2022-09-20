@@ -9,6 +9,7 @@ import { Event } from "../../entities/Event";
 import { User } from "../../entities/User";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { mdyDate } from "../../utils/timeZoneUtil";
+import { colorBooleanMapper } from "../createGoal";
 import { CLIENT, DAILY_UPDATES_CHAT_CHANNEL_ID, SERVER_ID } from "../discordScheduler";
 import { deactivateGoalsAndEvents } from "./deactivateGoals";
 import { updateGoalsYesterday } from "./updateGoalsYesterday";
@@ -100,14 +101,39 @@ export const updateGoalsToday = async (
         })
         .then(async (goal_left_channel_id) => {
           if (weekly_goal?.description) {
+            var Difference_In_Time = weekly_goal.adjustedEndDate.getTime() - LOCAL_TODAY(timeZoneIsUTCMidnight as string).getTime();
+            // To calculate the no. of days between two dates
+            var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24)) + 1;
+            let days_left_message = Difference_In_Days + " days left!";
+            if (Difference_In_Days === 1) {
+              days_left_message = "1 day left! 🏁 🏃‍♂️"
+            }
+
+            let dates = "S-" +
+            colorBooleanMapper(weekly_goal.days["sunday"]) +
+            "  M-" +
+            colorBooleanMapper(weekly_goal.days["monday"]) +
+            "  T-" +
+            colorBooleanMapper(weekly_goal.days["tuesday"]) +
+            "  W-" +
+            colorBooleanMapper(weekly_goal.days["wednesday"]) +
+            "  T-" +
+            colorBooleanMapper(weekly_goal.days["thursday"]) +
+            "  F-" +
+            colorBooleanMapper(weekly_goal.days["friday"]) +
+            "  S-" +
+            colorBooleanMapper(weekly_goal.days["saturday"]);
+
             (
               CLIENT.channels.cache.get(goal_left_channel_id.id) as TextChannel
             ).send(
               // `<@${user?.discordId}>` +
-                "Today's your day! Complete part of your weekly goal by sending a picture of evidence in: " +
+                "Today's your day! Complete your goal by sending evidence in: " +
                 `<#${DAILY_UPDATES_CHAT_CHANNEL_ID}>\n` +
-                "🚧 Goal: " + weekly_goal?.description + 
-                "\n🖼 Evidence: " + weekly_goal?.evidence
+                "🚧 **Goal**: " + weekly_goal?.description + 
+                "\n🖼 **Evidence**: " + weekly_goal?.evidence + 
+                "\n🔥 **" + days_left_message + "**" +
+                "\n" + dates
             );
           }
           let res = await Event.update(
