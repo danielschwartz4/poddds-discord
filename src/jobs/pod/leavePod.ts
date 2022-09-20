@@ -39,7 +39,7 @@ export const leavePod = async () => {
         );
         const val = cleanedData["leave-pod-confirmation"];
         if (val == "no") {
-          await interaction.reply("no");
+          await interaction.reply("Cancelled request");
           return;
         } else {
           // 1. remove pod id from db
@@ -63,7 +63,10 @@ export const leavePod = async () => {
             (r: Role) => r.name === category + podId
           );
           user?.roles.remove(pod_role_id as Role);
-          await interaction.reply("yes");
+          await interaction.reply(
+            (user?.displayName as string) +
+              " has left the pod :( Hopefully we see them again soon!"
+          );
         }
       }
     }
