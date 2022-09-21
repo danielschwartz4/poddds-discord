@@ -84,7 +84,13 @@ const buildSummary = async (activeGoals: WeeklyGoal[]) => {
     // if (streak_length > 2) { // disabled streaks because people's ids for dates are probably still messed until October, might want to just create a column for streaks and track active events completed
     //   res += `<@${goal.discordId}>` + ": " + missesMap(goal.misses) + " 🔥**" + streak_length + "**\n";
     // } else {
+    
+    let misses = missesMap(goal.misses)
+    if (misses === "🟩" || misses === "🟨" || misses === "🟥") {
       res += `<@${goal.discordId}>` + ": " + missesMap(goal.misses) + "\n";
+    } else {
+      console.log("MISSES IS UNDEFINED FOR USER ID: ", goal.discordId)
+    }
     // }
   };
 //   res +=
