@@ -11,15 +11,25 @@ export const assignPod = async (
   user: GuildMember,
   resp: string
 ) => {
+  console.log("START");
   const dbUser = await User.findOne({
     where: {
       discordId: user?.id,
     },
   });
-  if (type == "exercise" && dbUser?.exercisePodId) {
+  console.log("user: " + dbUser);
+  if (
+    type == "exercise" &&
+    dbUser?.exercisePodId != null &&
+    dbUser?.exercisePodId != -1
+  ) {
     return;
   }
-  if (type == "study" && dbUser?.studyPodId) {
+  if (
+    type == "study" &&
+    dbUser?.exercisePodId != null &&
+    dbUser?.exercisePodId != -1
+  ) {
     return;
   }
   // find target pod in database
@@ -30,7 +40,7 @@ export const assignPod = async (
     },
     order: { numMembers: "ASC" },
   });
-
+  console.log(pod);
   if (pod == null) {
     // 1. Create new pod with one member
     // 2. Change user's podId
@@ -64,6 +74,7 @@ export const assignPod = async (
       await channel.send(resp);
     }
   } else {
+    console.log("POD NOT NULL");
     // 1. Change users podId and increment pod numMembers
     // 2. send resp to goals channel
     // TODO 3. Assign user role BY TIMEZONE

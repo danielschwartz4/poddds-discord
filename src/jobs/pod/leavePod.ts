@@ -62,11 +62,12 @@ export const leavePod = async () => {
           let pod_role_id = user?.guild.roles.cache.find(
             (r: Role) => r.name === category + podId
           );
-          user?.roles.remove(pod_role_id as Role);
+
           await interaction.reply(
             (user?.displayName as string) +
               " has left the pod :( Hopefully we see them again soon!"
           );
+          await user?.roles.remove(pod_role_id as Role);
         }
       }
     }
