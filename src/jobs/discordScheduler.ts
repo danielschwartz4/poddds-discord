@@ -49,6 +49,8 @@ async function discordBot() {
     console.log("The client bot is ready!");
     console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-4")); // in EST
 
+    dailySummary();
+
     goalCommand(CLIENT, SERVER_ID as string);
     createGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
     breakCommand(CLIENT, SERVER_ID as string);
