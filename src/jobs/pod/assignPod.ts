@@ -17,21 +17,6 @@ export const assignPod = async (
       discordId: user?.id,
     },
   });
-  console.log("user: " + dbUser);
-  if (
-    type == "exercise" &&
-    dbUser?.exercisePodId != null &&
-    dbUser?.exercisePodId != -1
-  ) {
-    return;
-  }
-  if (
-    type == "study" &&
-    dbUser?.exercisePodId != null &&
-    dbUser?.exercisePodId != -1
-  ) {
-    return;
-  }
   // find target pod in database
   const pod = await Pod.findOne({
     where: {
@@ -40,6 +25,16 @@ export const assignPod = async (
     },
     order: { numMembers: "ASC" },
   });
+
+  if (
+    dbUser?.exercisePodId != null &&
+    dbUser?.exercisePodId != -1 &&
+    pod != null
+  ) {
+    sendMessage(type, resp, pod);
+    return;
+  }
+
   console.log(pod);
   if (pod == null) {
     // 1. Create new pod with one member
@@ -86,28 +81,51 @@ export const assignPod = async (
       (r) => r.name === type + pod?.id
     );
     await user?.roles?.add(role_id as Role);
-    const guild = CLIENT.guilds.cache.get(SERVER_ID as string);
+    sendMessage(type, resp, pod);
+    // const guild = CLIENT.guilds.cache.get(SERVER_ID as string);
 
-    let category = guild?.channels?.cache?.filter(
-      (category) =>
-        category.name ==
-        (type === "exercise"
-          ? "--- 💪 " + type + " pod " + pod?.id
-          : "--- 📚 " + type + " pod " + pod?.id)
-    );
-    const categoryId = category?.keys().next().value;
-    let categoryChannel = CLIENT.channels.cache.get(
-      categoryId
-    ) as CategoryChannel;
+    // let category = guild?.channels?.cache?.filter(
+    //   (category) =>
+    //     category.name ==
+    //     (type === "exercise"
+    //       ? "--- 💪 " + type + " pod " + pod?.id
+    //       : "--- 📚 " + type + " pod " + pod?.id)
+    // );
+    // const categoryId = category?.keys().next().value;
+    // let categoryChannel = CLIENT.channels.cache.get(
+    //   categoryId
+    // ) as CategoryChannel;
 
-    const channelId = categoryChannel?.children.cache
-      ?.filter((channel) => channel.name == "🏁weekly-goals-setting")
-      .keys()
-      .next().value;
+    // const channelId = categoryChannel?.children.cache
+    //   ?.filter((channel) => channel.name == "🏁weekly-goals-setting")
+    //   .keys()
+    //   .next().value;
 
-    let channel = CLIENT.channels.cache.get(channelId as string) as TextChannel;
-    await channel.send(resp);
-
-    // !! Get pod category from guild with type + pod.id
+    // let channel = CLIENT.channels.cache.get(channelId as string) as TextChannel;
+    // await channel.send(resp);
   }
+};
+
+const sendMessage = async (type: GoalType, resp: string, pod: Pod) => {
+  const guild = CLIENT.guilds.cache.get(SERVER_ID as string);
+
+  let category = guild?.channels?.cache?.filter(
+    (category) =>
+      category.name ==
+      (type === "exercise"
+        ? "--- 💪 " + type + " pod " + pod?.id
+        : "--- 📚 " + type + " pod " + pod?.id)
+  );
+  const categoryId = category?.keys().next().value;
+  let categoryChannel = CLIENT.channels.cache.get(
+    categoryId
+  ) as CategoryChannel;
+
+  const channelId = categoryChannel?.children.cache
+    ?.filter((channel) => channel.name == "🏁weekly-goals-setting")
+    .keys()
+    .next().value;
+
+  let channel = CLIENT.channels.cache.get(channelId as string) as TextChannel;
+  await channel.send(resp);
 };
