@@ -1,4 +1,5 @@
 import { WeeklyGoal } from "../entities/WeeklyGoal";
+import { Event } from "../entities/Event";
 
 export const readLastWeeklyGoal = async (
     discordId: string
@@ -17,5 +18,18 @@ export const updateWeeklyGoalStatusToInactive = async (
     return await WeeklyGoal.update(
         { discordId: discordId, isActive: true},
         { isActive: false }
+    )
+}
+
+export const updateWeeklyGoalAndEventsActive = async (
+    weeklyGoalId: number
+) => {
+    await WeeklyGoal.update(
+        { id: weeklyGoalId }, 
+        { isActive: true}
+    )
+    await Event.update(
+        { goalId: weeklyGoalId }, 
+        { isActive: true}
     )
 }

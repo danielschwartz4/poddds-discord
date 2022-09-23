@@ -16,9 +16,10 @@ export const newMember = (client: Client<boolean>) => {
       user.send(
         "what’s up " +
           `<@${user.id}>` +
-          "! mod from poddds here 👋\nmake a goal in #💪weekly-goals-setting to get access to the rest of the server. let me know if you have any questions 🎉"
+          "! mod from poddds here 👋\nmake a goal in #💪goals-setting to get access to the rest of the server. let me know if you have any questions 🎉"
       );
     });
+    console.log("intro message sent to ", user.displayName)
 
     // add member id and stuff to DB
     const newUser = await User.find({ where: { discordId: user.id } });

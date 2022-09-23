@@ -7,9 +7,9 @@ export const routeBotDMs = () => {
       ADMIN_USER_IDS.forEach((val: string) => {
         CLIENT.users.fetch(val as string).then((user) => {
           user.send(
-            "poddds -- DM message to bot from " +
+            "poddds bot DM message from " +
               msg.author.username +
-              " that said: \n" +
+              ":\n" +
               msg.content
           );
         });

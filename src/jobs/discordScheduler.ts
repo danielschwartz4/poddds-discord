@@ -14,7 +14,7 @@ import { dailySummary } from "./dailySummary";
 import { newMember } from "./member/newMember";
 import { reactToImages } from "./react";
 import { routeBotDMs } from "./routeBotDMs";
-import { updateGoalsToday } from "./goal/updateGoalsToday";
+import { updateGoalsToday } from "./goalsLeftToday/updateGoalsToday";
 import { leavePodCommand } from "../commands/leavePodCommand";
 import { leavePod } from "./pod/leavePod";
 require("dotenv").config();
@@ -27,6 +27,9 @@ export const DAILY_UPDATES_CHAT_CHANNEL_ID = !__prod__
   ? process.env.TEST_DAILY_UPDATES_CHAT_CHANNEL_ID
   : process.env.PROD_DAILY_UPDATES_CHAT_CHANNEL_ID;
 export const ADMIN_USER_IDS = ["743590338337308754", "933066784867766342"]; // for updates
+export const ROLES_CHANNEL_ID = !__prod__
+  ? process.env.TEST_ROLES_CHANNEL_ID
+  : process.env.PROD_ROLES_CHANNEL_ID;
 
 // Add discord
 export const CLIENT = new DiscordJS.Client({
@@ -46,7 +49,7 @@ export const CLIENT = new DiscordJS.Client({
 });
 
 async function discordBot() {
-  CLIENT.on("ready", () => {
+  CLIENT.on("ready", async () => {
     console.log("The client bot is ready!");
     console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-4")); // in EST
 
@@ -64,16 +67,10 @@ async function discordBot() {
     newMember(CLIENT);
     routeBotDMs();
 
-    // update streaks daily from database numbers using cron, everyday @ midnight
-    // cleanActiveEvents()
-    // updateGoalsToday(
-    //   client,
-    //   SERVER_ID as string,
-    //   DAILY_UPDATES_CHAT_CHANNEL_ID as string
-    // );
-
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
+      createBreak(CLIENT); // need to update TODAY var in break every hour
+
       const gmt0Hours = TODAY().getUTCHours();
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
 
@@ -87,13 +84,8 @@ async function discordBot() {
         " AND TODAY AS: ",
         TODAY()
       );
-      await updateGoalsToday(
-        CLIENT,
-        SERVER_ID as string,
-        DAILY_UPDATES_CHAT_CHANNEL_ID as string,
-        timeZoneIsUTCMidnight
-      );
-      await autokick(CLIENT, SERVER_ID as string, timeZoneIsUTCMidnight);
+      await updateGoalsToday(timeZoneIsUTCMidnight);
+      await autokick(timeZoneIsUTCMidnight);
       // updateStreaks(
       //   client,
       //   SERVER_ID as string,
@@ -103,7 +95,7 @@ async function discordBot() {
 
     // update every day at 9am EST (-5), (EST + 4) 1pm UTC
     cron.schedule("0 13 */1 * *", () => {
-      dailySummary(CLIENT);
+      dailySummary();
     });
 
     // update "At 00:00 on Sunday"

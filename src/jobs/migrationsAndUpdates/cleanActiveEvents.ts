@@ -1,7 +1,7 @@
-import { WeeklyGoal } from "../entities/WeeklyGoal";
-import { Event } from "../entities/Event";
-import { TODAY } from "../constants";
-import { addDays, mdyDate } from "../utils/timeZoneUtil";
+import { WeeklyGoal } from "../../entities/WeeklyGoal";
+import { Event } from "../../entities/Event";
+import { TODAY } from "../../constants";
+import { addDays, mdyDate } from "../../utils/timeZoneUtil";
 
 export const cleanActiveEvents = async () => {
     let allActiveGoals = await Event.find({ where: { isActive: true }, order: { id: "DESC" }})
