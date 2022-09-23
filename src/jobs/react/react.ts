@@ -7,7 +7,7 @@ import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { mdyDate } from "../../utils/timeZoneUtil";
 import { SERVER_ID } from "../discordScheduler";
 import { checkIfLastGoal } from "../goalsLeftToday/checkIfLastGoal";
-import { nudge } from "./nudge";
+// import { nudge } from "./nudge";
 
 export const reactToImages = (
   client: Client<boolean>,
