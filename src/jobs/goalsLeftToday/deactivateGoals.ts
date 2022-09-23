@@ -3,7 +3,10 @@ import { Event } from "../../entities/Event";
 import { CLIENT } from "../discordScheduler";
 import { GoalType } from "../../types/dbTypes";
 
-export const deactivateGoalsAndEvents = async (discordId: string) => {
+export const deactivateGoalsAndEvents = async (
+  discordId: string,
+  type?: GoalType
+) => {
   // deactivate any goals left today channels from discord UI if they exist
   let active_events = await Event.find({
     where: { discordId: discordId, isActive: true },
@@ -16,9 +19,18 @@ export const deactivateGoalsAndEvents = async (discordId: string) => {
       goal_left_channel?.delete();
     }
   });
-  await Event.update({ discordId: discordId, type: type }, { isActive: false });
-  await WeeklyGoal.update(
-    { discordId: discordId, type: type },
-    { isActive: false }
-  );
+
+  if (type != undefined) {
+    await Event.update(
+      { discordId: discordId, type: type },
+      { isActive: false }
+    );
+    await WeeklyGoal.update(
+      { discordId: discordId, type: type },
+      { isActive: false }
+    );
+  } else {
+    await Event.update({ discordId: discordId }, { isActive: false });
+    await WeeklyGoal.update({ discordId: discordId }, { isActive: false });
+  }
 };
