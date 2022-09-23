@@ -42,9 +42,9 @@ export const reactToImages = (
       );
       console.log("HERE IS THE CUSTOM CHANNEL ", userCustomChannel, " FOR ", msg.author.username)
       if (event?.goalLeftChannelId || userCustomChannel) {
-        setTimeout(() => {
-          nudge(user_id) // to delete and only show once
-        }, 250 * 1);  
+        // setTimeout(() => {
+        //   nudge(user_id) // to delete and only show once
+        // }, 250 * 1);  
 
         console.log("updating stuffs and deleting")
         if (event?.goalLeftChannelId) { // delete their identified goal left channel id
