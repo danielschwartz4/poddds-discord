@@ -65,7 +65,6 @@ export const assignPod = async (
       let channel = CLIENT.channels.cache.get(
         channelId as string
       ) as TextChannel;
-      console.log("before send: ", resp);
       await channel.send(resp);
     }
   } else {
@@ -106,6 +105,5 @@ const sendMessage = async (type: GoalType, resp: string, pod: Pod) => {
     .next().value;
 
   let channel = CLIENT.channels.cache.get(channelId as string) as TextChannel;
-  console.log("before send2: ", resp);
   await channel.send(resp);
 };
