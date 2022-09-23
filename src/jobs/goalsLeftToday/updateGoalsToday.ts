@@ -11,6 +11,7 @@ import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { mdyDate } from "../../utils/timeZoneUtil";
 import { colorBooleanMapper } from "../createGoal";
 import { CLIENT, DAILY_UPDATES_CHAT_CHANNEL_ID, SERVER_ID } from "../discordScheduler";
+import { deactivateMember } from "../onMemberLeave";
 import { deactivateGoalsAndEvents } from "./deactivateGoals";
 import { updateGoalsYesterday } from "./updateGoalsYesterday";
 
@@ -78,7 +79,10 @@ export const updateGoalsToday = async (
     let user_id = event.discordId;
 
     // if their role isn't a podmate, then deactivate their goals !! issue here (need to create a helper function to activate goals and events given a discord id now :/)
-    let userDiscordObject = await guild?.members.fetch(user_id);
+    let userDiscordObject = await guild?.members.fetch(user_id).catch((err) => {
+      console.log("ERROR! Assuming user has left server", err)
+      deactivateMember(user_id)
+    });;
     if (userDiscordObject) {
       if (userDiscordObject?.roles.cache.some((role) => role.name === "podmate")) {
         '' // just checking if ONE of their roles is podmate
