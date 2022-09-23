@@ -51,7 +51,7 @@ export const createGoal = (
           localTodayWithTimeZone,
           parseInt(cleanedData["duration"])
         );
-        deactivateGoalsAndEvents(interaction?.user?.id);
+        deactivateGoalsAndEvents(interaction?.user?.id, type as GoalType);
         const weekly_goal = await WeeklyGoal.create({
           description: cleanedData["goal"],
           evidence: cleanedData["evidence"],
@@ -76,6 +76,7 @@ export const createGoal = (
               discordId: interaction.user.id,
               goalId: weekly_goal.id,
               timeZone: flipSign(cleanedData["time-zone"]),
+              type: type as GoalType,
               isActive: true,
             }).save();
           }
@@ -86,6 +87,8 @@ export const createGoal = (
       const user = await guild?.members.fetch(interaction.user.id);
       console.log("BEFORE ASSIGN POD");
       // Assign user to pod and send resp to that goals channel
+      console.log("here");
+      console.log(resp);
       assignPod(type as GoalType, user as GuildMember, resp);
       if (user?.roles.cache.some((role) => role.name === "new member")) {
         // Notify admins of new podmate

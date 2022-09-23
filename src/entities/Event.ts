@@ -1,3 +1,4 @@
+import { GoalType } from "../types/dbTypes";
 import { Field, Int, ObjectType } from "type-graphql";
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
@@ -31,6 +32,15 @@ export class Event extends BaseEntity {
   @Field({ nullable: true })
   @Column({ nullable: true })
   timeZone: string;
+
+  @Field()
+  @Column({
+    type: "enum",
+    enum: ["exercise", "study"],
+    default: "exercise",
+    nullable: true,
+  })
+  type: GoalType;
 
   @Field({ nullable: true })
   @Column({ nullable: true })

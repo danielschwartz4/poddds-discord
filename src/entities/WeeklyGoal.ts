@@ -54,6 +54,7 @@ export class WeeklyGoal extends BaseEntity {
     type: "enum",
     enum: ["exercise", "study"],
     default: "exercise",
+    nullable: true,
   })
   type: GoalType;
 

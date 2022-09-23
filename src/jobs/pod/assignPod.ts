@@ -35,7 +35,6 @@ export const assignPod = async (
     return;
   }
 
-  console.log(pod);
   if (pod == null) {
     // 1. Create new pod with one member
     // 2. Change user's podId
@@ -66,43 +65,23 @@ export const assignPod = async (
       let channel = CLIENT.channels.cache.get(
         channelId as string
       ) as TextChannel;
+      console.log("before send: ", resp);
       await channel.send(resp);
     }
   } else {
-    console.log("POD NOT NULL");
     // 1. Change users podId and increment pod numMembers
     // 2. send resp to goals channel
     // TODO 3. Assign user role BY TIMEZONE
     type == "exercise"
       ? User.update({ discordId: user?.id }, { exercisePodId: pod?.id })
       : User.update({ discordId: user?.id }, { studyPodId: pod?.id });
+
     Pod.update({ id: pod?.id }, { numMembers: pod?.numMembers + 1 });
     let role_id = user?.guild?.roles?.cache.find(
       (r) => r.name === type + pod?.id
     );
     await user?.roles?.add(role_id as Role);
     sendMessage(type, resp, pod);
-    // const guild = CLIENT.guilds.cache.get(SERVER_ID as string);
-
-    // let category = guild?.channels?.cache?.filter(
-    //   (category) =>
-    //     category.name ==
-    //     (type === "exercise"
-    //       ? "--- 💪 " + type + " pod " + pod?.id
-    //       : "--- 📚 " + type + " pod " + pod?.id)
-    // );
-    // const categoryId = category?.keys().next().value;
-    // let categoryChannel = CLIENT.channels.cache.get(
-    //   categoryId
-    // ) as CategoryChannel;
-
-    // const channelId = categoryChannel?.children.cache
-    //   ?.filter((channel) => channel.name == "🏁weekly-goals-setting")
-    //   .keys()
-    //   .next().value;
-
-    // let channel = CLIENT.channels.cache.get(channelId as string) as TextChannel;
-    // await channel.send(resp);
   }
 };
 
@@ -127,5 +106,6 @@ const sendMessage = async (type: GoalType, resp: string, pod: Pod) => {
     .next().value;
 
   let channel = CLIENT.channels.cache.get(channelId as string) as TextChannel;
+  console.log("before send2: ", resp);
   await channel.send(resp);
 };
