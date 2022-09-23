@@ -49,34 +49,17 @@ async function discordBot() {
     console.log("The client bot is ready!");
     console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-4")); // in EST
 
-    // migrateFromTaskDB()
-    // const guilds = CLIENT.guilds.cache.map((guild) => guild.id);
-
-    // set goal ids of people to active that were mistakenly set to inactive, delete this after
-    // const goal_ids_to_reset = []
-    // goal_ids_to_reset.forEach((goal_id) => {
-    //   updateWeeklyGoalAndEventsActive(goal_id)
-    // })
-
     goalCommand(CLIENT, SERVER_ID as string);
     createGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
     breakCommand(CLIENT, SERVER_ID as string);
-    createBreak(CLIENT);
-    // addExistingMembers(client, SERVER_ID as string);
     reactToImages(CLIENT, DAILY_UPDATES_CHAT_CHANNEL_ID as string);
     newMember(CLIENT);
     routeBotDMs();
 
-    // update streaks daily from database numbers using cron, everyday @ midnight
-    // cleanActiveEvents()
-    // updateGoalsToday(
-    //   client,
-    //   SERVER_ID as string,
-    //   DAILY_UPDATES_CHAT_CHANNEL_ID as string
-    // );
-
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
+      createBreak(CLIENT); // need to update TODAY var in break every hour
+
       const gmt0Hours = TODAY().getUTCHours();
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
 
@@ -93,7 +76,7 @@ async function discordBot() {
       await updateGoalsToday(
         timeZoneIsUTCMidnight
       );
-      await autokick(CLIENT, SERVER_ID as string, timeZoneIsUTCMidnight);
+      await autokick(timeZoneIsUTCMidnight);
       // updateStreaks(
       //   client,
       //   SERVER_ID as string,
@@ -103,7 +86,7 @@ async function discordBot() {
 
     // update every day at 9am EST (-5), (EST + 4) 1pm UTC
     cron.schedule("0 13 */1 * *", () => {
-      dailySummary(CLIENT);
+      dailySummary();
     });
 
     // update "At 00:00 on Sunday"

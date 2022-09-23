@@ -1,7 +1,7 @@
 import { TODAY } from "../constants";
 
 // Change timezone given gmt (e.g. -6)
-export function changeTimeZone(dateUTC: Date, timeZone: string) {
+export const changeTimeZone = (dateUTC: Date, timeZone: string) => {
   let timeZoneFlipped = flipSign(timeZone)
     let localDateObject = dateUTC.toLocaleString("en-GB", {
         timeZone: "Etc/GMT" + timeZoneFlipped,
