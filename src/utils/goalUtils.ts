@@ -35,3 +35,7 @@ export const parseInteractionResponse = (
 const colorMapper = (option: string) => {
   return option == "off" ? "🔴" : "🟢";
 };
+
+export const colorBooleanMapper = (option: boolean) => {
+  return option ? "🟢" : "🔴";
+};

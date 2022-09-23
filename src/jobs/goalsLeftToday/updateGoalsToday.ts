@@ -1,23 +1,21 @@
-import {
-  ChannelType,
-  PermissionsBitField,
-  TextChannel,
-} from "discord.js";
+import { ChannelType, PermissionsBitField, TextChannel } from "discord.js";
 import { IsNull } from "typeorm";
 import { LOCAL_TODAY } from "../../constants";
 import { Event } from "../../entities/Event";
 import { User } from "../../entities/User";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { mdyDate } from "../../utils/timeZoneUtil";
-import { colorBooleanMapper } from "../createGoal";
-import { CLIENT, DAILY_UPDATES_CHAT_CHANNEL_ID, SERVER_ID } from "../discordScheduler";
-import { deactivateMember } from "../onMemberLeave";
+import { colorBooleanMapper } from "../../utils/goalUtils";
+import {
+  CLIENT,
+  DAILY_UPDATES_CHAT_CHANNEL_ID,
+  SERVER_ID,
+} from "../discordScheduler";
+import { deactivateMember } from "../member/onMemberLeave";
 import { deactivateGoalsAndEvents } from "./deactivateGoals";
 import { updateGoalsYesterday } from "./updateGoalsYesterday";
 
-export const updateGoalsToday = async (
-  timeZoneIsUTCMidnight?: string
-) => {
+export const updateGoalsToday = async (timeZoneIsUTCMidnight?: string) => {
   await updateGoalsYesterday(timeZoneIsUTCMidnight);
 
   // add goalsChannels for today if there is no channel id and if it's their day
@@ -45,7 +43,12 @@ export const updateGoalsToday = async (
       },
     });
   }
-  console.log("HERE ARE EVENTS THAT WILL BE UPDATED TO IS ACTIVE AND POSTED WHERE TODAY IS: ", date_today, " FOR TIMEZONE ", timeZoneIsUTCMidnight)
+  console.log(
+    "HERE ARE EVENTS THAT WILL BE UPDATED TO IS ACTIVE AND POSTED WHERE TODAY IS: ",
+    date_today,
+    " FOR TIMEZONE ",
+    timeZoneIsUTCMidnight
+  );
   console.log(events_for_day);
 
   // Create a channel in the "GOALS LEFT TODAY" category
@@ -80,14 +83,16 @@ export const updateGoalsToday = async (
 
     // if their role isn't a podmate, then deactivate their goals !! issue here (need to create a helper function to activate goals and events given a discord id now :/)
     let userDiscordObject = await guild?.members.fetch(user_id).catch((err) => {
-      console.log("ERROR! Assuming user has left server", err)
-      deactivateMember(user_id)
-    });;
+      console.log("ERROR! Assuming user has left server", err);
+      deactivateMember(user_id);
+    });
     if (userDiscordObject) {
-      if (userDiscordObject?.roles.cache.some((role) => role.name === "podmate")) {
-        '' // just checking if ONE of their roles is podmate
+      if (
+        userDiscordObject?.roles.cache.some((role) => role.name === "podmate")
+      ) {
+        (""); // just checking if ONE of their roles is podmate
       } else {
-        deactivateGoalsAndEvents(user_id) // none of their roles is podmate
+        deactivateGoalsAndEvents(user_id); // none of their roles is podmate
       }
     }
 
@@ -105,50 +110,64 @@ export const updateGoalsToday = async (
         })
         .then(async (goal_left_channel_id) => {
           if (weekly_goal?.description) {
-            var Difference_In_Time = weekly_goal.adjustedEndDate.getTime() - LOCAL_TODAY(timeZoneIsUTCMidnight as string).getTime();
+            var Difference_In_Time =
+              weekly_goal.adjustedEndDate.getTime() -
+              LOCAL_TODAY(timeZoneIsUTCMidnight as string).getTime();
             // To calculate the no. of days between two dates
-            var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24)) + 1;
+            var Difference_In_Days =
+              Math.round(Difference_In_Time / (1000 * 3600 * 24)) + 1;
             let days_left_message = Difference_In_Days + " days left!";
             if (Difference_In_Days === 1) {
-              days_left_message = "1 day left! 🏁 🏃‍♂️"
+              days_left_message = "1 day left! 🏁 🏃‍♂️";
             }
 
-            let dates = ""
+            let dates = "";
             if (weekly_goal.days) {
-              dates = "S-" +
-              colorBooleanMapper(weekly_goal.days["sunday"]) +
-              "  M-" +
-              colorBooleanMapper(weekly_goal.days["monday"]) +
-              "  T-" +
-              colorBooleanMapper(weekly_goal.days["tuesday"]) +
-              "  W-" +
-              colorBooleanMapper(weekly_goal.days["wednesday"]) +
-              "  T-" +
-              colorBooleanMapper(weekly_goal.days["thursday"]) +
-              "  F-" +
-              colorBooleanMapper(weekly_goal.days["friday"]) +
-              "  S-" +
-              colorBooleanMapper(weekly_goal.days["saturday"]);
+              dates =
+                "S-" +
+                colorBooleanMapper(weekly_goal.days["sunday"]) +
+                "  M-" +
+                colorBooleanMapper(weekly_goal.days["monday"]) +
+                "  T-" +
+                colorBooleanMapper(weekly_goal.days["tuesday"]) +
+                "  W-" +
+                colorBooleanMapper(weekly_goal.days["wednesday"]) +
+                "  T-" +
+                colorBooleanMapper(weekly_goal.days["thursday"]) +
+                "  F-" +
+                colorBooleanMapper(weekly_goal.days["friday"]) +
+                "  S-" +
+                colorBooleanMapper(weekly_goal.days["saturday"]);
             }
-            
+
             (
               CLIENT.channels.cache.get(goal_left_channel_id.id) as TextChannel
             ).send(
               // `<@${user?.discordId}>` +
-                "Today's your day! Complete your goal by sending evidence in: " +
+              "Today's your day! Complete your goal by sending evidence in: " +
                 `<#${DAILY_UPDATES_CHAT_CHANNEL_ID}>\n` +
-                "🚧 **Goal**: " + weekly_goal?.description + 
-                "\n🖼 **Evidence**: " + weekly_goal?.evidence + 
-                "\n🔥 **" + days_left_message + "**" +
-                "\n" + dates
+                "🚧 **Goal**: " +
+                weekly_goal?.description +
+                "\n🖼 **Evidence**: " +
+                weekly_goal?.evidence +
+                "\n🔥 **" +
+                days_left_message +
+                "**" +
+                "\n" +
+                dates
             );
           }
           let res = await Event.update(
             { discordId: user_id, adjustedDate: date_today, isActive: true },
             { goalLeftChannelId: goal_left_channel_id.id as string }
           );
-          console.log("NEW EVENT WITH GOAL LEFT CHANNEL ID UPDATED FOR USER ", user_id, " ON ", date_today)
-          console.log(res)
+          console.log(
+            "NEW EVENT WITH GOAL LEFT CHANNEL ID UPDATED FOR USER ",
+            user_id,
+            " ON ",
+            date_today
+          );
+          console.log(res);
         });
     }
   });

@@ -12,7 +12,7 @@ import {
 import { addDays, flipSign, int2day, mdyDate } from "../../utils/timeZoneUtil";
 import { deactivateGoalsAndEvents } from "../goalsLeftToday/deactivateGoals";
 import { assignPod } from "../pod/assignPod";
-import { parseInteractionResponse } from "./goalUtils";
+import { parseInteractionResponse } from "../../utils/goalUtils";
 
 export const createGoal = (
   client: Client<boolean>,
