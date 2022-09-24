@@ -1,9 +1,9 @@
 import { CategoryChannel, GuildMember, Role, TextChannel } from "discord.js";
 import { LessThan } from "typeorm";
+import { CLIENT, GUILD } from "../../constants";
 import { Pod } from "../../entities/Pod";
 import { User } from "../../entities/User";
 import { GoalType } from "../../types/dbTypes";
-import { CLIENT, SERVER_ID } from "../discordScheduler";
 import { createPodCategory } from "./createPodCategory";
 
 export const assignPod = async (
@@ -85,9 +85,7 @@ export const assignPod = async (
 };
 
 const sendMessage = async (type: GoalType, resp: string, pod: Pod) => {
-  const guild = CLIENT.guilds.cache.get(SERVER_ID as string);
-
-  let category = guild?.channels?.cache?.filter(
+  let category = GUILD?.channels?.cache?.filter(
     (category) =>
       category.name ==
       (type === "exercise"

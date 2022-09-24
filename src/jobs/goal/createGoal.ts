@@ -1,10 +1,11 @@
-import { Client, GuildMember, Role } from "discord.js";
-import { GoalType } from "src/types/dbTypes";
-import { LOCAL_TODAY } from "../../constants";
+import { GuildMember, Role } from "discord.js";
+import { ADMIN_USER_IDS, CLIENT, GUILD, LOCAL_TODAY } from "../../constants";
 import { Event } from "../../entities/Event";
 import { User } from "../../entities/User";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
+import { GoalType } from "../../types/dbTypes";
 import { buildDays } from "../../utils/buildDaysUtil";
+import { parseInteractionResponse } from "../../utils/goalUtils";
 import {
   InteractionResponse,
   transformInteractionData,
@@ -12,14 +13,9 @@ import {
 import { addDays, flipSign, int2day, mdyDate } from "../../utils/timeZoneUtil";
 import { deactivateGoalsAndEvents } from "../goalsLeftToday/deactivateGoals";
 import { assignPod } from "../pod/assignPod";
-import { parseInteractionResponse } from "../../utils/goalUtils";
 
-export const createGoal = (
-  client: Client<boolean>,
-  admin_ids: string[],
-  server_id: string
-) => {
-  client.on("interactionCreate", async (interaction) => {
+export const createGoal = () => {
+  CLIENT.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     let type;
     if (interaction.commandName === "set-current-exercise-goal") {
@@ -83,8 +79,7 @@ export const createGoal = (
         }
       }
       const from_username = interaction.user.username;
-      const guild = client.guilds.cache.get(server_id);
-      const user = await guild?.members.fetch(interaction.user.id);
+      const user = await GUILD?.members.fetch(interaction.user.id);
       console.log("BEFORE ASSIGN POD");
       // Assign user to pod and send resp to that goals channel
       console.log("here");
@@ -92,8 +87,8 @@ export const createGoal = (
       assignPod(type as GoalType, user as GuildMember, resp);
       if (user?.roles.cache.some((role) => role.name === "new member")) {
         // Notify admins of new podmate
-        admin_ids.forEach((val) => {
-          client.users.fetch(val as string).then((user) => {
+        ADMIN_USER_IDS.forEach((val) => {
+          CLIENT.users.fetch(val as string).then((user) => {
             user.send(
               "poddds -- NEW PODMATE ALERT! DM them if there's no evidence or anything is unclear\n" +
                 from_username +
@@ -104,8 +99,7 @@ export const createGoal = (
         });
 
         // Automatically remove new member role and add podmate role to msg.author.roles
-        const guild = client.guilds.cache.get(interaction?.guildId as string);
-        guild?.members.fetch(interaction.user.id).then((user: any) => {
+        GUILD?.members.fetch(interaction.user.id).then((user: any) => {
           let new_member_role_id = user.guild.roles.cache.find(
             (r: Role) => r.name === "new member"
           );

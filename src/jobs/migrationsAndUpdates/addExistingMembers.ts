@@ -1,13 +1,8 @@
-import { Client } from "discord.js";
+import { GUILD } from "../../constants";
 import { User } from "../../entities/User";
 
-export const addExistingMembers = async (
-  client: Client<boolean>,
-  server_id: string
-) => {
-  const guild = client.guilds.cache.get(server_id);
-
-  guild?.members.fetch().then((members) => {
+export const addExistingMembers = async () => {
+  GUILD?.members.fetch().then((members) => {
     members.forEach(async (user) => {
       // add member id and stuff to DB
       const newUser = await User.find({ where: { discordId: user.id } });

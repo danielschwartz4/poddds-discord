@@ -1,13 +1,15 @@
 import { TextChannel } from "discord.js";
-import { LOCAL_TODAY } from "../constants";
+import {
+  CLIENT,
+  DAILY_UPDATES_CHAT_CHANNEL_ID,
+  LOCAL_TODAY,
+} from "../constants";
 import AppDataSource from "../dataSource";
 import { changeTimeZone, mdyDate } from "../utils/timeZoneUtil";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
-import { CLIENT, DAILY_UPDATES_CHAT_CHANNEL_ID } from "./discordScheduler";
 import { deactivateMember } from "./member/onMemberLeave";
 import inspirational_quotes from "../utils/quotes.json";
 
-// import { DAILY_UPDATES_CHAT_CHANNEL_ID } from "./discordScheduler";
 require("dotenv").config();
 
 export const dailySummary = async () => {

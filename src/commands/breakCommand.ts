@@ -1,14 +1,12 @@
-import { Client } from "discord.js";
-import { TODAY } from "../constants";
+import { CLIENT, GUILD, TODAY } from "../constants";
 import { addDays, int2day } from "../utils/timeZoneUtil";
 
-export const breakCommand = (client: Client<boolean>, serverId: string) => {
-  const guild = client.guilds.cache.get(serverId);
+export const breakCommand = () => {
   let commands;
-  if (guild) {
-    commands = guild.commands;
+  if (GUILD) {
+    commands = GUILD.commands;
   } else {
-    commands = client.application?.commands;
+    commands = CLIENT.application?.commands;
   }
 
   commands?.create({

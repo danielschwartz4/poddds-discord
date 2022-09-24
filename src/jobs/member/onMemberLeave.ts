@@ -1,5 +1,5 @@
+import { ADMIN_USER_IDS, CLIENT } from "../../constants";
 import { User } from "../../entities/User";
-import { ADMIN_USER_IDS, CLIENT } from "../discordScheduler";
 import { deactivateGoalsAndEvents } from "../goalsLeftToday/deactivateGoals";
 
 export const onMemberLeave = () => {

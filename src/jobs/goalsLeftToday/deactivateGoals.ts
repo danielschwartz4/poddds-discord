@@ -1,7 +1,7 @@
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { Event } from "../../entities/Event";
-import { CLIENT } from "../discordScheduler";
 import { GoalType } from "../../types/dbTypes";
+import { CLIENT } from "../../constants";
 
 export const deactivateGoalsAndEvents = async (
   discordId: string,

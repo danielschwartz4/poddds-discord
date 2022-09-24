@@ -1,4 +1,4 @@
-import { ADMIN_USER_IDS, CLIENT } from "./discordScheduler";
+import { ADMIN_USER_IDS, CLIENT } from "../constants";
 
 export const routeBotDMs = () => {
   // route DMs to bot to admins

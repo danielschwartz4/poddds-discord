@@ -2,8 +2,7 @@ import { addDays, mdyDate } from "../../utils/timeZoneUtil";
 import { IsNull, Not } from "typeorm";
 import { Event } from "../../entities/Event";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
-import { LOCAL_TODAY } from "../../constants";
-import { CLIENT } from "../discordScheduler";
+import { CLIENT, LOCAL_TODAY } from "../../constants";
 import { checkIfLastGoal } from "./checkIfLastGoal";
 
 export const updateGoalsYesterday = async (timeZoneIsUTCMidnight?: string) => {

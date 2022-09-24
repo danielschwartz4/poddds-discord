@@ -1,21 +1,18 @@
 import { Role } from "discord.js";
-import { ADMIN_USER_IDS, CLIENT, SERVER_ID } from "../discordScheduler";
-import { WeeklyGoal } from "../../entities/WeeklyGoal";
-import { LOCAL_TODAY } from "../../constants";
+import { ADMIN_USER_IDS, CLIENT, GUILD, LOCAL_TODAY } from "../../constants";
 import { Event } from "../../entities/Event";
+import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { mdyDate } from "../../utils/timeZoneUtil";
 import { deactivateMember } from "./onMemberLeave";
 
-export const autokick = async (timeZoneIsUTCMidnight: string) => {
-  const guild = CLIENT.guilds.cache.get(SERVER_ID as string);
-
-  let podmate_role_id = guild?.roles.cache.find(
+export const autoKickMember = async (timeZoneIsUTCMidnight: string) => {
+  let podmate_role_id = GUILD?.roles.cache.find(
     (r: Role) => r.name === "podmate"
   );
-  let kicked_role_id = guild?.roles.cache.find(
+  let kicked_role_id = GUILD?.roles.cache.find(
     (r: Role) => r.name === "kicked"
   );
-  let new_member_role_id = guild?.roles.cache.find(
+  let new_member_role_id = GUILD?.roles.cache.find(
     (r: Role) => r.name === "new member"
   );
 
@@ -83,7 +80,7 @@ export const autokick = async (timeZoneIsUTCMidnight: string) => {
         });
       // else if client.users.fetch is an error because it's an unknown member, then deactivate weekly goals of member
 
-      const user = await guild?.members.fetch(userId);
+      const user = await GUILD?.members.fetch(userId);
       user?.roles.add(kicked_role_id as Role);
       user?.roles.remove(podmate_role_id as Role);
       user?.roles.remove(new_member_role_id as Role);

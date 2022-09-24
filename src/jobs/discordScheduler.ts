@@ -1,75 +1,46 @@
-import DiscordJS, { GatewayIntentBits, Partials } from "discord.js";
 import cron from "node-cron";
 import { breakCommand } from "../commands/breakCommand";
 import { exerciseGoalCommand } from "../commands/exerciseGoalCommand";
+import { leavePodCommand } from "../commands/leavePodCommand";
 import { studyGoalCommand } from "../commands/studyGoalCommand";
-
-import { LOCAL_TODAY, TODAY, __prod__ } from "../constants";
+import { CLIENT, LOCAL_TODAY, TODAY, __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
-import { autokick } from "./member/kickMember";
 import { createBreak } from "./createBreak";
+import { dailySummary } from "./dailySummary";
 import { createGoal } from "./goal/createGoal";
 import { createGoalReminder } from "./goal/createGoalReminder";
-import { dailySummary } from "./dailySummary";
-import { newMember } from "./member/newMember";
-import { reactToImages } from "./react";
-import { routeBotDMs } from "./routeBotDMs";
 import { updateGoalsToday } from "./goalsLeftToday/updateGoalsToday";
-import { leavePodCommand } from "../commands/leavePodCommand";
+import { updateGoalsYesterday } from "./goalsLeftToday/updateGoalsYesterday";
+import { autoKickMember } from "./member/autoKickMember";
+import { newMember } from "./member/newMember";
 import { leavePod } from "./pod/leavePod";
+import { reactToImages } from "./react/react";
+import { routeBotDMs } from "./routeBotDMs";
 require("dotenv").config();
-
-// NOTE: Ensure that you invite the bot to every channel or make them admin
-export const SERVER_ID = !__prod__
-  ? process.env.TEST_SERVER_ID
-  : process.env.PROD_SERVER_ID;
-export const DAILY_UPDATES_CHAT_CHANNEL_ID = !__prod__
-  ? process.env.TEST_DAILY_UPDATES_CHAT_CHANNEL_ID
-  : process.env.PROD_DAILY_UPDATES_CHAT_CHANNEL_ID;
-export const ADMIN_USER_IDS = ["743590338337308754", "933066784867766342"]; // for updates
-export const ROLES_CHANNEL_ID = !__prod__
-  ? process.env.TEST_ROLES_CHANNEL_ID
-  : process.env.PROD_ROLES_CHANNEL_ID;
-
-// Add discord
-export const CLIENT = new DiscordJS.Client({
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildPresences,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.DirectMessages,
-    GatewayIntentBits.DirectMessageTyping,
-    GatewayIntentBits.DirectMessageReactions,
-  ],
-  partials: [Partials.Channel],
-});
 
 async function discordBot() {
   CLIENT.on("ready", async () => {
     console.log("The client bot is ready!");
     console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-4")); // in EST
 
-    // migrateFromTaskDB()
-
-    exerciseGoalCommand(CLIENT, SERVER_ID as string);
-    studyGoalCommand(CLIENT, SERVER_ID as string);
-    createGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
-    breakCommand(CLIENT, SERVER_ID as string);
-    createBreak(CLIENT);
-    leavePodCommand(CLIENT, SERVER_ID as string);
+    // Run our bot functions
+    exerciseGoalCommand();
+    studyGoalCommand();
+    createGoal();
+    // Put breakCommand in createBreak and pass in timezone
+    breakCommand();
+    createBreak();
+    leavePodCommand();
     leavePod();
-    // addExistingMembers(client, SERVER_ID as string);
-    reactToImages(CLIENT, DAILY_UPDATES_CHAT_CHANNEL_ID as string);
-    newMember(CLIENT);
+    reactToImages();
+    newMember();
     routeBotDMs();
+
+    // addExistingMembers(client, SERVER_ID as string);
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
-      createBreak(CLIENT); // need to update TODAY var in break every hour
+      createBreak(); // need to update TODAY var in break every hour
 
       const gmt0Hours = TODAY().getUTCHours();
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
@@ -84,13 +55,9 @@ async function discordBot() {
         " AND TODAY AS: ",
         TODAY()
       );
+      await updateGoalsYesterday(timeZoneIsUTCMidnight);
       await updateGoalsToday(timeZoneIsUTCMidnight);
-      await autokick(timeZoneIsUTCMidnight);
-      // updateStreaks(
-      //   client,
-      //   SERVER_ID as string,
-      //   DAILY_UPDATES_CHAT_CHANNEL_ID as string
-      // );
+      await autoKickMember(timeZoneIsUTCMidnight);
     });
 
     // update every day at 9am EST (-5), (EST + 4) 1pm UTC

@@ -1,36 +1,58 @@
-import { Client } from "discord.js";
-import { WeeklyGoal } from "../entities/WeeklyGoal";
-import { Event } from "../entities/Event";
-import { LOCAL_TODAY } from "../constants";
+import { CLIENT, LOCAL_TODAY } from "../constants";
 import AppDataSource from "../dataSource";
+import { Event } from "../entities/Event";
+import { WeeklyGoal } from "../entities/WeeklyGoal";
 import {
   InteractionResponse,
   transformInteractionData,
 } from "../utils/interactionData";
-import { addDays, changeTimeZone, int2day, mdyDate } from "../utils/timeZoneUtil";
-import { CLIENT } from "./discordScheduler";
+import {
+  addDays,
+  changeTimeZone,
+  int2day,
+  mdyDate,
+} from "../utils/timeZoneUtil";
 
-export const createBreak = (client: Client<boolean>) => {
-  client.on("interactionCreate", async (interaction) => {
+export const createBreak = () => {
+  CLIENT.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName === "break") {
       const cleanedData = transformInteractionData(
         interaction.options.data as InteractionResponse[]
       );
 
-      const weeklyGoal = await WeeklyGoal.findOne({where: { discordId: interaction.user.id, isActive: true }, order: { id: "DESC" }})
-      if (!weeklyGoal) return
-      const timeZone = weeklyGoal.timeZone
-      const startDate = changeTimeZone(new Date(cleanedData["start-date"]), timeZone)
+      const weeklyGoal = await WeeklyGoal.findOne({
+        where: { discordId: interaction.user.id, isActive: true },
+        order: { id: "DESC" },
+      });
+      if (!weeklyGoal) return;
+      const timeZone = weeklyGoal.timeZone;
+      const startDate = changeTimeZone(
+        new Date(cleanedData["start-date"]),
+        timeZone
+      );
 
-      console.log("BREAK COMMAND BY ", interaction.user.username, " WHERE STARTDATE: ", startDate, " AND LOCAL_TODAY(timeZone): ", LOCAL_TODAY(timeZone), " FOR TIMEZONE: ", timeZone, " AND THE FOLLOWING WEEKLY GOAL", weeklyGoal)
+      console.log(
+        "BREAK COMMAND BY ",
+        interaction.user.username,
+        " WHERE STARTDATE: ",
+        startDate,
+        " AND LOCAL_TODAY(timeZone): ",
+        LOCAL_TODAY(timeZone),
+        " FOR TIMEZONE: ",
+        timeZone,
+        " AND THE FOLLOWING WEEKLY GOAL",
+        weeklyGoal
+      );
       // !! delete goal left channel id if it exists
-      if (mdyDate(startDate) ==  mdyDate(LOCAL_TODAY(timeZone))) {
-        let event = await Event.findOne({ where: { 
-          discordId: interaction.user.id, 
-          isActive: true, 
-          adjustedDate: mdyDate(startDate)}
-        })
+      if (mdyDate(startDate) == mdyDate(LOCAL_TODAY(timeZone))) {
+        let event = await Event.findOne({
+          where: {
+            discordId: interaction.user.id,
+            isActive: true,
+            adjustedDate: mdyDate(startDate),
+          },
+        });
 
         if (event) {
           const goal_left_channel = CLIENT.channels.cache.get(
@@ -45,14 +67,9 @@ export const createBreak = (client: Client<boolean>) => {
         UPDATE event
         SET "isActive" = false
         WHERE "discordId" = '${interaction.user.id}'
-        AND CAST("adjustedDate" AS date) >= '${mdyDate(
-          startDate
-        )}'
+        AND CAST("adjustedDate" AS date) >= '${mdyDate(startDate)}'
         AND CAST("adjustedDate" AS date) < '${mdyDate(
-          addDays(
-            startDate,
-            parseInt(cleanedData["duration"])
-          )
+          addDays(startDate, parseInt(cleanedData["duration"]))
         )}'
 			`
       );

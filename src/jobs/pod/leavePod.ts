@@ -1,11 +1,11 @@
 import { Role, TextChannel } from "discord.js";
+import { CLIENT, GUILD } from "../../constants";
 import { Pod } from "../../entities/Pod";
 import { User } from "../../entities/User";
 import {
   InteractionResponse,
   transformInteractionData,
 } from "../../utils/interactionData";
-import { CLIENT, SERVER_ID } from "../discordScheduler";
 
 export const leavePod = async () => {
   CLIENT.on("interactionCreate", async (interaction) => {
@@ -57,8 +57,7 @@ export const leavePod = async () => {
           Pod.update({ id: podId }, { numMembers: pod?.numMembers - 1 });
 
           // 3. remove role
-          const guild = CLIENT.guilds.cache.get(SERVER_ID as string);
-          const user = await guild?.members.fetch(interaction.user.id);
+          const user = await GUILD?.members.fetch(interaction.user.id);
           let pod_role_id = user?.guild.roles.cache.find(
             (r: Role) => r.name === category + podId
           );

@@ -1,25 +1,24 @@
 import { ChannelType, PermissionsBitField, TextChannel } from "discord.js";
 import { IsNull } from "typeorm";
-import { LOCAL_TODAY } from "../../constants";
-import { Event } from "../../entities/Event";
-import { User } from "../../entities/User";
-import { WeeklyGoal } from "../../entities/WeeklyGoal";
-import { mdyDate } from "../../utils/timeZoneUtil";
-import { colorBooleanMapper } from "../../utils/goalUtils";
 import {
   CLIENT,
   DAILY_UPDATES_CHAT_CHANNEL_ID,
-  SERVER_ID,
-} from "../discordScheduler";
+  GUILD,
+  LOCAL_TODAY,
+} from "../../constants";
+import { Event } from "../../entities/Event";
+import { User } from "../../entities/User";
+import { WeeklyGoal } from "../../entities/WeeklyGoal";
+import { colorBooleanMapper } from "../../utils/goalUtils";
+import { mdyDate } from "../../utils/timeZoneUtil";
 import { deactivateMember } from "../member/onMemberLeave";
 import { deactivateGoalsAndEvents } from "./deactivateGoals";
-import { updateGoalsYesterday } from "./updateGoalsYesterday";
 
 export const updateGoalsToday = async (timeZoneIsUTCMidnight?: string) => {
-  await updateGoalsYesterday(timeZoneIsUTCMidnight);
+  // !! Moved this to discord scheduler to separate functions
+  // await updateGoalsYesterday(timeZoneIsUTCMidnight);
 
   // add goalsChannels for today if there is no channel id and if it's their day
-  const guild = CLIENT.guilds.cache.get(SERVER_ID as string);
   const date_today = mdyDate(LOCAL_TODAY(timeZoneIsUTCMidnight as string)); // use local today because you want to find the local date based on the timezone and update and display that
   let events_for_day;
 
@@ -52,8 +51,8 @@ export const updateGoalsToday = async (timeZoneIsUTCMidnight?: string) => {
   console.log(events_for_day);
 
   // Create a channel in the "GOALS LEFT TODAY" category
-  let podmate_role_id = guild?.roles.cache.find((r) => r.name === "podmate");
-  let everyone_role_id = guild?.roles.cache.find((r) => r.name === "@everyone");
+  let podmate_role_id = GUILD?.roles.cache.find((r) => r.name === "podmate");
+  let everyone_role_id = GUILD?.roles.cache.find((r) => r.name === "@everyone");
   const channel_permission_overwrites = [
     {
       id: podmate_role_id?.id as string,
@@ -66,11 +65,11 @@ export const updateGoalsToday = async (timeZoneIsUTCMidnight?: string) => {
   ];
 
   // check if category channel exists
-  let category_channel = guild?.channels.cache.find(
+  let category_channel = GUILD?.channels.cache.find(
     (channel) => channel.name === "--- GOALS LEFT TODAY"
   );
   if (!category_channel) {
-    category_channel = await guild?.channels.create({
+    category_channel = await GUILD?.channels.create({
       name: "--- GOALS LEFT TODAY",
       type: ChannelType.GuildCategory,
       permissionOverwrites: channel_permission_overwrites,
@@ -82,7 +81,7 @@ export const updateGoalsToday = async (timeZoneIsUTCMidnight?: string) => {
     let user_id = event.discordId;
 
     // if their role isn't a podmate, then deactivate their goals !! issue here (need to create a helper function to activate goals and events given a discord id now :/)
-    let userDiscordObject = await guild?.members.fetch(user_id).catch((err) => {
+    let userDiscordObject = await GUILD?.members.fetch(user_id).catch((err) => {
       console.log("ERROR! Assuming user has left server", err);
       deactivateMember(user_id);
     });
@@ -101,7 +100,7 @@ export const updateGoalsToday = async (timeZoneIsUTCMidnight?: string) => {
       where: { id: event.goalId, isActive: true },
     });
     if (user && weekly_goal) {
-      guild?.channels
+      GUILD?.channels
         .create({
           name: user.discordUsername,
           type: ChannelType.GuildText,
@@ -143,7 +142,6 @@ export const updateGoalsToday = async (timeZoneIsUTCMidnight?: string) => {
             (
               CLIENT.channels.cache.get(goal_left_channel_id.id) as TextChannel
             ).send(
-              // `<@${user?.discordId}>` +
               "Today's your day! Complete your goal by sending evidence in: " +
                 `<#${DAILY_UPDATES_CHAT_CHANNEL_ID}>\n` +
                 "🚧 **Goal**: " +
