@@ -33,55 +33,43 @@ const newGoalOptions = [
         value: `${addDays(TODAY(), 1)}`,
       },
       {
-        name: `${
-          int2day(addDays(TODAY(), 2).getDay()) +
-          ", " +
-          addDays(TODAY(), 2).getMonth() +
-          "/" +
-          addDays(TODAY(), 2).getDate()
-        }`,
+        name: "two days from now",
         value: `${addDays(TODAY(), 2)}`,
       },
       {
-        name: `${
-          int2day(addDays(TODAY(), 3).getDay()) +
-          ", " +
-          addDays(TODAY(), 3).getMonth() +
-          "/" +
-          addDays(TODAY(), 3).getDate()
-        }`,
+        name: "three days from now",
         value: `${addDays(TODAY(), 3)}`,
       },
-      {
-        name: `${
-          int2day(addDays(TODAY(), 4).getDay()) +
-          ", " +
-          addDays(TODAY(), 4).getMonth() +
-          "/" +
-          addDays(TODAY(), 4).getDate()
-        }`,
-        value: `${addDays(TODAY(), 4)}`,
-      },
-      {
-        name: `${
-          int2day(addDays(TODAY(), 5).getDay()) +
-          ", " +
-          addDays(TODAY(), 5).getMonth() +
-          "/" +
-          addDays(TODAY(), 5).getDate()
-        }`,
-        value: `${addDays(TODAY(), 5)}`,
-      },
-      {
-        name: `${
-          int2day(addDays(TODAY(), 6).getDay()) +
-          ", " +
-          addDays(TODAY(), 6).getMonth() +
-          "/" +
-          addDays(TODAY(), 6).getDate()
-        }`,
-        value: `${addDays(TODAY(), 6)}`,
-      },
+      // {
+      //   name: `${
+      //     int2day(addDays(TODAY(), 4).getDay()) +
+      //     ", " +
+      //     addDays(TODAY(), 4).getMonth() +
+      //     "/" +
+      //     addDays(TODAY(), 4).getDate()
+      //   }`,
+      //   value: `${addDays(TODAY(), 4)}`,
+      // },
+      // {
+      //   name: `${
+      //     int2day(addDays(TODAY(), 5).getDay()) +
+      //     ", " +
+      //     addDays(TODAY(), 5).getMonth() +
+      //     "/" +
+      //     addDays(TODAY(), 5).getDate()
+      //   }`,
+      //   value: `${addDays(TODAY(), 5)}`,
+      // },
+      // {
+      //   name: `${
+      //     int2day(addDays(TODAY(), 6).getDay()) +
+      //     ", " +
+      //     addDays(TODAY(), 6).getMonth() +
+      //     "/" +
+      //     addDays(TODAY(), 6).getDate()
+      //   }`,
+      //   value: `${addDays(TODAY(), 6)}`,
+      // },
     ],
   },
   {
