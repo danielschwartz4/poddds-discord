@@ -9,7 +9,6 @@ import { changeTimeZone, mdyDate } from "../utils/timeZoneUtil";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { deactivateMember } from "./member/onMemberLeave";
 import inspirational_quotes from "../utils/quotes.json";
-
 require("dotenv").config();
 
 export const dailySummary = async () => {

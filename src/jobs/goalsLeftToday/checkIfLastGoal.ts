@@ -1,6 +1,6 @@
 import { mdyDate } from "../../utils/timeZoneUtil";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
-import { readLastWeeklyGoal } from "../../resolvers/weeklyGoalResolvers";
+import { readLastWeeklyGoal } from "../../resolvers/weeklyGoal";
 import { expiredGoalNotif } from "../expiredGoalNotif";
 
 export const checkIfLastGoal = async (user_id: string, date: string) => {

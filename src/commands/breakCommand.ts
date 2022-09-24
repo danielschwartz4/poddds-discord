@@ -1,5 +1,5 @@
 import { CLIENT, GUILD, TODAY } from "../constants";
-import { addDays, int2day } from "../utils/timeZoneUtil";
+import { addDays } from "../utils/timeZoneUtil";
 
 export const breakCommand = () => {
   let commands;

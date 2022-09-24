@@ -1,7 +1,7 @@
 import { Client } from "discord.js";
 import { User } from "../../entities/User";
-import { readAllUsers } from "../../resolvers/userResolvers";
-import { readLastWeeklyGoal } from "../../resolvers/weeklyGoalResolvers";
+import { readAllUsers } from "../../resolvers/user";
+import { readLastWeeklyGoal } from "../../resolvers/weeklyGoal";
 
 export const createGoalReminder = async (client: Client<boolean>) => {
   console.log("CREATE GOAL REMINDER");
