@@ -58,7 +58,7 @@ export const assignPod = async (
       const category = await createPodCategory(type, pod?.id);
       // Get weekly-goals-setting channel id
       const channelId = category?.children.cache
-        ?.filter((channel) => channel.name == "🏁weekly-goals-setting")
+        ?.filter((channel) => channel.name == "🏁goals-setting")
         .keys()
         .next().value;
 
@@ -100,7 +100,7 @@ const sendMessage = async (type: GoalType, resp: string, pod: Pod) => {
   ) as CategoryChannel;
 
   const channelId = categoryChannel?.children.cache
-    ?.filter((channel) => channel.name == "🏁weekly-goals-setting")
+    ?.filter((channel) => channel.name == "🏁goals-setting")
     .keys()
     .next().value;
 

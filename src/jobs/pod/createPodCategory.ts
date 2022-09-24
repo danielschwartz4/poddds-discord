@@ -41,7 +41,7 @@ export const createPodCategory = async (type: GoalType, podId: number) => {
     parent: pod_category?.id,
   });
   await guild?.channels.create({
-    name: "🏁weekly-goals-setting",
+    name: "🏁goals-setting",
     type: ChannelType.GuildText,
     permissionOverwrites: channel_permission_overwrites,
     parent: pod_category?.id,
