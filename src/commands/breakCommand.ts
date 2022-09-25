@@ -1,7 +1,8 @@
-import { CLIENT, GUILD, TODAY } from "../constants";
+import { Guild } from "discord.js";
+import { CLIENT, TODAY } from "../constants";
 import { addDays } from "../utils/timeZoneUtil";
 
-export const breakCommand = () => {
+export const breakCommand = (GUILD: Guild) => {
   let commands;
   if (GUILD) {
     commands = GUILD.commands;

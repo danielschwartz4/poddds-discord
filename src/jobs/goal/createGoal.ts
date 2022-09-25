@@ -1,5 +1,5 @@
-import { GuildMember, Role } from "discord.js";
-import { ADMIN_USER_IDS, CLIENT, GUILD, LOCAL_TODAY } from "../../constants";
+import { Guild, GuildMember, Role } from "discord.js";
+import { ADMIN_USER_IDS, CLIENT, LOCAL_TODAY } from "../../constants";
 import { Event } from "../../entities/Event";
 import { User } from "../../entities/User";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
@@ -11,10 +11,11 @@ import {
   transformInteractionData,
 } from "../../utils/interactionData";
 import { addDays, flipSign, int2day, mdyDate } from "../../utils/timeZoneUtil";
+// import { GUILD } from "../discordScheduler";
 import { deactivateGoalsAndEvents } from "../goalsLeftToday/deactivateGoals";
 import { assignPod } from "../pod/assignPod";
 
-export const createGoal = () => {
+export const createGoal = (GUILD: Guild) => {
   CLIENT.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     let type;
@@ -79,12 +80,14 @@ export const createGoal = () => {
         }
       }
       const from_username = interaction.user.username;
-      const user = await GUILD?.members.fetch(interaction.user.id);
+      console.log(interaction.user);
+      const user = await GUILD.members.fetch(interaction.user.id);
+      console.log(user);
       console.log("BEFORE ASSIGN POD");
       // Assign user to pod and send resp to that goals channel
       console.log("here");
       console.log(resp);
-      assignPod(type as GoalType, user as GuildMember, resp);
+      assignPod(type as GoalType, user as GuildMember, resp, GUILD);
       if (user?.roles.cache.some((role) => role.name === "new member")) {
         // Notify admins of new podmate
         ADMIN_USER_IDS.forEach((val) => {

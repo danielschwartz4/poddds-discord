@@ -1,15 +1,23 @@
-import { CategoryChannel, GuildMember, Role, TextChannel } from "discord.js";
+import {
+  CategoryChannel,
+  Guild,
+  GuildMember,
+  Role,
+  TextChannel,
+} from "discord.js";
 import { LessThan } from "typeorm";
-import { CLIENT, GUILD } from "../../constants";
+import { CLIENT } from "../../constants";
 import { Pod } from "../../entities/Pod";
 import { User } from "../../entities/User";
 import { GoalType } from "../../types/dbTypes";
+// import { GUILD } from "../discordScheduler";
 import { createPodCategory } from "./createPodCategory";
 
 export const assignPod = async (
   type: GoalType,
   user: GuildMember,
-  resp: string
+  resp: string,
+  GUILD: Guild
 ) => {
   console.log("START");
   const dbUser = await User.findOne({
@@ -17,6 +25,7 @@ export const assignPod = async (
       discordId: user?.id,
     },
   });
+  console.log("user", dbUser);
   // find target pod in database
   const pod = await Pod.findOne({
     where: {
@@ -31,7 +40,7 @@ export const assignPod = async (
     dbUser?.exercisePodId != -1 &&
     pod != null
   ) {
-    sendMessage(type, resp, pod);
+    await sendMessage(type, resp, pod, GUILD);
     return;
   }
 
@@ -41,11 +50,14 @@ export const assignPod = async (
     // 3. Add new pod role
     // 4. Assign user role
     // 5. send resp to goals channel
+    console.log("before pod");
     const pod = await Pod.create({
       numMembers: 1,
       type: type,
     }).save();
+    console.log("pod", pod);
     if (pod) {
+      console.log("in if");
       type == "exercise"
         ? await User.update({ discordId: user?.id }, { exercisePodId: pod?.id })
         : await User.update({ discordId: user?.id }, { studyPodId: pod?.id });
@@ -55,8 +67,8 @@ export const assignPod = async (
         reason: "This pod is for " + type + "!",
       });
       await user?.roles?.add(role_id as Role);
-      const category = await createPodCategory(type, pod?.id);
-      // Get weekly-goals-setting channel id
+      const category = await createPodCategory(type, pod?.id, GUILD);
+      // Get goals-setting channel id
       const channelId = category?.children.cache
         ?.filter((channel) => channel.name == "🏁goals-setting")
         .keys()
@@ -72,19 +84,24 @@ export const assignPod = async (
     // 2. send resp to goals channel
     // TODO 3. Assign user role BY TIMEZONE
     type == "exercise"
-      ? User.update({ discordId: user?.id }, { exercisePodId: pod?.id })
-      : User.update({ discordId: user?.id }, { studyPodId: pod?.id });
+      ? await User.update({ discordId: user?.id }, { exercisePodId: pod?.id })
+      : await User.update({ discordId: user?.id }, { studyPodId: pod?.id });
 
     Pod.update({ id: pod?.id }, { numMembers: pod?.numMembers + 1 });
     let role_id = user?.guild?.roles?.cache.find(
       (r) => r.name === type + pod?.id
     );
     await user?.roles?.add(role_id as Role);
-    sendMessage(type, resp, pod);
+    sendMessage(type, resp, pod, GUILD);
   }
 };
 
-const sendMessage = async (type: GoalType, resp: string, pod: Pod) => {
+const sendMessage = async (
+  type: GoalType,
+  resp: string,
+  pod: Pod,
+  GUILD: Guild
+) => {
   let category = GUILD?.channels?.cache?.filter(
     (category) =>
       category.name ==
@@ -102,6 +119,9 @@ const sendMessage = async (type: GoalType, resp: string, pod: Pod) => {
     .keys()
     .next().value;
 
+  console.log("HERE");
+  console.log("resp", resp);
   let channel = CLIENT.channels.cache.get(channelId as string) as TextChannel;
+  console.log("channel", channel);
   await channel.send(resp);
 };

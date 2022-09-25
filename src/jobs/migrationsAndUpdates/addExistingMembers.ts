@@ -1,7 +1,7 @@
-import { GUILD } from "../../constants";
+import { Guild } from "discord.js";
 import { User } from "../../entities/User";
 
-export const addExistingMembers = async () => {
+export const addExistingMembers = async (GUILD: Guild) => {
   GUILD?.members.fetch().then((members) => {
     members.forEach(async (user) => {
       // add member id and stuff to DB

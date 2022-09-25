@@ -4,8 +4,12 @@ import { Event } from "../../entities/Event";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { CLIENT, LOCAL_TODAY } from "../../constants";
 import { checkIfLastGoal } from "./checkIfLastGoal";
+import { Guild } from "discord.js";
 
-export const updateGoalsYesterday = async (timeZoneIsUTCMidnight?: string) => {
+export const updateGoalsYesterday = async (
+  GUILD: Guild,
+  timeZoneIsUTCMidnight?: string
+) => {
   console.log("updating goals yesterday for timezone ", timeZoneIsUTCMidnight);
   const localTodayWithTimeZone = LOCAL_TODAY(timeZoneIsUTCMidnight as string);
   const date_yesterday = mdyDate(addDays(localTodayWithTimeZone, -1));
@@ -39,7 +43,7 @@ export const updateGoalsYesterday = async (timeZoneIsUTCMidnight?: string) => {
     },
   });
   activeWeeklyGoalsInTimezone.forEach((res) => {
-    checkIfLastGoal(res.discordId, date_yesterday);
+    checkIfLastGoal(res.discordId, date_yesterday, GUILD);
   });
 
   // debugging messages

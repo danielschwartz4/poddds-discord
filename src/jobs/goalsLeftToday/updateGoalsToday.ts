@@ -1,9 +1,13 @@
-import { ChannelType, PermissionsBitField, TextChannel } from "discord.js";
+import {
+  ChannelType,
+  Guild,
+  PermissionsBitField,
+  TextChannel,
+} from "discord.js";
 import { IsNull } from "typeorm";
 import {
   CLIENT,
   DAILY_UPDATES_CHAT_CHANNEL_ID,
-  GUILD,
   LOCAL_TODAY,
 } from "../../constants";
 import { Event } from "../../entities/Event";
@@ -14,7 +18,10 @@ import { mdyDate } from "../../utils/timeZoneUtil";
 import { deactivateMember } from "../member/onMemberLeave";
 import { deactivateGoalsAndEvents } from "./deactivateGoals";
 
-export const updateGoalsToday = async (timeZoneIsUTCMidnight?: string) => {
+export const updateGoalsToday = async (
+  GUILD: Guild,
+  timeZoneIsUTCMidnight?: string
+) => {
   // !! Moved this to discord scheduler to separate functions
   // await updateGoalsYesterday(timeZoneIsUTCMidnight);
 

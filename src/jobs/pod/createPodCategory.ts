@@ -1,8 +1,13 @@
-import { ChannelType, PermissionsBitField } from "discord.js";
-import { GUILD } from "../../constants";
+import { ChannelType, Guild, PermissionsBitField } from "discord.js";
+// import { GUILD } from "../../constants";
 import { GoalType } from "../../types/dbTypes";
+// import { GUILD } from "../discordScheduler";
 
-export const createPodCategory = async (type: GoalType, podId: number) => {
+export const createPodCategory = async (
+  type: GoalType,
+  podId: number,
+  GUILD: Guild
+) => {
   // Create permissions
   let pod_role_id = GUILD?.roles.cache.find((r) => r.name === type + podId);
   // let pod_role_id = guild?.roles.cache.get(type + podId);
@@ -18,6 +23,7 @@ export const createPodCategory = async (type: GoalType, podId: number) => {
       deny: [PermissionsBitField.Flags.ViewChannel],
     },
   ];
+
   const pod_category = await GUILD?.channels.create({
     name:
       type === "exercise"

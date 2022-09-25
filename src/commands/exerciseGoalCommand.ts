@@ -1,6 +1,7 @@
-import { CLIENT, GUILD } from "../constants";
+import { Guild } from "discord.js";
+import { CLIENT } from "../constants";
 
-export const exerciseGoalCommand = () => {
+export const exerciseGoalCommand = (GUILD: Guild) => {
   let commands;
   if (GUILD) {
     commands = GUILD.commands;

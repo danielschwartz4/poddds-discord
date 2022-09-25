@@ -1,5 +1,5 @@
-import { Role, TextChannel } from "discord.js";
-import { CLIENT, GUILD } from "../../constants";
+import { Guild, Role, TextChannel } from "discord.js";
+import { CLIENT } from "../../constants";
 import { Pod } from "../../entities/Pod";
 import { User } from "../../entities/User";
 import {
@@ -7,7 +7,7 @@ import {
   transformInteractionData,
 } from "../../utils/interactionData";
 
-export const leavePod = async () => {
+export const leavePod = async (GUILD: Guild) => {
   CLIENT.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName === "leave-pod") {

@@ -1,9 +1,10 @@
+import { Guild } from "discord.js";
 import cron from "node-cron";
 import { breakCommand } from "../commands/breakCommand";
 import { exerciseGoalCommand } from "../commands/exerciseGoalCommand";
 import { leavePodCommand } from "../commands/leavePodCommand";
 import { studyGoalCommand } from "../commands/studyGoalCommand";
-import { CLIENT, LOCAL_TODAY, TODAY, __prod__ } from "../constants";
+import { CLIENT, LOCAL_TODAY, SERVER_ID, TODAY, __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { createBreak } from "./createBreak";
 import { dailySummary } from "./dailySummary";
@@ -20,19 +21,20 @@ require("dotenv").config();
 
 async function discordBot() {
   CLIENT.on("ready", async () => {
+    console.log("GUILD MEMBER", CLIENT?.guilds.cache.get(SERVER_ID as string));
     console.log("The client bot is ready!");
     console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-4")); // in EST
-
+    const GUILD = CLIENT?.guilds.cache.get(SERVER_ID as string);
     // Run our bot functions
-    exerciseGoalCommand();
-    studyGoalCommand();
-    createGoal();
+    exerciseGoalCommand(GUILD as Guild);
+    studyGoalCommand(GUILD as Guild);
+    createGoal(GUILD as Guild);
     // Put breakCommand in createBreak and pass in timezone
-    breakCommand();
+    breakCommand(GUILD as Guild);
     createBreak();
-    leavePodCommand();
-    leavePod();
-    reactToImages();
+    leavePodCommand(GUILD as Guild);
+    leavePod(GUILD as Guild);
+    reactToImages(GUILD as Guild);
     newMember();
     routeBotDMs();
 
@@ -55,9 +57,9 @@ async function discordBot() {
         " AND TODAY AS: ",
         TODAY()
       );
-      await updateGoalsYesterday(timeZoneIsUTCMidnight);
-      await updateGoalsToday(timeZoneIsUTCMidnight);
-      await autoKickMember(timeZoneIsUTCMidnight);
+      await updateGoalsYesterday(GUILD as Guild, timeZoneIsUTCMidnight);
+      await updateGoalsToday(GUILD as Guild, timeZoneIsUTCMidnight);
+      await autoKickMember(timeZoneIsUTCMidnight, GUILD as Guild);
     });
 
     // update every day at 9am EST (-5), (EST + 4) 1pm UTC

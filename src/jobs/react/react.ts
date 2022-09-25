@@ -1,9 +1,9 @@
 // react with some emojis if there's an image
 
+import { Guild } from "discord.js";
 import {
   CLIENT,
   DAILY_UPDATES_CHAT_CHANNEL_ID,
-  GUILD,
   LOCAL_TODAY,
 } from "../../constants";
 import { Event } from "../../entities/Event";
@@ -12,7 +12,7 @@ import { mdyDate } from "../../utils/timeZoneUtil";
 import { checkIfLastGoal } from "../goalsLeftToday/checkIfLastGoal";
 import { nudge } from "./nudge";
 
-export const reactToImages = () => {
+export const reactToImages = (GUILD: Guild) => {
   CLIENT.on("messageCreate", async (msg) => {
     if (
       msg.attachments.size > 0 &&
@@ -88,7 +88,7 @@ export const reactToImages = () => {
         }
 
         // check if they just completed their last weekly goal
-        checkIfLastGoal(user_id, date_today);
+        checkIfLastGoal(user_id, date_today, GUILD);
       }
 
       // just in case they don't have a channel id but we still want to update

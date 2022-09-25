@@ -22,4 +22,5 @@ export const readPodUsers = async (pod: Pod) => {
       },
     });
   }
+  return users;
 };

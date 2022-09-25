@@ -1,11 +1,14 @@
-import { Role } from "discord.js";
-import { ADMIN_USER_IDS, CLIENT, GUILD, LOCAL_TODAY } from "../../constants";
+import { Guild, Role } from "discord.js";
+import { ADMIN_USER_IDS, CLIENT, LOCAL_TODAY } from "../../constants";
 import { Event } from "../../entities/Event";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { mdyDate } from "../../utils/timeZoneUtil";
 import { deactivateMember } from "./onMemberLeave";
 
-export const autoKickMember = async (timeZoneIsUTCMidnight: string) => {
+export const autoKickMember = async (
+  timeZoneIsUTCMidnight: string,
+  GUILD: Guild
+) => {
   let podmate_role_id = GUILD?.roles.cache.find(
     (r: Role) => r.name === "podmate"
   );

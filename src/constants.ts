@@ -1,5 +1,5 @@
-import { addDays, flipSign } from "./utils/timeZoneUtil";
 import DiscordJS, { GatewayIntentBits, Partials } from "discord.js";
+import { addDays, flipSign } from "./utils/timeZoneUtil";
 
 export const __prod__ = process.env.NODE_ENV === "production";
 export const TODAY = () => {
@@ -55,4 +55,4 @@ export const CLIENT = new DiscordJS.Client({
   partials: [Partials.Channel],
 });
 
-export const GUILD = CLIENT.guilds.cache.get(SERVER_ID as string);
+// export const GUILD = CLIENT?.guilds.cache.get(SERVER_ID as string);

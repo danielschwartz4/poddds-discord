@@ -1,7 +1,7 @@
-import { GUILD } from "../../constants";
+import { Guild } from "discord.js";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
 
-export const cleanWeeklyGoals = async () => {
+export const cleanWeeklyGoals = async (GUILD: Guild) => {
   let activeGoals = await WeeklyGoal.find({ where: { isActive: true } });
   activeGoals.forEach((goal: WeeklyGoal) => {
     GUILD?.members?.fetch(goal.discordId).then((user) => {
