@@ -1,10 +1,11 @@
 import { Guild } from "discord.js";
 import cron from "node-cron";
+import { readUser } from "../resolvers/user";
 import { breakCommand } from "../commands/breakCommand";
 import { exerciseGoalCommand } from "../commands/exerciseGoalCommand";
 import { leavePodCommand } from "../commands/leavePodCommand";
 import { studyGoalCommand } from "../commands/studyGoalCommand";
-import { CLIENT, LOCAL_TODAY, SERVER_ID, TODAY, __prod__ } from "../constants";
+import { ADMIN_USER_IDS, CLIENT, LOCAL_TODAY, SERVER_ID, TODAY, __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { createBreak } from "./createBreak";
 import { dailySummary } from "./dailySummary";
@@ -21,10 +22,13 @@ require("dotenv").config();
 
 async function discordBot() {
   CLIENT.on("ready", async () => {
-    console.log("GUILD MEMBER", CLIENT?.guilds.cache.get(SERVER_ID as string));
     console.log("The client bot is ready!");
     console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-4")); // in EST
     const GUILD = CLIENT?.guilds.cache.get(SERVER_ID as string);
+
+    // TEST, delete
+    console.log("TESTING HERE")
+
     // Run our bot functions
     exerciseGoalCommand(GUILD as Guild);
     studyGoalCommand(GUILD as Guild);
