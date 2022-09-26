@@ -1,10 +1,10 @@
-import { addDays, mdyDate } from "../../utils/timeZoneUtil";
+import { Guild } from "discord.js";
 import { IsNull, Not } from "typeorm";
+import { CLIENT, LOCAL_TODAY } from "../../constants";
 import { Event } from "../../entities/Event";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
-import { CLIENT, LOCAL_TODAY } from "../../constants";
+import { addDays, mdyDate } from "../../utils/timeZoneUtil";
 import { checkIfLastGoal } from "./checkIfLastGoal";
-import { Guild } from "discord.js";
 
 export const updateGoalsYesterday = async (
   GUILD: Guild,
@@ -43,7 +43,7 @@ export const updateGoalsYesterday = async (
     },
   });
   activeWeeklyGoalsInTimezone.forEach((res) => {
-    checkIfLastGoal(res.discordId, date_yesterday, GUILD);
+    checkIfLastGoal(res.discordId, date_yesterday, GUILD, res.type);
   });
 
   // debugging messages

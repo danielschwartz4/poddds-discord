@@ -11,8 +11,8 @@ export const exerciseGoalCommand = (GUILD: Guild) => {
 
   commands?.create({
     // name: "set-current-exercise-goal",
-    name: "set-current-exercise-goal",
-    description: "create exercise goal",
+    name: "set-current-goal",
+    description: "create goal in respective channel",
     type: 1,
     options: newGoalOptions,
   });

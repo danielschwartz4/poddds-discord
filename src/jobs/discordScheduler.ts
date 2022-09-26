@@ -1,9 +1,8 @@
 import { Guild } from "discord.js";
 import cron from "node-cron";
+import { goalCommand } from "../commands/goalCommand";
 import { breakCommand } from "../commands/breakCommand";
-import { exerciseGoalCommand } from "../commands/exerciseGoalCommand";
 import { leavePodCommand } from "../commands/leavePodCommand";
-import { studyGoalCommand } from "../commands/studyGoalCommand";
 import { CLIENT, LOCAL_TODAY, SERVER_ID, TODAY, __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { createBreak } from "./createBreak";
@@ -14,9 +13,9 @@ import { updateGoalsToday } from "./goalsLeftToday/updateGoalsToday";
 import { updateGoalsYesterday } from "./goalsLeftToday/updateGoalsYesterday";
 import { autoKickMember } from "./member/autoKickMember";
 import { newMember } from "./member/newMember";
+import { routeBotDMs } from "./member/routeBotDMs";
 import { leavePod } from "./pod/leavePod";
 import { reactToImages } from "./react/react";
-import { routeBotDMs } from "./member/routeBotDMs";
 require("dotenv").config();
 
 async function discordBot() {
@@ -29,8 +28,9 @@ async function discordBot() {
     console.log("TESTING HERE");
 
     // Run our bot functions
-    exerciseGoalCommand(GUILD as Guild);
-    studyGoalCommand(GUILD as Guild);
+    // exerciseGoalCommand(GUILD as Guild);
+    // studyGoalCommand(GUILD as Guild);
+    goalCommand(GUILD as Guild);
     createGoal(GUILD as Guild);
     // Put breakCommand in createBreak and pass in timezone
     breakCommand(GUILD as Guild);

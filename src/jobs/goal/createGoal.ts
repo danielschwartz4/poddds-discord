@@ -1,5 +1,11 @@
 import { Guild, GuildMember, Role } from "discord.js";
-import { ADMIN_USER_IDS, CLIENT, LOCAL_TODAY } from "../../constants";
+import {
+  ADMIN_USER_IDS,
+  CLIENT,
+  EXERCISE_GOALS_CHANNEL_ID,
+  LOCAL_TODAY,
+  STUDY_GOALS_CHANNEL_ID,
+} from "../../constants";
 import { Event } from "../../entities/Event";
 import { User } from "../../entities/User";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
@@ -11,7 +17,6 @@ import {
   transformInteractionData,
 } from "../../utils/interactionData";
 import { addDays, flipSign, int2day, mdyDate } from "../../utils/timeZoneUtil";
-// import { GUILD } from "../discordScheduler";
 import { deactivateGoalsAndEvents } from "../goalsLeftToday/deactivateGoals";
 import { assignPod } from "../pod/assignPod";
 
@@ -19,15 +24,12 @@ export const createGoal = (GUILD: Guild) => {
   CLIENT.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     let type;
-    if (interaction.commandName === "set-current-exercise-goal") {
+    if (interaction?.channelId === EXERCISE_GOALS_CHANNEL_ID) {
       type = "exercise";
-    } else if (interaction.commandName === "set-current-study-goal") {
+    } else if (interaction?.channelId === STUDY_GOALS_CHANNEL_ID) {
       type = "study";
     }
-    if (
-      interaction.commandName === "set-current-exercise-goal" ||
-      interaction.commandName === "set-current-study-goal"
-    ) {
+    if (interaction.commandName === "set-current-goal") {
       const cleanedData = transformInteractionData(
         interaction.options.data as InteractionResponse[]
       );
