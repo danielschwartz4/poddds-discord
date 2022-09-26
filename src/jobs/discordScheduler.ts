@@ -27,7 +27,6 @@ async function discordBot() {
 
     // TEST, delete
     console.log("TESTING HERE")
-    dailySummary(GUILD as Guild);
     
     // Run our bot functions
     exerciseGoalCommand(GUILD as Guild);

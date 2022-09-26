@@ -9,7 +9,6 @@ import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { deactivateMember } from "./member/onMemberLeave";
 import inspirational_quotes from "../utils/quotes.json";
 import { getPodCategoryChannelsByPodId } from "../utils/channelUtil";
-import { readActiveEvent } from "src/resolvers/event";
 import { readActivePods } from "../resolvers/pod";
 require("dotenv").config();
 
@@ -26,13 +25,17 @@ export const dailySummary = async (GUILD: Guild) => {
       podActiveWeeklyGoals = await AppDataSource.getRepository(WeeklyGoal)
         .createQueryBuilder("w")
         .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
-        .where('u."exercisePodId"=:exercisePodId', { exercisePodId: podId, isActive: true })
+        .where('u."exercisePodId"=:exercisePodId', { exercisePodId: podId })
+        .andWhere('w."isActive"=:isActive', { isActive: true })
+        .andWhere('w.type=:type', { type: podType })
         .getMany();
     } else if (podType === 'study') {
       podActiveWeeklyGoals = await AppDataSource.getRepository(WeeklyGoal)
         .createQueryBuilder("w")
         .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
-        .where('u."studyPodId"=:studyPodId', { studyPodId: podId, isActive: true })
+        .where('u."studyPodId"=:studyPodId', { studyPodId: podId })
+        .andWhere('w."isActive"=:isActive', { isActive: true })
+        .andWhere('w.type=:type', { type: podType })
         .getMany();
     }
 
@@ -43,7 +46,6 @@ export const dailySummary = async (GUILD: Guild) => {
       categoryChannels?.forEach(async (channel) => {
         const dailyUpdatesChannel = channel.id
         if (channel.name === '🚩daily-updates-chat') {
-          
           // hardcoding test-channel id
           let channel = CLIENT.channels.cache.get(dailyUpdatesChannel) as TextChannel;
           channel.send((await buildSummary(podActiveWeeklyGoals)) as string);
@@ -62,7 +64,6 @@ const buildSummary = async (activeGoals: WeeklyGoal[]) => {
     Math.floor(Math.random() * (max - min + 1) + min);
   const index = randomInt(0, inspirational_quotes.length); // random index to be used
   const quote_json = inspirational_quotes[index];
-  console.log(quote_json);
   const text = "*" + quote_json.text + "*";
   const author = quote_json.from.toUpperCase();
   const quote_to_send = text + "\n" + author + "\n\n";
@@ -138,7 +139,7 @@ const buildSummary = async (activeGoals: WeeklyGoal[]) => {
   //     "Hey everyone! Each day we will send out a progress update. \
   // 🟩 = on track! 🟨 = missed recent goal 🟥 = complete your next goal or note in the break channel so your role doesn’t change to “kicked”!";
 
-  console.log(res);
+  // console.log(res);
   return res;
 };
 
