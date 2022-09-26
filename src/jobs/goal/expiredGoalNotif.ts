@@ -1,38 +1,47 @@
 import { Guild, TextChannel } from "discord.js";
+import { GoalType } from "../..//types/dbTypes";
 import { CLIENT } from "../../constants";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
-import { updateWeeklyGoalStatusToInactive } from "../../resolvers/weeklyGoal";
+import { updateWeeklyGoalStatusToInactiveByType } from "../../resolvers/weeklyGoal";
+import { getPodCategoryChannelsByType } from "../../utils/channelUtil";
 
 export const expiredGoalNotif = async (
   discordId: string,
+  GUILD: Guild,
+  type: GoalType,
   weekly_goal: WeeklyGoal,
-  GUILD: Guild
 ) => {
+  if (!weekly_goal) return
   console.log("EXPIRED GOAL: ", weekly_goal);
-  var Difference_In_Time =
-    weekly_goal.adjustedEndDate.getTime() -
-    weekly_goal.adjustedStartDate.getTime();
-  // To calculate the no. of days between two dates
-  var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24) + 1;
+  var Difference_In_Time = weekly_goal.adjustedEndDate.getTime() - weekly_goal.adjustedStartDate.getTime();
+  var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
 
-  let selfPromoChannel = GUILD?.channels.cache.find(
-    (channel) => channel.name === "🔥self-promo"
-  );
+  const categoryChannels = await getPodCategoryChannelsByType(discordId, type, GUILD)
 
-  let msg = await (
-    CLIENT.channels.cache.get(selfPromoChannel?.id as string) as TextChannel
-  ).send(
-    "🎉 " +
-      `<@${discordId}>` +
-      " has finished their " +
-      Difference_In_Days +
-      " days goal! 🎉\n" +
-      "🚧 Goal: " +
-      weekly_goal?.description +
-      "\n🖼 Evidence: " +
-      weekly_goal?.evidence
-  );
-  msg.react("🔥");
+  // find the self promo channel and post in there
+  let selfPromoChannel: string;
+  categoryChannels?.forEach(async (channel) => {
+    if (channel.name === '🔥self-promo') {
+      selfPromoChannel = channel.id
 
-  updateWeeklyGoalStatusToInactive(discordId);
+      let msg = await (
+        CLIENT.channels.cache.get(selfPromoChannel) as TextChannel
+      ).send(
+        "🎉 " +
+          `<@${discordId}>` +
+          " has finished their **" +
+          Difference_In_Days +
+          " days goal!** 🎉\n" +
+          "🚧 **Goal:** " +
+          weekly_goal?.description +
+          "\n🖼 **Evidence:** " +
+          weekly_goal?.evidence
+      );
+      msg.react("🔥");
+
+      updateWeeklyGoalStatusToInactiveByType(discordId, type);
+    }
+  })
+
+  
 };

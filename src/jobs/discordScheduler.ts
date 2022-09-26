@@ -16,37 +16,18 @@ import { autoKickMember } from "./member/autoKickMember";
 import { newMember } from "./member/newMember";
 import { leavePod } from "./pod/leavePod";
 import { reactToImages } from "./react/react";
-import { routeBotDMs } from "./routeBotDMs";
+import { routeBotDMs } from "./member/routeBotDMs";
 require("dotenv").config();
 
 async function discordBot() {
   CLIENT.on("ready", async () => {
     console.log("The client bot is ready!");
-    console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-4")); // in EST
-
-    // if (podType === "exercise") {
-    // const podActiveWeeklyGoals = await AppDataSource.getRepository(WeeklyGoal)
-    //   .createQueryBuilder("w")
-    //   .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
-    //   .where('u."exercisePodId"=:exercisePodId', {
-    //     exercisePodId: 3,
-    //   })
-    //   .andWhere('w."isActive"=:isActive', { isActive: true })
-    //   .andWhere('w.type=:type', { isActive: type })
-    //   .getMany();
-    // } else if (podType === "study") {
-    //   podActiveWeeklyGoals = await AppDataSource.getRepository(WeeklyGoal)
-    //     .createQueryBuilder("w")
-    //     .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
-    //     .where('u."studyPodId"=:studyPodId', {
-    //       studyPodId: podId,
-    //     })
-    //     .andWhere('w."isActive"=:isActive', { isActive: true })
-    //     .andWhere("w.type=:type", { isActive: type })
-    //     .getMany();
-    // }
-
+    console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-12")); // in EST
     const GUILD = CLIENT?.guilds.cache.get(SERVER_ID as string);
+
+    // TEST, delete
+    console.log("TESTING HERE");
+
     // Run our bot functions
     exerciseGoalCommand(GUILD as Guild);
     studyGoalCommand(GUILD as Guild);
@@ -86,7 +67,7 @@ async function discordBot() {
 
     // update every day at 9am EST (-5), (EST + 4) 1pm UTC
     cron.schedule("0 13 */1 * *", () => {
-      dailySummary();
+      dailySummary(GUILD as Guild);
     });
 
     // update "At 00:00 on Sunday"

@@ -1,6 +1,6 @@
 import { Role } from "discord.js";
+import { createUser, readUser } from "../../resolvers/user";
 import { CLIENT } from "../../constants";
-import { User } from "../../entities/User";
 
 // bot handling when a new member posts a new goal
 export const newMember = () => {
@@ -20,16 +20,11 @@ export const newMember = () => {
           "! mod from poddds here 👋\nmake a goal in #💪goals-setting to get access to the rest of the server. let me know if you have any questions 🎉"
       );
     });
-    console.log("intro message sent to ", user.displayName);
 
     // add member id and stuff to DB
-    const newUser = await User.find({ where: { discordId: user.id } });
-    console.log(newUser);
-    if (!newUser.length) {
-      await User.create({
-        discordUsername: user.displayName,
-        discordId: user.id,
-      }).save();
+    const newUser = await readUser(user.id)
+    if (!newUser) {
+      await createUser(user.displayName, user.id)
     }
   });
 };

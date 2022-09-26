@@ -1,5 +1,5 @@
+import { readUser } from "../../resolvers/user";
 import { ADMIN_USER_IDS, CLIENT } from "../../constants";
-import { User } from "../../entities/User";
 import { deactivateGoalsAndEvents } from "../goalsLeftToday/deactivateGoals";
 
 export const onMemberLeave = () => {
@@ -9,12 +9,11 @@ export const onMemberLeave = () => {
 };
 
 export const deactivateMember = async (userId: string) => {
-  const userObject = await User.findOne({ where: { discordId: userId } });
-  console.log("A MEMBER LEFT: ", userObject?.discordUsername, userId);
+  const userObject = await readUser(userId);
   ADMIN_USER_IDS.forEach((val) => {
     CLIENT.users.fetch(val as string).then((user) => {
       user.send(
-        "poddds -- AUTOMATIC MEMBER LEFT: " +
+        "poddds bot DM message -- AUTOMATIC MEMBER LEFT: " +
           userObject?.discordUsername +
           " AND THEIR WEEKLY GOALS WERE DEACTIVATED"
       );
