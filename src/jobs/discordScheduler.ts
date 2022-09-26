@@ -48,8 +48,6 @@ async function discordBot() {
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
-      createBreak(); // need to update TODAY var in break every hour
-
       const gmt0Hours = TODAY().getUTCHours();
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
 
