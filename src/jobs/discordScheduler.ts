@@ -52,14 +52,14 @@ async function discordBot() {
     goalCommand(CLIENT, SERVER_ID as string);
     createGoal(CLIENT, ADMIN_USER_IDS, SERVER_ID as string);
     breakCommand(CLIENT, SERVER_ID as string);
+    createBreak(CLIENT);
     reactToImages(CLIENT, DAILY_UPDATES_CHAT_CHANNEL_ID as string);
     newMember(CLIENT);
     routeBotDMs();
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
-      createBreak(CLIENT); // need to update TODAY var in break every hour
-      breakCommand(CLIENT, SERVER_ID as string);
+      breakCommand(CLIENT, SERVER_ID as string); // need to update TODAY var in break every hour
 
       const gmt0Hours = TODAY().getUTCHours();
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
