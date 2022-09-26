@@ -23,7 +23,7 @@ export const newMember = () => {
 
     // add member id and stuff to DB
     const newUser = await readUser(user.id)
-    if (!newUser.length) {
+    if (!newUser) {
       await createUser(user.displayName, user.id)
     }
   });

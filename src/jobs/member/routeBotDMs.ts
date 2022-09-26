@@ -1,5 +1,5 @@
 import { DMChannel } from "discord.js";
-import { ADMIN_USER_IDS, CLIENT } from "../constants";
+import { ADMIN_USER_IDS, CLIENT } from "../../constants";
 
 export const routeBotDMs = () => {
   // route DMs TO and FROM bot to admins

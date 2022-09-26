@@ -6,7 +6,18 @@ export const readActiveEvent = (discordId: string, adjustedDate: string) => {
         where: {
             discordId,
             isActive: true,
-            adjustedDate
+            adjustedDate,
+        }
+    })
+}
+
+export const readActiveEventByType = (discordId: string, adjustedDate: string, type: GoalType) => {
+    return Event.findOne({ 
+        where: {
+            discordId,
+            isActive: true,
+            adjustedDate,
+            type
         }
     })
 }
@@ -15,6 +26,13 @@ export const readActiveEvents = (discordId: string) => {
     return Event.find({
         where: { discordId, isActive: true },
     });
+}
+
+export const updateEventToCompleted = ( discordId: string, adjustedDate: string, type: GoalType) => {
+    return Event.update(
+        { discordId, adjustedDate, isActive: true, type },
+        { completed: true, goalLeftChannelId: "" }
+    );
 }
 
 export const updateAllUserEventsToInactive = ( discordId: string) => {

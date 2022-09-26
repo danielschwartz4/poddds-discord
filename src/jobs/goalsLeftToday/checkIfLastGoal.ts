@@ -1,19 +1,21 @@
 import { mdyDate } from "../../utils/timeZoneUtil";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
-import { readLastWeeklyGoal } from "../../resolvers/weeklyGoal";
-import { expiredGoalNotif } from "../expiredGoalNotif";
+import { readLastWeeklyGoalByType } from "../../resolvers/weeklyGoal";
+import { expiredGoalNotif } from "../goal/expiredGoalNotif";
 import { Guild } from "discord.js";
+import { GoalType } from "../../types/dbTypes";
 
 export const checkIfLastGoal = async (
   user_id: string,
   date: string,
-  GUILD: Guild
+  GUILD: Guild,
+  type: GoalType,
 ) => {
-  readLastWeeklyGoal(user_id).then(async (weekly_goal_res) => {
+  readLastWeeklyGoalByType(user_id, type).then(async (weekly_goal_res) => {
     // compare only dates and not time
     if (weekly_goal_res && weekly_goal_res.adjustedEndDate) {
       if (mdyDate(weekly_goal_res?.adjustedEndDate) === date) {
-        expiredGoalNotif(user_id, weekly_goal_res as WeeklyGoal, GUILD);
+        expiredGoalNotif(user_id, GUILD, type, weekly_goal_res as WeeklyGoal);
       }
     }
   });

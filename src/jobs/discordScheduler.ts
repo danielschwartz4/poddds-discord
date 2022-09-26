@@ -1,11 +1,10 @@
 import { Guild } from "discord.js";
 import cron from "node-cron";
-import { readUser } from "../resolvers/user";
 import { breakCommand } from "../commands/breakCommand";
 import { exerciseGoalCommand } from "../commands/exerciseGoalCommand";
 import { leavePodCommand } from "../commands/leavePodCommand";
 import { studyGoalCommand } from "../commands/studyGoalCommand";
-import { ADMIN_USER_IDS, CLIENT, LOCAL_TODAY, SERVER_ID, TODAY, __prod__ } from "../constants";
+import { CLIENT, LOCAL_TODAY, SERVER_ID, TODAY, __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { createBreak } from "./createBreak";
 import { dailySummary } from "./dailySummary";
@@ -17,18 +16,18 @@ import { autoKickMember } from "./member/autoKickMember";
 import { newMember } from "./member/newMember";
 import { leavePod } from "./pod/leavePod";
 import { reactToImages } from "./react/react";
-import { routeBotDMs } from "./routeBotDMs";
+import { routeBotDMs } from "./member/routeBotDMs";
 require("dotenv").config();
 
 async function discordBot() {
   CLIENT.on("ready", async () => {
     console.log("The client bot is ready!");
-    console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-4")); // in EST
+    console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-12")); // in EST
     const GUILD = CLIENT?.guilds.cache.get(SERVER_ID as string);
 
     // TEST, delete
     console.log("TESTING HERE")
-
+    
     // Run our bot functions
     exerciseGoalCommand(GUILD as Guild);
     studyGoalCommand(GUILD as Guild);
