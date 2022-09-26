@@ -10,6 +10,7 @@ export const exerciseGoalCommand = (GUILD: Guild) => {
   }
 
   commands?.create({
+    // name: "set-current-exercise-goal",
     name: "set-current-exercise-goal",
     description: "create exercise goal",
     type: 1,

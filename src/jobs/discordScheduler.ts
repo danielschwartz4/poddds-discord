@@ -21,9 +21,31 @@ require("dotenv").config();
 
 async function discordBot() {
   CLIENT.on("ready", async () => {
-    console.log("GUILD MEMBER", CLIENT?.guilds.cache.get(SERVER_ID as string));
     console.log("The client bot is ready!");
     console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-4")); // in EST
+
+    // if (podType === "exercise") {
+    // const podActiveWeeklyGoals = await AppDataSource.getRepository(WeeklyGoal)
+    //   .createQueryBuilder("w")
+    //   .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
+    //   .where('u."exercisePodId"=:exercisePodId', {
+    //     exercisePodId: 3,
+    //   })
+    //   .andWhere('w."isActive"=:isActive', { isActive: true })
+    //   .andWhere('w.type=:type', { isActive: type })
+    //   .getMany();
+    // } else if (podType === "study") {
+    //   podActiveWeeklyGoals = await AppDataSource.getRepository(WeeklyGoal)
+    //     .createQueryBuilder("w")
+    //     .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
+    //     .where('u."studyPodId"=:studyPodId', {
+    //       studyPodId: podId,
+    //     })
+    //     .andWhere('w."isActive"=:isActive', { isActive: true })
+    //     .andWhere("w.type=:type", { isActive: type })
+    //     .getMany();
+    // }
+
     const GUILD = CLIENT?.guilds.cache.get(SERVER_ID as string);
     // Run our bot functions
     exerciseGoalCommand(GUILD as Guild);
