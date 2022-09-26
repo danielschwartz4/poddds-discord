@@ -5,8 +5,8 @@ export const createUser = (discordUsername: string, discordId: string) => {
   return User.create({discordUsername, discordId}).save();
 }
 
-export const readUser = async (discordId: string) => {
-  return await User.findOne({ where: { discordId } });
+export const readUser = (discordId: string) => {
+  return User.findOne({ where: { discordId } });
 }
 
 export const readAllUsers = () => {

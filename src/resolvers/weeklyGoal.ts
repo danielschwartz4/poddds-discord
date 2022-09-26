@@ -1,6 +1,11 @@
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { Event } from "../entities/Event";
 import { GoalType } from "../types/dbTypes";
+import AppDataSource from "../dataSource";
+
+export const readActiveWeeklyGoalByGoalId = (goalId: number) => {
+  return WeeklyGoal.findOne({where: { id: goalId, isActive: true }});
+}
 
 export const readWeeklyGoalByType = (discordId: string, type: GoalType) => {
   return WeeklyGoal.findOne({
@@ -30,6 +35,26 @@ export const readLastWeeklyGoalByType = (discordId: string, type: GoalType) => {
     },
   });
 };
+
+export const readWeeklyGoalByExercisePodIdAndType = (podId: number, type: GoalType) => {
+  return AppDataSource.getRepository(WeeklyGoal)
+  .createQueryBuilder("w")
+  .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
+  .where('u."exercisePodId"=:exercisePodId', { exercisePodId: podId })
+  .andWhere('w."isActive"=:isActive', { isActive: true })
+  .andWhere('w.type=:type', { type })
+  .getMany();
+}
+
+export const readWeeklyGoalByStudyPodIdAndType = (podId: number, type: GoalType) => {
+  return AppDataSource.getRepository(WeeklyGoal)
+  .createQueryBuilder("w")
+  .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
+  .where('u."studyPodId"=:studyPodId', { studyPodId: podId })
+  .andWhere('w."isActive"=:isActive', { isActive: true })
+  .andWhere('w.type=:type', { type })
+  .getMany();
+}
 
 export const updateWeeklyGoalToCompleted = ( discordId: string, type: GoalType) => {
   return  WeeklyGoal.update({ discordId, isActive: true, type }, { misses: 0 });

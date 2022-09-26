@@ -8,8 +8,9 @@ import { changeTimeZone, mdyDate } from "../utils/timeZoneUtil";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { deactivateMember } from "./member/onMemberLeave";
 import inspirational_quotes from "../utils/quotes.json";
-import { getPodCategoryChannelsByPodId } from "../utils/channelUtil";
+import { readPodCategoryChannelsByPodId } from "../utils/channelUtil";
 import { readActivePods } from "../resolvers/pod";
+import { readWeeklyGoalByExercisePodIdAndType, readWeeklyGoalByStudyPodIdAndType } from "../resolvers/weeklyGoal";
 require("dotenv").config();
 
 export const dailySummary = async (GUILD: Guild) => {
@@ -22,27 +23,15 @@ export const dailySummary = async (GUILD: Guild) => {
     // get all active weekly goals for that pod id
     let podActiveWeeklyGoals: WeeklyGoal[] = []
     if (podType === 'exercise') {
-      podActiveWeeklyGoals = await AppDataSource.getRepository(WeeklyGoal)
-        .createQueryBuilder("w")
-        .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
-        .where('u."exercisePodId"=:exercisePodId', { exercisePodId: podId })
-        .andWhere('w."isActive"=:isActive', { isActive: true })
-        .andWhere('w.type=:type', { type: podType })
-        .getMany();
+      podActiveWeeklyGoals = await readWeeklyGoalByExercisePodIdAndType(podId, podType)
     } else if (podType === 'study') {
-      podActiveWeeklyGoals = await AppDataSource.getRepository(WeeklyGoal)
-        .createQueryBuilder("w")
-        .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
-        .where('u."studyPodId"=:studyPodId', { studyPodId: podId })
-        .andWhere('w."isActive"=:isActive', { isActive: true })
-        .andWhere('w.type=:type', { type: podType })
-        .getMany();
+      podActiveWeeklyGoals = await readWeeklyGoalByStudyPodIdAndType(podId, podType)
     }
 
     // if there are active goals for the pod
     if (podActiveWeeklyGoals) {
       // send daily summary into daily chat updates for that pod id
-      const categoryChannels = await getPodCategoryChannelsByPodId(podId, podType, GUILD);
+      const categoryChannels = await readPodCategoryChannelsByPodId(podId, podType, GUILD);
       categoryChannels?.forEach(async (channel) => {
         const dailyUpdatesChannel = channel.id
         if (channel.name === '🚩daily-updates-chat') {

@@ -4,7 +4,7 @@ import { goalCommand } from "../commands/goalCommand";
 import { breakCommand } from "../commands/breakCommand";
 import { leavePodCommand } from "../commands/leavePodCommand";
 import { CLIENT, LOCAL_TODAY, SERVER_ID, TODAY, __prod__ } from "../constants";
-import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
+import { mdyDate, timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { createBreak } from "./createBreak";
 import { dailySummary } from "./dailySummary";
 import { createGoal } from "./goal/createGoal";
@@ -16,6 +16,8 @@ import { newMember } from "./member/newMember";
 import { routeBotDMs } from "./member/routeBotDMs";
 import { leavePod } from "./pod/leavePod";
 import { reactToImages } from "./react/react";
+import { readPodCategoryChannelByPodId } from "../utils/channelUtil";
+import { readActiveEventsByDateAndWeeklyGoal } from "../resolvers/event";
 require("dotenv").config();
 
 async function discordBot() {
@@ -26,6 +28,7 @@ async function discordBot() {
 
     // TEST, delete
     console.log("TESTING HERE");
+    // updateGoalsToday() // STILL NEED TO TEST!! Also get rid of goallefttodaychannelid creation if you can and make sure any updates based on it and its logic checks out
 
     // Run our bot functions
     // exerciseGoalCommand(GUILD as Guild);
