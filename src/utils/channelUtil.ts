@@ -1,8 +1,8 @@
 import { CategoryChannel, ChannelType, Guild, PermissionsBitField, TextChannel } from "discord.js";
-import { CLIENT, LOCAL_TODAY } from "src/constants";
-import { User } from "src/entities/User";
-import { WeeklyGoal } from "src/entities/WeeklyGoal";
-import { updateEventGoalLeftChannelId } from "src/resolvers/event";
+import { CLIENT, LOCAL_TODAY } from "../constants";
+import { User } from "../entities/User";
+import { WeeklyGoal } from "../entities/WeeklyGoal";
+import { updateEventGoalLeftChannelId } from "../resolvers/event";
 import { readUser } from "../resolvers/user";
 import { GoalType } from "../types/dbTypes";
 import { colorBooleanMapper } from "./goalUtils";

@@ -28,7 +28,7 @@ async function discordBot() {
 
     // TEST, delete
     console.log("TESTING HERE");
-    // updateGoalsToday() // STILL NEED TO TEST!! Also get rid of goallefttodaychannelid creation if you can and make sure any updates based on it and its logic checks out
+    // updateGoalsToday(GUILD as Guild, "-5") // STILL NEED TO TEST!! Also get rid of goallefttodaychannelid creation if you can and make sure any updates based on it and its logic checks out
 
     // Run our bot functions
     // exerciseGoalCommand(GUILD as Guild);
@@ -48,6 +48,7 @@ async function discordBot() {
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
+      breakCommand(GUILD as Guild);
       const gmt0Hours = TODAY().getUTCHours();
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
 
