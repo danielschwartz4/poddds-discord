@@ -54,7 +54,9 @@ export const leavePod = async (GUILD: Guild) => {
               );
 
           // 2. decrement pod count
-          Pod.update({ id: podId }, { numMembers: pod?.numMembers - 1 });
+          if (pod?.numMembers > 0) {
+            Pod.update({ id: podId }, { numMembers: pod?.numMembers - 1 });
+          }
 
           // 3. remove role
           const user = await GUILD?.members.fetch(interaction.user.id);

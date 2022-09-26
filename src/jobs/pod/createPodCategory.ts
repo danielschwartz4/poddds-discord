@@ -24,6 +24,14 @@ export const createPodCategory = async (
     },
   ];
 
+  const goal_setting_permissions = [
+    ...channel_permission_overwrites,
+    {
+      id: everyone_role_id?.id as string,
+      deny: [PermissionsBitField.Flags.SendMessages],
+    },
+  ];
+
   const pod_category = await GUILD?.channels.create({
     name:
       type === "exercise"
@@ -48,7 +56,7 @@ export const createPodCategory = async (
   await GUILD?.channels.create({
     name: "🏁goals-setting",
     type: ChannelType.GuildText,
-    permissionOverwrites: channel_permission_overwrites,
+    permissionOverwrites: goal_setting_permissions,
     parent: pod_category?.id,
   });
   await GUILD?.channels.create({
