@@ -1,7 +1,6 @@
-import { TextChannel } from "discord.js";
+import { Guild, TextChannel } from "discord.js";
 import {
   CLIENT,
-  DAILY_UPDATES_CHAT_CHANNEL_ID,
   LOCAL_TODAY,
 } from "../constants";
 import AppDataSource from "../dataSource";
@@ -9,28 +8,52 @@ import { changeTimeZone, mdyDate } from "../utils/timeZoneUtil";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { deactivateMember } from "./member/onMemberLeave";
 import inspirational_quotes from "../utils/quotes.json";
+import { getPodCategoryChannelsByPodId } from "../utils/channelUtil";
+import { readActiveEvent } from "src/resolvers/event";
+import { readActivePods } from "../resolvers/pod";
 require("dotenv").config();
 
-export const dailySummary = async () => {
-  const activeGoals = await WeeklyGoal.find({
-    where: {
-      isActive: true,
-    },
-    order: {
-      misses: {
-        direction: "DESC",
-      },
-    },
-  });
+export const dailySummary = async (GUILD: Guild) => {
+  // iterate through every pod
+  const activePods = await readActivePods()
 
-  // hardcoding test-channel id
-  let channel = CLIENT.channels.cache.get(
-    DAILY_UPDATES_CHAT_CHANNEL_ID as string
-  ) as TextChannel;
-  channel.send((await buildSummary(activeGoals)) as string);
-  const daily_summary_description =
-    "Hey everyone! Each day we will send out a progress update 🚩\n🟩 = on track! 🟨 = missed recent goal 🟥 = complete your next goal so your role doesn’t change to “kicked”!";
-  channel.send(daily_summary_description);
+  for (const pod of activePods) {
+    const podId = pod.id
+    const podType = pod.type
+    // get all active weekly goals for that pod id
+    let podActiveWeeklyGoals: WeeklyGoal[] = []
+    if (podType === 'exercise') {
+      podActiveWeeklyGoals = await AppDataSource.getRepository(WeeklyGoal)
+        .createQueryBuilder("w")
+        .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
+        .where('u."exercisePodId"=:exercisePodId', { exercisePodId: podId, isActive: true })
+        .getMany();
+    } else if (podType === 'study') {
+      podActiveWeeklyGoals = await AppDataSource.getRepository(WeeklyGoal)
+        .createQueryBuilder("w")
+        .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
+        .where('u."studyPodId"=:studyPodId', { studyPodId: podId, isActive: true })
+        .getMany();
+    }
+
+    // if there are active goals for the pod
+    if (podActiveWeeklyGoals) {
+      // send daily summary into daily chat updates for that pod id
+      const categoryChannels = await getPodCategoryChannelsByPodId(podId, podType, GUILD);
+      categoryChannels?.forEach(async (channel) => {
+        const dailyUpdatesChannel = channel.id
+        if (channel.name === '🚩daily-updates-chat') {
+          
+          // hardcoding test-channel id
+          let channel = CLIENT.channels.cache.get(dailyUpdatesChannel) as TextChannel;
+          channel.send((await buildSummary(podActiveWeeklyGoals)) as string);
+          const daily_summary_description =
+            "Hey everyone! Each day we will send out a progress update 🚩\n🟩 = on track! 🟨 = missed recent goal 🟥 = complete your next goal so your role doesn’t change to “kicked”!";
+          channel.send(daily_summary_description);
+        }
+      })
+    }
+  }
 };
 
 const buildSummary = async (activeGoals: WeeklyGoal[]) => {
