@@ -7,11 +7,11 @@ export const readWeeklyGoalByType = (discordId: string, type: GoalType) => {
     where: {
       discordId,
       isActive: true,
-      type
+      type,
     },
     order: {
-      id: "DESC"
-    }
+      id: "DESC",
+    },
   });
 };
 
@@ -19,7 +19,7 @@ export const readAllActiveGoalsForTimezone = (timeZone: string) => {
   return WeeklyGoal.find({
     where: { isActive: true, timeZone },
   });
-}
+};
 
 export const readLastWeeklyGoalByType = (discordId: string, type: GoalType) => {
   return WeeklyGoal.findOne({
@@ -31,11 +31,17 @@ export const readLastWeeklyGoalByType = (discordId: string, type: GoalType) => {
   });
 };
 
-export const updateWeeklyGoalToCompleted = ( discordId: string, type: GoalType) => {
-  return  WeeklyGoal.update({ discordId, isActive: true, type }, { misses: 0 });
-}
+export const updateWeeklyGoalToCompleted = (
+  discordId: string,
+  type: GoalType
+) => {
+  return WeeklyGoal.update({ discordId, isActive: true, type }, { misses: 0 });
+};
 
-export const updateWeeklyGoalStatusToInactiveByType = (discordId: string, type: GoalType) => {
+export const updateWeeklyGoalStatusToInactiveByType = (
+  discordId: string,
+  type: GoalType
+) => {
   return WeeklyGoal.update(
     { discordId: discordId, isActive: true, type },
     { isActive: false }
@@ -49,8 +55,11 @@ export const updateWeeklyGoalAndEventsActive = (weeklyGoalId: number) => {
 
 export const updateAllUserWeeklyGoalsToInactive = (discordId: string) => {
   WeeklyGoal.update({ discordId }, { isActive: false });
-}
+};
 
-export const updateUserWeeklyGoalsToInactiveByType = (discordId: string, type: GoalType) => {
+export const updateUserWeeklyGoalsToInactiveByType = (
+  discordId: string,
+  type: GoalType
+) => {
   WeeklyGoal.update({ discordId, type }, { isActive: false });
-}
+};

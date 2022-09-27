@@ -6,12 +6,7 @@ import {
   InteractionResponse,
   transformInteractionData,
 } from "../utils/interactionData";
-import {
-  addDays,
-  changeTimeZone,
-  int2day,
-  mdyDate,
-} from "../utils/timeZoneUtil";
+import { addDays, mdyDate } from "../utils/timeZoneUtil";
 
 export const createBreak = () => {
   CLIENT.on("interactionCreate", async (interaction) => {
@@ -27,9 +22,9 @@ export const createBreak = () => {
       });
       if (!weeklyGoal) return;
       const timeZone = weeklyGoal.timeZone;
-      const startDate = changeTimeZone(
-        new Date(cleanedData["start-date"]),
-        timeZone
+      const startDate = addDays(
+        LOCAL_TODAY(timeZone),
+        parseInt(cleanedData["start-date"])
       );
 
       console.log(
@@ -44,7 +39,6 @@ export const createBreak = () => {
         " AND THE FOLLOWING WEEKLY GOAL",
         weeklyGoal
       );
-      // !! delete goal left channel id if it exists
       if (mdyDate(startDate) == mdyDate(LOCAL_TODAY(timeZone))) {
         let event = await Event.findOne({
           where: {
@@ -77,25 +71,18 @@ export const createBreak = () => {
       // Get the UTC start day based on their timezone
       // Set isActive to false for all days from this start date to duration
       if (res) {
-        // new Date(startDate).getDay() == LOCAL_TODAY(timeZone).getDay()
-        //   ? interaction.reply(
-        //       interaction.user.username +
-        //         " is taking a break for " +
-        //         cleanedData.duration +
-        //         " days, starting today!"
-        //     )
-        //   :
+        const adjMonth = startDate.getMonth() + 1;
         interaction.reply(
           interaction.user.username +
             " is taking a break for " +
             cleanedData.duration +
             " days, starting on " +
-            int2day(startDate.getDay()) +
-            ", " +
-            mdyDate(startDate) +
-            "! (GMT" +
+            adjMonth +
+            "/" +
+            startDate.getDate() +
+            " (GMT" +
             timeZone +
-            ")"
+            ") ! ⏸"
         );
       }
     }
