@@ -33,6 +33,9 @@ export const readLastWeeklyGoalByType = (discordId: string, type: GoalType) => {
       isActive: true,
       type,
     },
+    order: {
+      id: "DESC"
+    }
   });
 };
 
@@ -58,6 +61,10 @@ export const readWeeklyGoalByStudyPodIdAndType = (podId: number, type: GoalType)
 
 export const updateWeeklyGoalToCompleted = ( discordId: string, type: GoalType) => {
   return  WeeklyGoal.update({ discordId, isActive: true, type }, { misses: 0 });
+}
+
+export const updateWeeklyGoalMisses = ( discordId: string, type: GoalType, misses: number) => {
+  return  WeeklyGoal.update({ discordId, isActive: true, type }, { misses });
 }
 
 export const updateWeeklyGoalStatusToInactiveByType = (discordId: string, type: GoalType) => {

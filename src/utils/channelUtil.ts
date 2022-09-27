@@ -2,12 +2,11 @@ import { CategoryChannel, ChannelType, Guild, PermissionsBitField, TextChannel }
 import { CLIENT, LOCAL_TODAY } from "../constants";
 import { User } from "../entities/User";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
-import { updateEventGoalLeftChannelId } from "../resolvers/event";
 import { readUser } from "../resolvers/user";
 import { GoalType } from "../types/dbTypes";
 import { colorBooleanMapper } from "./goalUtils";
 
-export const createGoalsLeftTodayCategory = async (GUILD: Guild, position: number) => {
+export const createGoalsLeftTodayCategory = async (GUILD: Guild, position: number, type: GoalType, podId: number) => {
   const podmate_role_id = GUILD?.roles.cache.find((r) => r.name === "podmate");
   const everyone_role_id = GUILD?.roles.cache.find((r) => r.name === "@everyone");
   const channel_permission_overwrites = [
@@ -20,8 +19,11 @@ export const createGoalsLeftTodayCategory = async (GUILD: Guild, position: numbe
       deny: [PermissionsBitField.Flags.ViewChannel],
     },
   ];
+
+  const name_descriptor = type + " pod " + podId
+
   const categoryChannel = await GUILD?.channels.create({
-    name: "--- GOALS LEFT TODAY",
+    name: "--- goals left today, " + name_descriptor,
     type: ChannelType.GuildCategory,
     permissionOverwrites: channel_permission_overwrites,
     position
@@ -30,7 +32,7 @@ export const createGoalsLeftTodayCategory = async (GUILD: Guild, position: numbe
   return categoryChannel
 }
 
-export const createGoalsLeftTodayChannel = async (GUILD: Guild, user: User, category_channel: CategoryChannel, weekly_goal: WeeklyGoal, timeZoneIsUTCMidnight: string, date_today: string) => {
+export const createGoalsLeftTodayChannel = async (GUILD: Guild, user: User, category_channel: CategoryChannel, weekly_goal: WeeklyGoal, timeZoneIsUTCMidnight: string) => {
   const podmate_role_id = GUILD?.roles.cache.find((r) => r.name === "podmate");
   const everyone_role_id = GUILD?.roles.cache.find((r) => r.name === "@everyone");
   const channel_permission_overwrites = [
@@ -50,7 +52,7 @@ export const createGoalsLeftTodayChannel = async (GUILD: Guild, user: User, cate
     type: ChannelType.GuildText,
     permissionOverwrites: channel_permission_overwrites,
     parent: category_channel?.id,
-  }).then(async (goal_left_channel_id) => {
+  }).then(async (goal_left_channel) => {
     if (weekly_goal?.description) {
       var Difference_In_Time = weekly_goal.adjustedEndDate.getTime() - LOCAL_TODAY(timeZoneIsUTCMidnight as string).getTime();
       // To calculate the no. of days between two dates
@@ -78,7 +80,7 @@ export const createGoalsLeftTodayChannel = async (GUILD: Guild, user: User, cate
       }
 
       (
-        CLIENT.channels.cache.get(goal_left_channel_id.id) as TextChannel
+        CLIENT.channels.cache.get(goal_left_channel.id) as TextChannel
       ).send(
         // fix starting below
         "Today's your day! Complete your goal by sending evidence in **🚩daily-updates-chat**\n" +
@@ -92,8 +94,6 @@ export const createGoalsLeftTodayChannel = async (GUILD: Guild, user: User, cate
           "\n" +
           dates
       );
-    let res = await updateEventGoalLeftChannelId(user.discordId, date_today, goal_left_channel_id.id as string)
-    console.log("Event updated with goal left channel id", res)
     }
   });
 }
@@ -149,14 +149,7 @@ export const readPodCategoryChannelByPodId = async (podId: number, type: GoalTyp
 }
 
 export const readPodGoalsLeftTodayCategoryChannelByPodId = async (podId: number, type: GoalType, GUILD: Guild) => {
-  let podName: string;
-  if (type === 'exercise') {
-    podName = "--- goals left today, fitness pod " + podId
-  } else if (type === 'study') {
-    podName = "--- goals left today, study pod " + podId
-  }
-  if (!type) return
+  let podName = "--- goals left today, " + type + " pod " + podId
   const userPodCategoryChannel = GUILD?.channels.cache.find((channel) => channel.name === podName)
-  // const categoryChannels = GUILD.channels.cache.filter(c => c.parentId === userPodCategoryChannel?.id) // this is how you get the children objects of the category
   return userPodCategoryChannel
 }

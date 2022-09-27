@@ -44,7 +44,14 @@ export const readActiveEventsByDateAndWeeklyGoal = (adjustedDate: string, goalId
 export const updateEventToCompleted = ( discordId: string, adjustedDate: string, type: GoalType) => {
     return Event.update(
         { discordId, adjustedDate, isActive: true, type },
-        { completed: true, goalLeftChannelId: "" }
+        { completed: true, goalLeftChannelId: "", isActive: false }
+    );
+}
+
+export const updateEventToInactive = ( discordId: string, adjustedDate: string, type: GoalType) => {
+    return Event.update(
+        { discordId, adjustedDate, isActive: true, type },
+        { isActive: false, goalLeftChannelId: "" }
     );
 }
 

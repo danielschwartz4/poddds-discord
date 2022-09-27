@@ -19,7 +19,7 @@ export const assignPod = async (
   resp: string,
   GUILD: Guild
 ) => {
-  console.log("START");
+  console.log("START", type);
   const dbUser = await User.findOne({
     where: {
       discordId: user?.id,
@@ -61,12 +61,14 @@ export const assignPod = async (
       type == "exercise"
         ? await User.update({ discordId: user?.id }, { exercisePodId: pod?.id })
         : await User.update({ discordId: user?.id }, { studyPodId: pod?.id });
-      const role_id = await user?.guild?.roles.create({
+      
+        const role_id = await user?.guild?.roles.create({
         name: type + pod?.id,
         color: "Random",
         reason: "This pod is for " + type + "!",
       });
       await user?.roles?.add(role_id as Role);
+      
       const category = await createPodCategory(type, pod?.id, GUILD);
       // Get goals-setting channel id
       const channelId = category?.children.cache
@@ -77,6 +79,7 @@ export const assignPod = async (
       let channel = CLIENT.channels.cache.get(
         channelId as string
       ) as TextChannel;
+      console.log("channel", channel, channelId)
       await channel.send(resp);
     }
   } else {
@@ -88,6 +91,7 @@ export const assignPod = async (
       : await User.update({ discordId: user?.id }, { studyPodId: pod?.id });
 
     Pod.update({ id: pod?.id }, { numMembers: pod?.numMembers + 1 });
+    console.log("SEEKING ROLE", type, pod?.id, type + pod?.id)
     let role_id = user?.guild?.roles?.cache.find(
       (r) => r.name === type + pod?.id
     );
