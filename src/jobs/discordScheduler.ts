@@ -5,7 +5,7 @@ import { breakCommand } from "../commands/breakCommand";
 import { leavePodCommand } from "../commands/leavePodCommand";
 import { CLIENT, LOCAL_TODAY, SERVER_ID, TODAY, __prod__ } from "../constants";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
-import { createBreak } from "./createBreak";
+import { createBreak } from "./break/createBreak";
 import { dailySummary } from "./dailySummary";
 import { createGoal } from "./goal/createGoal";
 import { createGoalReminder } from "./goal/createGoalReminder";
@@ -31,7 +31,7 @@ async function discordBot() {
     createGoal(GUILD as Guild);
     // Put breakCommand in createBreak and pass in timezone
     breakCommand(GUILD as Guild);
-    createBreak();
+    createBreak(GUILD as Guild);
     leavePodCommand(GUILD as Guild);
     leavePod(GUILD as Guild);
     reactToImages(GUILD as Guild);

@@ -1,14 +1,16 @@
-import { CLIENT, LOCAL_TODAY } from "../constants";
-import AppDataSource from "../dataSource";
-import { Event } from "../entities/Event";
-import { WeeklyGoal } from "../entities/WeeklyGoal";
+import { Guild, TextChannel } from "discord.js";
+import { readUser } from "../../resolvers/user";
+import { readPodGoalsLeftTodayCategoryChannelByPodId } from "../../utils/channelUtil";
+import { CLIENT, LOCAL_TODAY } from "../../constants";
+import AppDataSource from "../../dataSource";
+import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import {
   InteractionResponse,
   transformInteractionData,
-} from "../utils/interactionData";
-import { addDays, mdyDate } from "../utils/timeZoneUtil";
+} from "../../utils/interactionData";
+import { addDays, mdyDate } from "../../utils/timeZoneUtil";
 
-export const createBreak = () => {
+export const createBreak = (GUILD: Guild) => {
   CLIENT.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName === "break") {
@@ -39,21 +41,28 @@ export const createBreak = () => {
         " AND THE FOLLOWING WEEKLY GOAL",
         weeklyGoal
       );
-      if (mdyDate(startDate) == mdyDate(LOCAL_TODAY(timeZone))) {
-        let event = await Event.findOne({
-          where: {
-            discordId: interaction.user.id,
-            isActive: true,
-            adjustedDate: mdyDate(startDate),
-          },
-        });
 
-        if (event) {
-          const goal_left_channel = CLIENT.channels.cache.get(
-            event.goalLeftChannelId
-          );
-          goal_left_channel?.delete();
-        }
+      // delete event from goals left today if it's there
+      if (mdyDate(startDate) == mdyDate(LOCAL_TODAY(timeZone))) {
+        // 1. find the user's pod goals left today category
+        // figure out which category the break command is coming from
+        const channel = CLIENT.channels.cache.get(interaction.channelId as string) as TextChannel;
+  
+        const podType = channel?.parent?.name.includes("💪")
+          ? "exercise"
+          : "study";
+        const podId = parseInt(channel?.parent?.name.split(" ").pop() as string);
+
+        let goalsLeftCategoryChannel = await readPodGoalsLeftTodayCategoryChannelByPodId(podId, podType, GUILD as Guild);
+        const goalsLeftChannels = GUILD.channels.cache.filter(c => c.parentId === goalsLeftCategoryChannel?.id)
+        
+        const user = await readUser(interaction.user.id)
+
+        // 2. if the username is found in goals left today as a channel, delete it
+        const userChannels = goalsLeftChannels.filter(c => c.name === user?.discordUsername)
+        userChannels.forEach((channel) => {
+          channel.delete()
+        })
       }
 
       const res = await AppDataSource.query(
