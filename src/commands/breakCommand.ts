@@ -1,6 +1,5 @@
 import { Guild } from "discord.js";
-import { CLIENT, TODAY } from "../constants";
-import { addDays } from "../utils/timeZoneUtil";
+import { CLIENT } from "../constants";
 
 export const breakCommand = (GUILD: Guild) => {
   let commands;
@@ -27,50 +26,28 @@ const newGoalOptions = [
     choices: [
       {
         name: "today",
-        value: `${addDays(TODAY(), 0)}`,
+        value: "0",
       },
       {
         name: "tomorrow",
-        value: `${addDays(TODAY(), 1)}`,
+        value: "1",
       },
       {
-        name: "two days from now",
-        value: `${addDays(TODAY(), 2)}`,
+        name: "2 days from now",
+        value: "2",
       },
       {
-        name: "three days from now",
-        value: `${addDays(TODAY(), 3)}`,
+        name: "3 days from now",
+        value: "3",
       },
-      // {
-      //   name: `${
-      //     int2day(addDays(TODAY(), 4).getDay()) +
-      //     ", " +
-      //     addDays(TODAY(), 4).getMonth() +
-      //     "/" +
-      //     addDays(TODAY(), 4).getDate()
-      //   }`,
-      //   value: `${addDays(TODAY(), 4)}`,
-      // },
-      // {
-      //   name: `${
-      //     int2day(addDays(TODAY(), 5).getDay()) +
-      //     ", " +
-      //     addDays(TODAY(), 5).getMonth() +
-      //     "/" +
-      //     addDays(TODAY(), 5).getDate()
-      //   }`,
-      //   value: `${addDays(TODAY(), 5)}`,
-      // },
-      // {
-      //   name: `${
-      //     int2day(addDays(TODAY(), 6).getDay()) +
-      //     ", " +
-      //     addDays(TODAY(), 6).getMonth() +
-      //     "/" +
-      //     addDays(TODAY(), 6).getDate()
-      //   }`,
-      //   value: `${addDays(TODAY(), 6)}`,
-      // },
+      {
+        name: "4 days from now",
+        value: "4",
+      },
+      {
+        name: "5 days from now",
+        value: "5",
+      },
     ],
   },
   {

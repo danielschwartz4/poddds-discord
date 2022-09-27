@@ -60,7 +60,7 @@ export const createPodCategory = async (
     parent: pod_category?.id,
   });
   await GUILD?.channels.create({
-    name: "🛑break",
+    name: "⏸break",
     type: ChannelType.GuildText,
     permissionOverwrites: channel_permission_overwrites,
     parent: pod_category?.id,
