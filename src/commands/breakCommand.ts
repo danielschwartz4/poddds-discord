@@ -26,11 +26,11 @@ const newGoalOptions = [
     required: true,
     choices: [
       {
-        name: "today",
+        name: "0 days from now",
         value: `${addDays(TODAY(), 0)}`,
       },
       {
-        name: "tomorrow",
+        name: "one day from now",
         value: `${addDays(TODAY(), 1)}`,
       },
       {

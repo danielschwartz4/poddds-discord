@@ -6,6 +6,7 @@ import {
   InteractionResponse,
   transformInteractionData,
 } from "../../utils/interactionData";
+import { deactivateGoalsAndEvents } from "../goalsLeftToday/deactivateGoals";
 
 export const leavePod = async (GUILD: Guild) => {
   CLIENT.on("interactionCreate", async (interaction) => {
@@ -69,6 +70,8 @@ export const leavePod = async (GUILD: Guild) => {
               " has left the pod :( Hopefully we see them again soon!"
           );
           await user?.roles.remove(pod_role_id as Role);
+
+          deactivateGoalsAndEvents(user?.id, category);
         }
       }
     }

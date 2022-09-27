@@ -77,21 +77,26 @@ export const createBreak = () => {
       // Get the UTC start day based on their timezone
       // Set isActive to false for all days from this start date to duration
       if (res) {
-        new Date(startDate).getDay() == LOCAL_TODAY(timeZone).getDay()
-          ? interaction.reply(
-              interaction.user.username +
-                " is taking a break for " +
-                cleanedData.duration +
-                " days, starting today!"
-            )
-          : interaction.reply(
-              interaction.user.username +
-                " is taking a break for " +
-                cleanedData.duration +
-                " days, starting on " +
-                int2day(startDate.getDay()) +
-                "!"
-            );
+        // new Date(startDate).getDay() == LOCAL_TODAY(timeZone).getDay()
+        //   ? interaction.reply(
+        //       interaction.user.username +
+        //         " is taking a break for " +
+        //         cleanedData.duration +
+        //         " days, starting today!"
+        //     )
+        //   :
+        interaction.reply(
+          interaction.user.username +
+            " is taking a break for " +
+            cleanedData.duration +
+            " days, starting on " +
+            int2day(startDate.getDay()) +
+            ", " +
+            mdyDate(startDate) +
+            "! (GMT" +
+            timeZone +
+            ")"
+        );
       }
     }
   });
