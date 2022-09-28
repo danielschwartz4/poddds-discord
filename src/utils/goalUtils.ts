@@ -14,7 +14,7 @@ export const parseInteractionResponse = (
     userId +
     ">" +
     " created a new goal! \n" +
-    ` **Goal**: ${cleanedData["goal"]}. \n **Evidence:** ${cleanedData["evidence"]} \n **Commitment:** ${cleanedData["duration"]} days! \n` +
+    ` **Goal**: ${cleanedData["goal"]} \n **Evidence:** ${cleanedData["evidence"]} \n **Commitment:** ${cleanedData["duration"]} days! \n` +
     " S-" +
     colorMapper(cleanedData["sunday"]) +
     "  M-" +

@@ -1,5 +1,5 @@
 import { CategoryChannel, Guild } from "discord.js";
-import { readActiveEventsByDateAndWeeklyGoal } from "../../resolvers/event";
+import { readActiveEventsByDateAndWeeklyGoalAndTimezone } from "../../resolvers/event";
 import { readActivePods } from "../../resolvers/pod";
 import {
   readActiveWeeklyGoalByGoalId,
@@ -76,10 +76,12 @@ export const updateGoalsToday = async (
       podActiveWeeklyGoals.forEach((weeklyGoal) => {
         goalIds.push(weeklyGoal.id);
       });
-      const events_for_day = await readActiveEventsByDateAndWeeklyGoal(
-        date_today,
-        goalIds
-      );
+      const events_for_day =
+        await readActiveEventsByDateAndWeeklyGoalAndTimezone(
+          date_today,
+          goalIds,
+          timeZoneIsUTCMidnight as string
+        );
       console.log(
         "HERE ARE EVENTS THAT WILL BE UPDATED TO IS ACTIVE AND POSTED WHERE TODAY IS: ",
         date_today,
@@ -126,7 +128,9 @@ export const updateGoalsToday = async (
               user,
               goalsLeftCategoryChannel as CategoryChannel,
               weekly_goal,
-              timeZoneIsUTCMidnight as string
+              timeZoneIsUTCMidnight as string,
+              podType,
+              podId
             );
           }
         }

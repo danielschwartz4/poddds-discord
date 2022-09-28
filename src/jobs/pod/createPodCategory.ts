@@ -26,10 +26,13 @@ export const createPodCategory = async (
   ];
 
   const goal_setting_permissions = [
-    ...channel_permission_overwrites,
+    {
+      id: pod_role_id?.id as string,
+      allow: [PermissionsBitField.Flags.ViewChannel],
+    },
     {
       id: everyone_role_id?.id as string,
-      deny: [PermissionsBitField.Flags.SendMessages],
+      deny: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
     },
   ];
 

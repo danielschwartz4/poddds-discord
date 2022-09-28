@@ -29,7 +29,7 @@ export const readActiveEvents = (discordId: string) => {
     });
 }
 
-export const readActiveEventsByDateAndWeeklyGoal = (adjustedDate: string, goalIds: number[]) => {
+export const readActiveEventsByDateAndWeeklyGoalAndTimezone = (adjustedDate: string, goalIds: number[], timeZone: string) => {
     return Event.find({
         where: {
           adjustedDate,
@@ -37,6 +37,7 @@ export const readActiveEventsByDateAndWeeklyGoal = (adjustedDate: string, goalId
           completed: false,
           isActive: true,
           goalId: In(goalIds),
+          timeZone
         },
       });
 }

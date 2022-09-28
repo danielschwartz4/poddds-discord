@@ -35,15 +35,6 @@ export const assignPod = async (
     order: { numMembers: "ASC" },
   });
 
-  if (
-    dbUser?.fitnessPodId != null &&
-    dbUser?.fitnessPodId != -1 &&
-    pod != null
-  ) {
-    await sendMessage(type, resp, pod, GUILD);
-    return;
-  }
-
   if (pod == null) {
     // 1. Create new pod with one member
     // 2. Change user's podId
@@ -84,6 +75,13 @@ export const assignPod = async (
     // 1. Change users podId and increment pod numMembers
     // 2. send resp to goals channel
     // TODO 3. Assign user role BY TIMEZONE
+
+    // if the user goal expired and they're in a pod, just send a message instead of doing updates
+    if ((pod.type == "fitness" && dbUser?.fitnessPodId != null && dbUser?.fitnessPodId != -1) || (pod.type == "study" && dbUser?.studyPodId != null && dbUser?.studyPodId != -1)) {
+      await sendMessage(type, resp, pod, GUILD);
+      return;
+    }
+
     type == "fitness"
       ? await User.update({ discordId: user?.id }, { fitnessPodId: pod?.id })
       : await User.update({ discordId: user?.id }, { studyPodId: pod?.id });

@@ -7,7 +7,9 @@ import { GoalType } from "../types/dbTypes";
 import { colorBooleanMapper } from "./goalUtils";
 
 export const createGoalsLeftTodayCategory = async (GUILD: Guild, position: number, type: GoalType, podId: number) => {
-  const podmate_role_id = GUILD?.roles.cache.find((r) => r.name === "podmate");
+  const podmate_role_id = GUILD?.roles.cache.find(
+    (r) => r.name === type + "-" + podId
+  );
   const everyone_role_id = GUILD?.roles.cache.find((r) => r.name === "@everyone");
   const channel_permission_overwrites = [
     {
@@ -32,8 +34,10 @@ export const createGoalsLeftTodayCategory = async (GUILD: Guild, position: numbe
   return categoryChannel
 }
 
-export const createGoalsLeftTodayChannel = async (GUILD: Guild, user: User, category_channel: CategoryChannel, weekly_goal: WeeklyGoal, timeZoneIsUTCMidnight: string) => {
-  const podmate_role_id = GUILD?.roles.cache.find((r) => r.name === "podmate");
+export const createGoalsLeftTodayChannel = async (GUILD: Guild, user: User, category_channel: CategoryChannel, weekly_goal: WeeklyGoal, timeZoneIsUTCMidnight: string, podType: GoalType, podId: number) => {
+  const podmate_role_id = GUILD?.roles.cache.find(
+    (r) => r.name === podType + "-" + podId
+  );
   const everyone_role_id = GUILD?.roles.cache.find((r) => r.name === "@everyone");
   const channel_permission_overwrites = [
     {
@@ -56,7 +60,7 @@ export const createGoalsLeftTodayChannel = async (GUILD: Guild, user: User, cate
     if (weekly_goal?.description) {
       var Difference_In_Time = weekly_goal.adjustedEndDate.getTime() - LOCAL_TODAY(timeZoneIsUTCMidnight as string).getTime();
       // To calculate the no. of days between two dates
-      var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24)) + 1;
+      var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
       let days_left_message = Difference_In_Days + " days left!";
       if (Difference_In_Days === 1) { days_left_message = "1 day left! 🏁 🏃‍♂️" }
 

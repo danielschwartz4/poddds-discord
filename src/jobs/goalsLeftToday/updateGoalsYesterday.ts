@@ -5,7 +5,7 @@ import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { addDays, mdyDate } from "../../utils/timeZoneUtil";
 import { checkIfLastGoal } from "./checkIfLastGoal";
 import { readWeeklyGoalByFitnessPodIdAndType, readWeeklyGoalByStudyPodIdAndType, readWeeklyGoalByType, updateWeeklyGoalMisses, updateWeeklyGoalToCompleted } from "../../resolvers/weeklyGoal";
-import { readActiveEventsByDateAndWeeklyGoal, updateEventToCompleted, updateEventToInactive } from "../../resolvers/event";
+import { readActiveEventsByDateAndWeeklyGoalAndTimezone, updateEventToCompleted, updateEventToInactive } from "../../resolvers/event";
 import { readPodGoalsLeftTodayCategoryChannelByPodId } from "../../utils/channelUtil";
 import { readUser } from "../../resolvers/user";
 import { GoalType } from "../../types/dbTypes";
@@ -35,7 +35,7 @@ export const updateGoalsYesterday = async (
     // 2. get all pod events active yesterday
     let goalIds: number[] = []
     podActiveWeeklyGoals.forEach((weeklyGoal) => {goalIds.push(weeklyGoal.id)})
-    const events_incompleted_yesterday = await readActiveEventsByDateAndWeeklyGoal(date_yesterday, goalIds)
+    const events_incompleted_yesterday = await readActiveEventsByDateAndWeeklyGoalAndTimezone(date_yesterday, goalIds, timeZoneIsUTCMidnight as string)
     let events_incompleted_yesterday_usernames: string[] = []
     for (const event of events_incompleted_yesterday) {
       const user_incompleted_yesterday = await readUser(event.discordId)
