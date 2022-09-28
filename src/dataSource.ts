@@ -5,7 +5,7 @@ import { __prod__ } from "./constants";
 const AppDataSource = __prod__
   ? new DataSource({
       type: "postgres",
-      synchronize: true,
+      synchronize: false,
       url: process.env.DATABASE_URL,
       migrations: [path.join(__dirname, "./migrations/*")],
       entities: ["dist/entities/*.*"],

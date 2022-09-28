@@ -1,5 +1,5 @@
 import { CategoryChannel, Guild } from "discord.js";
-import { readActiveEventsByDateAndWeeklyGoal } from "../../resolvers/event";
+import { readActiveEventsByDateAndWeeklyGoalAndTimezone } from "../../resolvers/event";
 import { readActivePods } from "../../resolvers/pod";
 import { readActiveWeeklyGoalByGoalId, readWeeklyGoalByFitnessPodIdAndType, readWeeklyGoalByStudyPodIdAndType } from "../../resolvers/weeklyGoal";
 import { createGoalsLeftTodayCategory, createGoalsLeftTodayChannel, readPodCategoryChannelByPodId, readPodGoalsLeftTodayCategoryChannelByPodId } from "../../utils/channelUtil";
@@ -47,7 +47,7 @@ export const updateGoalsToday = async (
       // 3. get events for day based on resolver and for the pod based on active weekly goals
       let goalIds: number[] = []
       podActiveWeeklyGoals.forEach((weeklyGoal) => {goalIds.push(weeklyGoal.id)})
-      const events_for_day = await readActiveEventsByDateAndWeeklyGoal(date_today, goalIds)
+      const events_for_day = await readActiveEventsByDateAndWeeklyGoalAndTimezone(date_today, goalIds, timeZoneIsUTCMidnight as string)
       console.log("HERE ARE EVENTS THAT WILL BE UPDATED TO IS ACTIVE AND POSTED WHERE TODAY IS: ", date_today, " FOR TIMEZONE ", timeZoneIsUTCMidnight, events_for_day);
 
       // 4. ADD THESE EVENTS TO THE CATEGOR CHANNEL!
