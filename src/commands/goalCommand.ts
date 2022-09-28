@@ -108,6 +108,14 @@ const newGoalOptions = [
         name: "14 days",
         value: "14",
       },
+      {
+        name: "14 days",
+        value: "21",
+      },
+      {
+        name: "14 days",
+        value: "28",
+      },
     ],
   },
   {
