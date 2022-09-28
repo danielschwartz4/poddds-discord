@@ -14,7 +14,6 @@ export const dailySummary = async (GUILD: Guild) => {
   // iterate through every pod
   const activePods = await readActivePods();
 
-  console.log("here are the active pods!", activePods)
   for (const pod of activePods) {
     const podId = pod.id;
     const podType = pod.type;
@@ -23,23 +22,17 @@ export const dailySummary = async (GUILD: Guild) => {
     let podActiveWeeklyGoals: WeeklyGoal[] = []
     if (podType === 'fitness') {
       podActiveWeeklyGoals = await readWeeklyGoalByFitnessPodIdAndType(podId, podType)
-      console.log("f", podId, podType)
     } else if (podType === 'study') {
       podActiveWeeklyGoals = await readWeeklyGoalByStudyPodIdAndType(podId, podType)
-      console.log("s", podId, podType)
     }
 
-    console.log("TESTING HERE", podId, podType, podActiveWeeklyGoals)
     // if there are active goals for the pod
     if (podActiveWeeklyGoals) {
       // send daily summary into daily chat updates for that pod id
       const categoryChannels = await readPodCategoryChannelsByPodId(podId, podType, GUILD);
-      console.log("categoryChannels found")
       categoryChannels?.forEach(async (channel) => {
-        console.log("syncing")
         const dailyUpdatesChannel = channel.id;
         if (channel.name === "🚩daily-updates-chat") {
-          console.log("found daily updates chat")
           // hardcoding test-channel id
           let channel = CLIENT.channels.cache.get(
             dailyUpdatesChannel
@@ -55,7 +48,6 @@ export const dailySummary = async (GUILD: Guild) => {
 };
 
 const buildSummary = async (activeGoals: WeeklyGoal[]) => {
-  console.log("building summary")
   // start with an inspirational quote
   const randomInt = (min: number, max: number) =>
     Math.floor(Math.random() * (max - min + 1) + min);
@@ -126,20 +118,12 @@ const buildSummary = async (activeGoals: WeeklyGoal[]) => {
 
     let misses = missesMap(goal.misses);
     if (misses === "🟩" || misses === "🟨" || misses === "🟥") {
-      console.log("BUILDING")
       res += `<@${goal.discordId}>` + ": " + missesMap(goal.misses) + "\n";
     } else {
       console.log("MISSES IS UNDEFINED FOR USER ID: ", goal.discordId);
     }
-    console.log("end iteration")
-    // }
   }
-  //   res +=
-  //     "\n" +
-  //     "Hey everyone! Each day we will send out a progress update. \
-  // 🟩 = on track! 🟨 = missed recent goal 🟥 = complete your next goal or note in the break channel so your role doesn’t change to “kicked”!";
 
-  console.log(res);
   return res;
 };
 
