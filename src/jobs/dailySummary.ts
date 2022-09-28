@@ -14,6 +14,7 @@ export const dailySummary = async (GUILD: Guild) => {
   // iterate through every pod
   const activePods = await readActivePods();
 
+  console.log("here are the active pods!", activePods)
   for (const pod of activePods) {
     const podId = pod.id;
     const podType = pod.type;
@@ -32,10 +33,12 @@ export const dailySummary = async (GUILD: Guild) => {
     if (podActiveWeeklyGoals) {
       // send daily summary into daily chat updates for that pod id
       const categoryChannels = await readPodCategoryChannelsByPodId(podId, podType, GUILD);
-      console.log("categoryChannels: ", categoryChannels)
+      console.log("categoryChannels found")
       categoryChannels?.forEach(async (channel) => {
+        console.log("syncing")
         const dailyUpdatesChannel = channel.id;
         if (channel.name === "🚩daily-updates-chat") {
+          console.log("found daily updates chat")
           // hardcoding test-channel id
           let channel = CLIENT.channels.cache.get(
             dailyUpdatesChannel
