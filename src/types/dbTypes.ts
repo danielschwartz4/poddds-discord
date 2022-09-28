@@ -8,4 +8,4 @@ export type DaysType = {
   saturday: boolean;
 };
 
-export type GoalType = "exercise" | "study";
+export type GoalType = "fitness" | "study";

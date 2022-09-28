@@ -1,7 +1,7 @@
 import { Guild } from "discord.js";
 import { CLIENT } from "../constants";
 
-export const exerciseGoalCommand = (GUILD: Guild) => {
+export const fitnessGoalCommand = (GUILD: Guild) => {
   let commands;
   if (GUILD) {
     commands = GUILD.commands;
@@ -10,7 +10,6 @@ export const exerciseGoalCommand = (GUILD: Guild) => {
   }
 
   commands?.create({
-    // name: "set-current-exercise-goal",
     name: "set-current-goal",
     description: "create goal in respective channel",
     type: 1,

@@ -2,12 +2,12 @@ import { Pod } from "../entities/Pod";
 import { User } from "../entities/User";
 
 export const createUser = (discordUsername: string, discordId: string) => {
-  return User.create({discordUsername, discordId}).save();
-}
+  return User.create({ discordUsername, discordId }).save();
+};
 
 export const readUser = async (discordId: string) => {
   return await User.findOne({ where: { discordId } });
-}
+};
 
 export const readAllUsers = () => {
   return User.find();
@@ -17,10 +17,10 @@ export const readPodUsers = (pod: Pod) => {
   const type = pod?.type;
   let users;
 
-  if (type === "exercise") {
+  if (type === "fitness") {
     users = User.find({
       where: {
-        exercisePodId: pod?.id,
+        fitnessPodId: pod?.id,
       },
     });
   } else if (type === "study") {

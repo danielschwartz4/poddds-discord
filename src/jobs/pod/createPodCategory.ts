@@ -34,7 +34,7 @@ export const createPodCategory = async (
 
   const pod_category = await GUILD?.channels.create({
     name:
-      type === "exercise"
+      type === "fitness"
         ? "--- 💪 " + type + " pod " + podId
         : "--- 📚 " + type + " pod " + podId,
     type: ChannelType.GuildCategory,

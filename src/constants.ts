@@ -37,9 +37,9 @@ export const ADMIN_USER_IDS = ["743590338337308754", "933066784867766342"]; // f
 export const ROLES_CHANNEL_ID = !__prod__
   ? process.env.TEST_ROLES_CHANNEL_ID
   : process.env.PROD_ROLES_CHANNEL_ID;
-export const EXERCISE_GOALS_CHANNEL_ID = !__prod__
-  ? process.env.TEST_EXERCISE_GOALS_CHANNEL_ID
-  : process.env.PROD_EXERCISE_GOALS_CHANNEL_ID;
+export const FITNESS_GOALS_CHANNEL_ID = !__prod__
+  ? process.env.TEST_FITNESS_GOALS_CHANNEL_ID
+  : process.env.PROD_FITNESS_GOALS_CHANNEL_ID;
 export const STUDY_GOALS_CHANNEL_ID = !__prod__
   ? process.env.TEST_STUDY_GOALS_CHANNEL_ID
   : process.env.PROD_STUDY_GOALS_CHANNEL_ID;

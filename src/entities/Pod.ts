@@ -24,8 +24,8 @@ export class Pod extends BaseEntity {
   @Field()
   @Column({
     type: "enum",
-    enum: ["exercise", "study"],
-    default: "exercise",
+    enum: ["fitness", "study"],
+    default: "fitness",
   })
   type: GoalType;
 

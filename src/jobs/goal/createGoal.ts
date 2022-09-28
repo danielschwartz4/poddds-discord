@@ -2,7 +2,7 @@ import { Guild, GuildMember, Role } from "discord.js";
 import {
   ADMIN_USER_IDS,
   CLIENT,
-  EXERCISE_GOALS_CHANNEL_ID,
+  FITNESS_GOALS_CHANNEL_ID,
   LOCAL_TODAY,
   STUDY_GOALS_CHANNEL_ID,
 } from "../../constants";
@@ -24,8 +24,8 @@ export const createGoal = (GUILD: Guild) => {
   CLIENT.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     let type;
-    if (interaction?.channelId === EXERCISE_GOALS_CHANNEL_ID) {
-      type = "exercise";
+    if (interaction?.channelId === FITNESS_GOALS_CHANNEL_ID) {
+      type = "fitness";
     } else if (interaction?.channelId === STUDY_GOALS_CHANNEL_ID) {
       type = "study";
     }
@@ -89,6 +89,9 @@ export const createGoal = (GUILD: Guild) => {
       // Assign user to pod and send resp to that goals channel
       console.log("here");
       console.log(resp);
+      // Add podmate role
+      let role_id = user?.guild?.roles?.cache.find((r) => r.name === "podmate");
+      await user?.roles?.add(role_id as Role);
       assignPod(type as GoalType, user as GuildMember, resp, GUILD);
       if (user?.roles.cache.some((role) => role.name === "new member")) {
         // Notify admins of new podmate

@@ -28,8 +28,6 @@ async function discordBot() {
     console.log("TESTING HERE");
 
     // Run our bot functions
-    // exerciseGoalCommand(GUILD as Guild);
-    // studyGoalCommand(GUILD as Guild);
     goalCommand(GUILD as Guild);
     createGoal(GUILD as Guild);
     // Put breakCommand in createBreak and pass in timezone
