@@ -18,17 +18,18 @@ export const dailySummary = async (GUILD: Guild) => {
   for (const pod of activePods) {
     const podId = pod.id;
     const podType = pod.type;
+
     // get all active weekly goals for that pod id
     let podActiveWeeklyGoals: WeeklyGoal[] = []
     if (podType === 'fitness') {
       podActiveWeeklyGoals = await readWeeklyGoalByFitnessPodIdAndType(podId, podType)
-      console.log("f", podId, podType, podActiveWeeklyGoals)
+      console.log("f", podId, podType)
     } else if (podType === 'study') {
       podActiveWeeklyGoals = await readWeeklyGoalByStudyPodIdAndType(podId, podType)
-      console.log("s", podId, podType, podActiveWeeklyGoals)
+      console.log("s", podId, podType)
     }
 
-    console.log(podId, podType, podActiveWeeklyGoals)
+    console.log("TESTING HERE", podId, podType, podActiveWeeklyGoals)
     // if there are active goals for the pod
     if (podActiveWeeklyGoals) {
       // send daily summary into daily chat updates for that pod id
@@ -54,6 +55,7 @@ export const dailySummary = async (GUILD: Guild) => {
 };
 
 const buildSummary = async (activeGoals: WeeklyGoal[]) => {
+  console.log("building summary")
   // start with an inspirational quote
   const randomInt = (min: number, max: number) =>
     Math.floor(Math.random() * (max - min + 1) + min);
@@ -121,12 +123,15 @@ const buildSummary = async (activeGoals: WeeklyGoal[]) => {
     //   res += `<@${goal.discordId}>` + ": " + missesMap(goal.misses) + " 🔥**" + streak_length + "**\n";
     // } else {
 
+
     let misses = missesMap(goal.misses);
     if (misses === "🟩" || misses === "🟨" || misses === "🟥") {
+      console.log("BUILDING")
       res += `<@${goal.discordId}>` + ": " + missesMap(goal.misses) + "\n";
     } else {
       console.log("MISSES IS UNDEFINED FOR USER ID: ", goal.discordId);
     }
+    console.log("end iteration")
     // }
   }
   //   res +=
@@ -134,7 +139,7 @@ const buildSummary = async (activeGoals: WeeklyGoal[]) => {
   //     "Hey everyone! Each day we will send out a progress update. \
   // 🟩 = on track! 🟨 = missed recent goal 🟥 = complete your next goal or note in the break channel so your role doesn’t change to “kicked”!";
 
-  // console.log(res);
+  console.log(res);
   return res;
 };
 
