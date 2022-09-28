@@ -23,12 +23,13 @@ export const createGoalsLeftTodayCategory = async (GUILD: Guild, position: numbe
   ];
 
   const name_descriptor = type + " pod " + podId
+  const goals_position = position + 1
 
   const categoryChannel = await GUILD?.channels.create({
     name: "--- goals left today, " + name_descriptor,
     type: ChannelType.GuildCategory,
     permissionOverwrites: channel_permission_overwrites,
-    position
+    position: goals_position
   });
 
   return categoryChannel
