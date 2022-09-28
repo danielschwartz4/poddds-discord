@@ -17,7 +17,7 @@ export const leavePod = async (GUILD: Guild) => {
       ) as TextChannel;
 
       const category = channel?.parent?.name.includes("💪")
-        ? "exercise"
+        ? "fitness"
         : "study";
       const podId = parseInt(channel?.parent?.name.split(" ").pop() as string);
 
@@ -44,10 +44,10 @@ export const leavePod = async (GUILD: Guild) => {
           return;
         } else {
           // 1. remove pod id from db
-          category == "exercise"
+          category == "fitness"
             ? User.update(
                 { discordId: interaction?.user?.id },
-                { exercisePodId: -1 }
+                { fitnessPodId: -1 }
               )
             : User.update(
                 { discordId: interaction?.user?.id },

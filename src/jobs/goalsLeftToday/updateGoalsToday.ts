@@ -1,7 +1,7 @@
 import { CategoryChannel, Guild } from "discord.js";
 import { readActiveEventsByDateAndWeeklyGoal } from "../../resolvers/event";
 import { readActivePods } from "../../resolvers/pod";
-import { readActiveWeeklyGoalByGoalId, readWeeklyGoalByExercisePodIdAndType, readWeeklyGoalByStudyPodIdAndType } from "../../resolvers/weeklyGoal";
+import { readActiveWeeklyGoalByGoalId, readWeeklyGoalByFitnessPodIdAndType, readWeeklyGoalByStudyPodIdAndType } from "../../resolvers/weeklyGoal";
 import { createGoalsLeftTodayCategory, createGoalsLeftTodayChannel, readPodCategoryChannelByPodId, readPodGoalsLeftTodayCategoryChannelByPodId } from "../../utils/channelUtil";
 import {
   LOCAL_TODAY,
@@ -28,8 +28,8 @@ export const updateGoalsToday = async (
 
     // 1. get all active weekly goals for that pod id
     let podActiveWeeklyGoals: WeeklyGoal[] = []
-    if (podType === 'exercise') {
-      podActiveWeeklyGoals = await readWeeklyGoalByExercisePodIdAndType(podId, podType)
+    if (podType === 'fitness') {
+      podActiveWeeklyGoals = await readWeeklyGoalByFitnessPodIdAndType(podId, podType)
     } else if (podType === 'study') {
       podActiveWeeklyGoals = await readWeeklyGoalByStudyPodIdAndType(podId, podType)
     }

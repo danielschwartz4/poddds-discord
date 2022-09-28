@@ -27,7 +27,7 @@ export class User extends BaseEntity {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  exercisePodId: number;
+  fitnessPodId: number;
 
   @Field({ nullable: true })
   @Column({ nullable: true })

@@ -4,7 +4,7 @@ import { LOCAL_TODAY } from "../../constants";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { addDays, mdyDate } from "../../utils/timeZoneUtil";
 import { checkIfLastGoal } from "./checkIfLastGoal";
-import { readWeeklyGoalByExercisePodIdAndType, readWeeklyGoalByStudyPodIdAndType, readWeeklyGoalByType, updateWeeklyGoalMisses, updateWeeklyGoalToCompleted } from "../../resolvers/weeklyGoal";
+import { readWeeklyGoalByFitnessPodIdAndType, readWeeklyGoalByStudyPodIdAndType, readWeeklyGoalByType, updateWeeklyGoalMisses, updateWeeklyGoalToCompleted } from "../../resolvers/weeklyGoal";
 import { readActiveEventsByDateAndWeeklyGoal, updateEventToCompleted, updateEventToInactive } from "../../resolvers/event";
 import { readPodGoalsLeftTodayCategoryChannelByPodId } from "../../utils/channelUtil";
 import { readUser } from "../../resolvers/user";
@@ -26,8 +26,8 @@ export const updateGoalsYesterday = async (
 
     // find what pod active weekly goals are
     let podActiveWeeklyGoals: WeeklyGoal[] = []
-    if (podType === 'exercise') {
-      podActiveWeeklyGoals = await readWeeklyGoalByExercisePodIdAndType(podId, podType)
+    if (podType === 'fitness') {
+      podActiveWeeklyGoals = await readWeeklyGoalByFitnessPodIdAndType(podId, podType)
     } else if (podType === 'study') {
       podActiveWeeklyGoals = await readWeeklyGoalByStudyPodIdAndType(podId, podType)
     }

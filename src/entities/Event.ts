@@ -36,8 +36,8 @@ export class Event extends BaseEntity {
   @Field()
   @Column({
     type: "enum",
-    enum: ["exercise", "study"],
-    default: "exercise",
+    enum: ["fitness", "study"],
+    default: "fitness",
     nullable: true,
   })
   type: GoalType;

@@ -39,11 +39,11 @@ export const readLastWeeklyGoalByType = (discordId: string, type: GoalType) => {
   });
 };
 
-export const readWeeklyGoalByExercisePodIdAndType = (podId: number, type: GoalType) => {
+export const readWeeklyGoalByFitnessPodIdAndType = (podId: number, type: GoalType) => {
   return AppDataSource.getRepository(WeeklyGoal)
   .createQueryBuilder("w")
   .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
-  .where('u."exercisePodId"=:exercisePodId', { exercisePodId: podId })
+  .where('u."fitnessPodId"=:fitnessPodId', { fitnessPodId: podId })
   .andWhere('w."isActive"=:isActive', { isActive: true })
   .andWhere('w.type=:type', { type })
   .getMany();

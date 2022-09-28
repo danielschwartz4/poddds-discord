@@ -99,21 +99,21 @@ export const createGoalsLeftTodayChannel = async (GUILD: Guild, user: User, cate
 }
 
 export const readTypeFromChannelName = (name: string) => {
-    name = name.toLowerCase()
-    let type;
-    if (name.includes('exercise pod') || name.includes('fitness pod')) {
-        type = 'exercise'
-    } else if (name.includes('study pod')) {
-        type = 'study'
-    }
-    return type
-}
+  name = name.toLowerCase();
+  let type;
+  if (name.includes("fitness pod") || name.includes("fitness pod")) {
+    type = "fitness";
+  } else if (name.includes("study pod")) {
+    type = "study";
+  }
+  return type;
+};
 
 export const readPodCategoryChannelsByType = async (discordId: string, type: GoalType, GUILD: Guild) => {
     const userObject = await readUser(discordId)
     let podName: string;
-    if (type === 'exercise') {
-      podName = "--- 💪 exercise pod " + userObject?.exercisePodId
+    if (type === 'fitness') {
+      podName = "--- 💪 fitness pod " + userObject?.fitnessPodId
     } else if (type === 'study') {
       podName = "--- 📚 study pod " + userObject?.studyPodId
     }
@@ -125,8 +125,8 @@ export const readPodCategoryChannelsByType = async (discordId: string, type: Goa
 
 export const readPodCategoryChannelsByPodId = async (podId: number, type: GoalType, GUILD: Guild) => {
     let podName: string;
-    if (type === 'exercise') {
-      podName = "--- 💪 exercise pod " + podId
+    if (type === 'fitness') {
+      podName = "--- 💪 fitness pod " + podId
     } else if (type === 'study') {
       podName = "--- 📚 study pod " + podId
     }
@@ -138,8 +138,8 @@ export const readPodCategoryChannelsByPodId = async (podId: number, type: GoalTy
 
 export const readPodCategoryChannelByPodId = async (podId: number, type: GoalType, GUILD: Guild) => {
   let podName: string;
-  if (type === 'exercise') {
-    podName = "--- 💪 exercise pod " + podId
+  if (type === 'fitness') {
+    podName = "--- 💪 fitness pod " + podId
   } else if (type === 'study') {
     podName = "--- 📚 study pod " + podId
   }

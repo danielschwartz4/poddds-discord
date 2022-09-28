@@ -9,8 +9,9 @@ export const createPodCategory = async (
   GUILD: Guild
 ) => {
   // Create permissions
-  let pod_role_id = GUILD?.roles.cache.find((r) => r.name === type + podId);
-  // let pod_role_id = guild?.roles.cache.get(type + podId);
+  let pod_role_id = GUILD?.roles.cache.find(
+    (r) => r.name === type + "-" + podId
+  );
   let everyone_role_id = GUILD?.roles.cache.get(GUILD?.id);
 
   const channel_permission_overwrites = [
@@ -34,7 +35,7 @@ export const createPodCategory = async (
 
   const pod_category = await GUILD?.channels.create({
     name:
-      type === "exercise"
+      type === "fitness"
         ? "--- 💪 " + type + " pod " + podId
         : "--- 📚 " + type + " pod " + podId,
     type: ChannelType.GuildCategory,
@@ -54,7 +55,7 @@ export const createPodCategory = async (
     parent: pod_category?.id,
   });
   await GUILD?.channels.create({
-    name: "🏁goals-setting",
+    name: "🏁view-goals",
     type: ChannelType.GuildText,
     permissionOverwrites: goal_setting_permissions,
     parent: pod_category?.id,

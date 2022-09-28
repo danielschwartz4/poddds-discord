@@ -49,7 +49,7 @@ export const createBreak = (GUILD: Guild) => {
         const channel = CLIENT.channels.cache.get(interaction.channelId as string) as TextChannel;
   
         const podType = channel?.parent?.name.includes("💪")
-          ? "exercise"
+          ? "fitness"
           : "study";
         const podId = parseInt(channel?.parent?.name.split(" ").pop() as string);
 
