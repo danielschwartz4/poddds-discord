@@ -66,7 +66,7 @@ export const assignPod = async (
         reason: "This pod is for " + type + "!",
       });
       await user?.roles?.add(role_id as Role);
-      
+
       const category = await createPodCategory(type, pod?.id, GUILD);
       // Get 🏁view-goals channel id
       const channelId = category?.children.cache
@@ -77,7 +77,7 @@ export const assignPod = async (
       let channel = CLIENT.channels.cache.get(
         channelId as string
       ) as TextChannel;
-      console.log("channel", channel, channelId)
+      console.log("channel", channel, channelId);
       await channel.send(resp);
     }
   } else {
@@ -89,7 +89,7 @@ export const assignPod = async (
       : await User.update({ discordId: user?.id }, { studyPodId: pod?.id });
 
     Pod.update({ id: pod?.id }, { numMembers: pod?.numMembers + 1 });
-    console.log("SEEKING ROLE", type, pod?.id, type + pod?.id)
+    console.log("SEEKING ROLE", type, pod?.id, type + pod?.id);
     let role_id = user?.guild?.roles?.cache.find(
       (r) => r.name === type + "-" + pod?.id
     );
