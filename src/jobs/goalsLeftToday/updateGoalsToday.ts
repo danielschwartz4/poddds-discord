@@ -76,7 +76,7 @@ export const updateGoalsToday = async (
             }
           }
           if (!alreadyDisplayed) {
-            createGoalsLeftTodayChannel(GUILD, user, goalsLeftCategoryChannel as CategoryChannel, weekly_goal, timeZoneIsUTCMidnight as string)
+            createGoalsLeftTodayChannel(GUILD, user, goalsLeftCategoryChannel as CategoryChannel, weekly_goal, timeZoneIsUTCMidnight as string, podType, podId)
           }
         }
       });
