@@ -67,9 +67,9 @@ export const assignPod = async (
       });
       await user?.roles?.add(role_id as Role);
       const category = await createPodCategory(type, pod?.id, GUILD);
-      // Get goals-setting channel id
+      // Get 🏁view-goals channel id
       const channelId = category?.children.cache
-        ?.filter((channel) => channel.name == "🏁goals-setting")
+        ?.filter((channel) => channel.name == "🏁view-goals")
         .keys()
         .next().value;
 
@@ -114,7 +114,7 @@ const sendMessage = async (
   ) as CategoryChannel;
 
   const channelId = categoryChannel?.children.cache
-    ?.filter((channel) => channel.name == "🏁goals-setting")
+    ?.filter((channel) => channel.name == "🏁view-goals")
     .keys()
     .next().value;
 
