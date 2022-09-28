@@ -46,6 +46,7 @@ export const readWeeklyGoalByFitnessPodIdAndType = (podId: number, type: GoalTyp
   .where('u."fitnessPodId"=:fitnessPodId', { fitnessPodId: podId })
   .andWhere('w."isActive"=:isActive', { isActive: true })
   .andWhere('w.type=:type', { type })
+  .orderBy('w.misses', 'DESC')
   .getMany();
 }
 
@@ -56,6 +57,7 @@ export const readWeeklyGoalByStudyPodIdAndType = (podId: number, type: GoalType)
   .where('u."studyPodId"=:studyPodId', { studyPodId: podId })
   .andWhere('w."isActive"=:isActive', { isActive: true })
   .andWhere('w.type=:type', { type })
+  .orderBy('w.misses', 'DESC')
   .getMany();
 }
 

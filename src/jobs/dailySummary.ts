@@ -17,6 +17,7 @@ export const dailySummary = async (GUILD: Guild) => {
   for (const pod of activePods) {
     const podId = pod.id;
     const podType = pod.type;
+
     // get all active weekly goals for that pod id
     let podActiveWeeklyGoals: WeeklyGoal[] = []
     if (podType === 'fitness') {
@@ -114,20 +115,15 @@ const buildSummary = async (activeGoals: WeeklyGoal[]) => {
     //   res += `<@${goal.discordId}>` + ": " + missesMap(goal.misses) + " 🔥**" + streak_length + "**\n";
     // } else {
 
+
     let misses = missesMap(goal.misses);
     if (misses === "🟩" || misses === "🟨" || misses === "🟥") {
       res += `<@${goal.discordId}>` + ": " + missesMap(goal.misses) + "\n";
     } else {
       console.log("MISSES IS UNDEFINED FOR USER ID: ", goal.discordId);
     }
-    // }
   }
-  //   res +=
-  //     "\n" +
-  //     "Hey everyone! Each day we will send out a progress update. \
-  // 🟩 = on track! 🟨 = missed recent goal 🟥 = complete your next goal or note in the break channel so your role doesn’t change to “kicked”!";
 
-  // console.log(res);
   return res;
 };
 
