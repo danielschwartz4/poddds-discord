@@ -35,14 +35,15 @@ export const assignPod = async (
     order: { numMembers: "ASC" },
   });
 
-  if (
-    dbUser?.fitnessPodId != null &&
-    dbUser?.fitnessPodId != -1 &&
-    pod != null
-  ) {
-    await sendMessage(type, resp, pod, GUILD);
-    return;
-  }
+  // if there is a pod but the user isn't in it
+  // if (
+  //   dbUser?.fitnessPodId != null &&
+  //   dbUser?.fitnessPodId != -1 &&
+  //   pod != null
+  // ) {
+  //   await sendMessage(type, resp, pod, GUILD);
+  //   return;
+  // }
 
   if (pod == null) {
     // 1. Create new pod with one member
