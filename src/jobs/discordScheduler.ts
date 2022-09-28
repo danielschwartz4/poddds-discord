@@ -60,7 +60,7 @@ async function discordBot() {
     });
 
     // update every day at 9am EST (-5), (EST + 4) 1pm UTC
-    cron.schedule("56 13 */1 * *", () => {
+    cron.schedule("00 14 */1 * *", () => {
       dailySummary(GUILD as Guild);
     });
 
