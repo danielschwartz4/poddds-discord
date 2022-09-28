@@ -21,14 +21,18 @@ export const dailySummary = async (GUILD: Guild) => {
     let podActiveWeeklyGoals: WeeklyGoal[] = []
     if (podType === 'fitness') {
       podActiveWeeklyGoals = await readWeeklyGoalByFitnessPodIdAndType(podId, podType)
+      console.log("f", podId, podType, podActiveWeeklyGoals)
     } else if (podType === 'study') {
       podActiveWeeklyGoals = await readWeeklyGoalByStudyPodIdAndType(podId, podType)
+      console.log("s", podId, podType, podActiveWeeklyGoals)
     }
 
+    console.log(podId, podType, podActiveWeeklyGoals)
     // if there are active goals for the pod
     if (podActiveWeeklyGoals) {
       // send daily summary into daily chat updates for that pod id
       const categoryChannels = await readPodCategoryChannelsByPodId(podId, podType, GUILD);
+      console.log("categoryChannels: ", categoryChannels)
       categoryChannels?.forEach(async (channel) => {
         const dailyUpdatesChannel = channel.id;
         if (channel.name === "🚩daily-updates-chat") {
