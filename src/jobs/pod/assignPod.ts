@@ -88,7 +88,7 @@ export const assignPod = async (
 
     Pod.update({ id: pod?.id }, { numMembers: pod?.numMembers + 1 });
     let role_id = user?.guild?.roles?.cache.find(
-      (r) => r.name === type + pod?.id
+      (r) => r.name === type + "-" + pod?.id
     );
     await user?.roles?.add(role_id as Role);
     sendMessage(type, resp, pod, GUILD);

@@ -9,8 +9,9 @@ export const createPodCategory = async (
   GUILD: Guild
 ) => {
   // Create permissions
-  let pod_role_id = GUILD?.roles.cache.find((r) => r.name === type + podId);
-  // let pod_role_id = guild?.roles.cache.get(type + podId);
+  let pod_role_id = GUILD?.roles.cache.find(
+    (r) => r.name === type + "-" + podId
+  );
   let everyone_role_id = GUILD?.roles.cache.get(GUILD?.id);
 
   const channel_permission_overwrites = [
