@@ -98,7 +98,7 @@ export const createGoal = (GUILD: Guild) => {
         ADMIN_USER_IDS.forEach((val) => {
           CLIENT.users.fetch(val as string).then((user) => {
             user.send(
-              "poddds bot DM message -- NEW PODMATE ALERT! DM them if there's no evidence or anything is unclear\n" +
+              "**poddds bot DM message NEW PODMATE ALERT!** DM them if there's no evidence or anything is unclear\n" +
                 from_username +
                 " says that their weekly goal and evidence will be:\n" +
                 resp
