@@ -59,7 +59,7 @@ export const createBreak = (GUILD: Guild) => {
         const user = await readUser(interaction.user.id)
 
         // 2. if the username is found in goals left today as a channel, delete it
-        const userChannels = goalsLeftChannels.filter(c => c.name === user?.discordUsername)
+        const userChannels = goalsLeftChannels.filter(c => c.name === user?.discordUsername.toLowerCase())
         userChannels.forEach((channel) => {
           channel.delete()
         })

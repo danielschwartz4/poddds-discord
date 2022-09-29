@@ -52,7 +52,7 @@ export const updateGoalsYesterday = async (
       events_incompleted_yesterday.forEach(async (event) => {
         const user_id = event.discordId
         const user_incompleted_yesterday = await readUser(user_id)
-        const user_channels = goalsLeftChannels.filter(c => c.name === user_incompleted_yesterday?.discordUsername)
+        const user_channels = goalsLeftChannels.filter(c => c.name === user_incompleted_yesterday?.discordUsername.toLowerCase())
         
         // incompleted goal, update misses += 1
         if (user_channels.size) { 

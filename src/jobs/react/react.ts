@@ -48,7 +48,7 @@ export const reactToImages = (GUILD: Guild) => {
       );
 
       let userCustomChannels = GUILD?.channels.cache.filter(
-        (channel) => channel.name === msg.author.username
+        (channel) => channel.name === msg.author.username.toLowerCase()
       );
       for (const userChannelObject of userCustomChannels) {
         let userChannel = msg.guild?.channels.cache.get(userChannelObject[0])

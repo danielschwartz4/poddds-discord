@@ -46,7 +46,6 @@ export const updateGoalsToday = async (
         podType
       );
     }
-    console.log("podActiveWeeklyGoals", podActiveWeeklyGoals);
 
     // if there are active goals for the pod
     if (podActiveWeeklyGoals && podType && podId) {
