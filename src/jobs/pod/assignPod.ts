@@ -77,8 +77,17 @@ export const assignPod = async (
     // TODO 3. Assign user role BY TIMEZONE
 
     // if the user goal expired and they're in a pod, just send a message instead of doing updates
-    if ((pod.type == "fitness" && dbUser?.fitnessPodId != null && dbUser?.fitnessPodId != -1) || (pod.type == "study" && dbUser?.studyPodId != null && dbUser?.studyPodId != -1)) {
-      await sendMessage(type, resp, pod, GUILD);
+    if (
+      (type == "fitness" &&
+        dbUser?.fitnessPodId != null &&
+        dbUser?.fitnessPodId != -1) ||
+      (type == "study" &&
+        dbUser?.studyPodId != null &&
+        dbUser?.studyPodId != -1)
+    ) {
+      type == "fitness"
+        ? await sendMessage(type, resp, dbUser.fitnessPodId, GUILD)
+        : await sendMessage(type, resp, dbUser.studyPodId, GUILD);
       return;
     }
 
@@ -92,22 +101,22 @@ export const assignPod = async (
       (r) => r.name === type + "-" + pod?.id
     );
     await user?.roles?.add(role_id as Role);
-    sendMessage(type, resp, pod, GUILD);
+    sendMessage(type, resp, pod?.id, GUILD);
   }
 };
 
 const sendMessage = async (
   type: GoalType,
   resp: string,
-  pod: Pod,
+  podId: number,
   GUILD: Guild
 ) => {
   let category = GUILD?.channels?.cache?.filter(
     (category) =>
       category.name ==
       (type === "fitness"
-        ? "--- 💪 " + type + " pod " + pod?.id
-        : "--- 📚 " + type + " pod " + pod?.id)
+        ? "--- 💪 " + type + " pod " + podId
+        : "--- 📚 " + type + " pod " + podId)
   );
   const categoryId = category?.keys().next().value;
   let categoryChannel = CLIENT.channels.cache.get(
