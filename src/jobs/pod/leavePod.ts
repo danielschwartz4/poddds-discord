@@ -19,7 +19,13 @@ export const leavePod = async (GUILD: Guild) => {
       const category = channel?.parent?.name.includes("💪")
         ? "fitness"
         : "study";
+      console.log("CHANNEL NAME");
+      console.log(channel?.parent?.name);
       const podId = parseInt(channel?.parent?.name.split(" ").pop() as string);
+      console.log("PODID");
+      console.log(podId);
+      console.log(podId == null);
+      console.log(podId == NaN);
       if (podId == null || podId == NaN) {
         interaction?.reply(
           "Looks like you used this command in the wrong channel. Be sure to only use the leave-pod command in the #leave-pod channel of the pod you want to leave!"
