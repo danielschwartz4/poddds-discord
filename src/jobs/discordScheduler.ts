@@ -4,7 +4,6 @@ import { goalCommand } from "../commands/goalCommand";
 import { breakCommand } from "../commands/breakCommand";
 import { leavePodCommand } from "../commands/leavePodCommand";
 import { CLIENT, LOCAL_TODAY, SERVER_ID, TODAY, __prod__ } from "../constants";
-import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { createBreak } from "./break/createBreak";
 import { dailySummary } from "./dailySummary";
 import { createGoal } from "./goal/createGoal";
@@ -16,6 +15,7 @@ import { newMember } from "./member/newMember";
 import { routeBotDMs } from "./member/routeBotDMs";
 import { leavePod } from "./pod/leavePod";
 import { reactToImages } from "./react/react";
+import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 require("dotenv").config();
 
 async function discordBot() {
@@ -42,8 +42,7 @@ async function discordBot() {
     cron.schedule("1 */1 * * *", async () => {
       breakCommand(GUILD as Guild);
       const gmt0Hours = TODAY().getUTCHours();
-      // const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
-      const timeZoneIsUTCMidnight = "-5"
+      const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
 
       console.log(
         "UPDATING GOALS LEFT TODAY FOR TIME ZONE: ",
