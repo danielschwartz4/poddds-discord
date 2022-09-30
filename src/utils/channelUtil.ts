@@ -6,6 +6,24 @@ import { readUser } from "../resolvers/user";
 import { GoalType } from "../types/dbTypes";
 import { colorBooleanMapper } from "./goalUtils";
 
+export const createTextChannel = (GUILD: Guild, channelName: string, channel_permission_overwrites: any[], position?: number) => {
+  return GUILD?.channels.create({
+    name: channelName,
+    type: ChannelType.GuildText,
+    permissionOverwrites: channel_permission_overwrites,
+    position
+  });
+}
+
+export const createVoiceChannel = (GUILD: Guild, channelName: string, channel_permission_overwrites: any[], position?: number) => {
+  return GUILD?.channels.create({
+    name: channelName,
+    type: ChannelType.GuildVoice,
+    permissionOverwrites: channel_permission_overwrites,
+    position
+  });
+}
+
 export const createGoalsLeftTodayCategory = async (GUILD: Guild, position: number, type: GoalType, podId: number) => {
   const podmate_role_id = GUILD?.roles.cache.find(
     (r) => r.name === type + "-" + podId
@@ -113,6 +131,10 @@ export const readTypeFromChannelName = (name: string) => {
   }
   return type;
 };
+
+export const readChannelByName = (GUILD: Guild, channelName: string) => {
+  return GUILD?.channels.cache.find((channel) => channel.name.includes(channelName))
+}
 
 export const readPodCategoryChannelsByType = async (discordId: string, type: GoalType, GUILD: Guild) => {
     const userObject = await readUser(discordId)

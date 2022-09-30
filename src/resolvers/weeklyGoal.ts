@@ -20,6 +20,12 @@ export const readWeeklyGoalByType = (discordId: string, type: GoalType) => {
   });
 };
 
+export const readAllActiveGoals = () => {
+  return WeeklyGoal.find({
+    where: { isActive: true },
+  });
+};
+
 export const readAllActiveGoalsForTimezone = (timeZone: string) => {
   return WeeklyGoal.find({
     where: { isActive: true, timeZone },

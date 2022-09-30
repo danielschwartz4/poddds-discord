@@ -16,6 +16,7 @@ import { routeBotDMs } from "./member/routeBotDMs";
 import { leavePod } from "./pod/leavePod";
 import { reactToImages } from "./react/react";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
+import { activeGoals } from "../metrics/activeGoals";
 require("dotenv").config();
 
 async function discordBot() {
@@ -27,7 +28,6 @@ async function discordBot() {
     // Run our bot functions
     goalCommand(GUILD as Guild);
     createGoal(GUILD as Guild);
-    // Put breakCommand in createBreak and pass in timezone
     breakCommand(GUILD as Guild);
     createBreak(GUILD as Guild);
     leavePodCommand(GUILD as Guild);
@@ -35,11 +35,11 @@ async function discordBot() {
     reactToImages(GUILD as Guild);
     newMember();
     routeBotDMs();
-
-    // addExistingMembers(client, SERVER_ID as string);
+    activeGoals(GUILD as Guild);
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
+      activeGoals(GUILD as Guild);
       breakCommand(GUILD as Guild);
       const gmt0Hours = TODAY().getUTCHours();
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
