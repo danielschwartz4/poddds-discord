@@ -26,7 +26,9 @@ export const leavePod = async (GUILD: Guild) => {
       console.log(podId);
       console.log(podId == null);
       console.log(podId == NaN);
-      if (podId == null || podId == NaN) {
+      console.log(!podId);
+
+      if (podId == null || podId == NaN || !podId) {
         interaction?.reply(
           "Looks like you used this command in the wrong channel. Be sure to only use the leave-pod command in the #leave-pod channel of the pod you want to leave!"
         );
