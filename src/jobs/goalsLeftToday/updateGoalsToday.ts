@@ -28,7 +28,6 @@ export const updateGoalsToday = async (
   const date_today = mdyDate(LOCAL_TODAY(timeZoneIsUTCMidnight as string)); // use local today because you want to find the local date based on the timezone and update and display that
 
   const activePods = await readActivePods();
-  console.log("activePods", activePods);
   for (const pod of activePods) {
     const podId = pod.id;
     const podType = pod.type;
@@ -118,9 +117,11 @@ export const updateGoalsToday = async (
           let alreadyDisplayed = false;
           for (const channel of goalsLeftTodayList) {
             if (channel[1].name === user?.discordUsername) {
+              console.log(user?.discordUsername + "'s goal left today is already being displayed", channel)
               alreadyDisplayed = true;
             }
           }
+
           if (!alreadyDisplayed) {
             createGoalsLeftTodayChannel(
               GUILD,
