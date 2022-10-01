@@ -4,8 +4,8 @@ import { GoalType } from "../types/dbTypes";
 import AppDataSource from "../dataSource";
 
 export const readActiveWeeklyGoalByGoalId = (goalId: number) => {
-  return WeeklyGoal.findOne({where: { id: goalId, isActive: true }});
-}
+  return WeeklyGoal.findOne({ where: { id: goalId, isActive: true } });
+};
 
 export const readWeeklyGoalByType = (discordId: string, type: GoalType) => {
   return WeeklyGoal.findOne({
@@ -40,42 +40,58 @@ export const readLastWeeklyGoalByType = (discordId: string, type: GoalType) => {
       type,
     },
     order: {
-      id: "DESC"
-    }
+      id: "DESC",
+    },
   });
 };
 
-export const readWeeklyGoalByFitnessPodIdAndType = (podId: number, type: GoalType) => {
+export const readWeeklyGoalByFitnessPodIdAndType = (
+  podId: number,
+  type: GoalType
+) => {
   return AppDataSource.getRepository(WeeklyGoal)
-  .createQueryBuilder("w")
-  .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
-  .where('u."fitnessPodId"=:fitnessPodId', { fitnessPodId: podId })
-  .andWhere('w."isActive"=:isActive', { isActive: true })
-  .andWhere('w.type=:type', { type })
-  .orderBy('w.misses', 'DESC')
-  .getMany();
-}
+    .createQueryBuilder("w")
+    .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
+    .where('u."fitnessPodId"=:fitnessPodId', { fitnessPodId: podId })
+    .andWhere('w."isActive"=:isActive', { isActive: true })
+    .andWhere("w.type=:type", { type })
+    .orderBy("w.misses", "DESC")
+    .getMany();
+};
 
-export const readWeeklyGoalByStudyPodIdAndType = (podId: number, type: GoalType) => {
+export const readWeeklyGoalByStudyPodIdAndType = (
+  podId: number,
+  type: GoalType
+) => {
   return AppDataSource.getRepository(WeeklyGoal)
-  .createQueryBuilder("w")
-  .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
-  .where('u."studyPodId"=:studyPodId', { studyPodId: podId })
-  .andWhere('w."isActive"=:isActive', { isActive: true })
-  .andWhere('w.type=:type', { type })
-  .orderBy('w.misses', 'DESC')
-  .getMany();
-}
+    .createQueryBuilder("w")
+    .innerJoinAndSelect("w.user", "u", 'u.id=w."userId"')
+    .where('u."studyPodId"=:studyPodId', { studyPodId: podId })
+    .andWhere('w."isActive"=:isActive', { isActive: true })
+    .andWhere("w.type=:type", { type })
+    .orderBy("w.misses", "DESC")
+    .getMany();
+};
 
-export const updateWeeklyGoalToCompleted = ( discordId: string, type: GoalType) => {
-  return  WeeklyGoal.update({ discordId, isActive: true, type }, { misses: 0 });
-}
+export const updateWeeklyGoalToCompleted = (
+  discordId: string,
+  type: GoalType
+) => {
+  return WeeklyGoal.update({ discordId, isActive: true, type }, { misses: 0 });
+};
 
-export const updateWeeklyGoalMisses = ( discordId: string, type: GoalType, misses: number) => {
-  return  WeeklyGoal.update({ discordId, isActive: true, type }, { misses });
-}
+export const updateWeeklyGoalMisses = (
+  discordId: string,
+  type: GoalType,
+  misses: number
+) => {
+  return WeeklyGoal.update({ discordId, isActive: true, type }, { misses });
+};
 
-export const updateWeeklyGoalStatusToInactiveByType = (discordId: string, type: GoalType) => {
+export const updateWeeklyGoalStatusToInactiveByType = (
+  discordId: string,
+  type: GoalType
+) => {
   return WeeklyGoal.update(
     { discordId: discordId, isActive: true, type },
     { isActive: false }

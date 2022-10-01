@@ -1,6 +1,5 @@
 import { GuildMember, Role } from "discord.js";
 import {
-  ADMIN_USER_IDS,
   CLIENT,
   FITNESS_GOALS_CHANNEL_ID,
   LOCAL_TODAY,
@@ -10,6 +9,7 @@ import { Event } from "../../entities/Event";
 import { User } from "../../entities/User";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { GoalType } from "../../types/dbTypes";
+import { newPodmateNotification } from "../../utils/adminNotifs";
 import { buildDays } from "../../utils/buildDaysUtil";
 import { parseInteractionResponse } from "../../utils/goalUtils";
 import {
@@ -96,28 +96,21 @@ export const createGoal = () => {
       assignPod(type as GoalType, user as GuildMember, resp);
       if (user?.roles.cache.some((role) => role.name === "new member")) {
         // Notify admins of new podmate
-        ADMIN_USER_IDS.forEach((val) => {
-          CLIENT.users.fetch(val as string).then((user) => {
-            user.send(
-              "**poddds bot DM message NEW PODMATE ALERT!** DM them if there's no evidence or anything is unclear\n" +
-                from_username +
-                " says that their weekly goal and evidence will be:\n" +
-                resp
-            );
-          });
-        });
+        newPodmateNotification(from_username, resp);
 
         // Automatically remove new member role and add podmate role to msg.author.roles
-        GUILD()?.members.fetch(interaction.user.id).then((user: any) => {
-          let new_member_role_id = user.guild.roles.cache.find(
-            (r: Role) => r.name === "new member"
-          );
-          let podmate_role_id = user.guild.roles.cache.find(
-            (r: Role) => r.name === "podmate"
-          );
-          user.roles.add(podmate_role_id);
-          user.roles.remove(new_member_role_id);
-        });
+        GUILD()
+          ?.members.fetch(interaction.user.id)
+          .then((user: any) => {
+            let new_member_role_id = user.guild.roles.cache.find(
+              (r: Role) => r.name === "new member"
+            );
+            let podmate_role_id = user.guild.roles.cache.find(
+              (r: Role) => r.name === "podmate"
+            );
+            user.roles.add(podmate_role_id);
+            user.roles.remove(new_member_role_id);
+          });
       }
     }
   });
