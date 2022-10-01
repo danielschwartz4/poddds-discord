@@ -17,7 +17,7 @@ export const newMember = () => {
       user.send(
         "what’s up " +
           `<@${user.id}>` +
-          "! mod from poddds here 👋\nmake a goal in #💪fitness-goals  or #📚study-goals with by typing /set-current goal to get access to the rest of the server. let me know if you have any questions 🎉"
+          "! mod from poddds here 👋\nmake a goal in #💪fitness-goals or #📚study-goals with by typing /set-current goal to get access to the rest of the server. let me know if you have any questions 🎉"
       );
     });
 
