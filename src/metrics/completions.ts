@@ -24,5 +24,5 @@ export const displayGoalCompletionCount = async () => {
     ];
     const numActiveGoals = await readAllCompletedEvents()
     displayChannelName += numActiveGoals.length
-    createVoiceChannel(displayChannelName, channel_permission_overwrites, 3)
+    createVoiceChannel(displayChannelName, channel_permission_overwrites, 2)
 }

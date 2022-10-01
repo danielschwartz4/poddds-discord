@@ -39,12 +39,9 @@ async function discordBot() {
     reactToImages();
     newMember();
     routeBotDMs();
-    displayGoalCompletionCount();
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
-      displayActiveGoalsCount();
-      breakCommand();
       const gmt0Hours = TODAY().getUTCHours();
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
 
@@ -61,6 +58,10 @@ async function discordBot() {
       await updateGoalsYesterday(timeZoneIsUTCMidnight);
       await updateGoalsToday(timeZoneIsUTCMidnight);
       await autoKickMember(timeZoneIsUTCMidnight);
+
+      // update metrics
+      displayActiveGoalsCount();
+      displayGoalCompletionCount();
     });
 
     // update every day at 9am EST (-5), (EST + 4) 1pm UTC
