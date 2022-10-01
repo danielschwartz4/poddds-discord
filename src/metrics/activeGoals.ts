@@ -1,16 +1,17 @@
-import { Guild, PermissionsBitField } from "discord.js"
+import { PermissionsBitField } from "discord.js"
+import { GUILD } from "../jobs/discordScheduler"
 import { readAllActiveGoals } from "../resolvers/weeklyGoal"
 import { createVoiceChannel, readChannelByName } from "../utils/channelUtil"
 
-export const activeGoals = async (GUILD: Guild) => {
+export const displayActiveGoalsCount = async () => {
     let displayActiveGoalsChannelName = "Active Goals: "
-    const activeGoalsChannel = readChannelByName(GUILD, displayActiveGoalsChannelName)
+    const activeGoalsChannel = readChannelByName(displayActiveGoalsChannelName)
     if (activeGoalsChannel) {
         activeGoalsChannel.delete()
     }
 
-    const mod_role_id = GUILD?.roles.cache.find((r) => r.name === "mod");
-    const everyone_role_id = GUILD?.roles.cache.find((r) => r.name === "@everyone");
+    const mod_role_id = GUILD()?.roles.cache.find((r) => r.name === "mod");
+    const everyone_role_id = GUILD()?.roles.cache.find((r) => r.name === "@everyone");
     const channel_permission_overwrites = [
         {
         id: mod_role_id?.id as string,
@@ -23,5 +24,5 @@ export const activeGoals = async (GUILD: Guild) => {
     ];
     const numActiveGoals = await readAllActiveGoals()
     displayActiveGoalsChannelName += numActiveGoals.length
-    createVoiceChannel(GUILD, displayActiveGoalsChannelName, channel_permission_overwrites, 2)
+    createVoiceChannel(displayActiveGoalsChannelName, channel_permission_overwrites, 2)
 }

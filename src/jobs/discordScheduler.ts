@@ -1,4 +1,3 @@
-import { Guild } from "discord.js";
 import cron from "node-cron";
 import { goalCommand } from "../commands/goalCommand";
 import { breakCommand } from "../commands/breakCommand";
@@ -16,31 +15,36 @@ import { routeBotDMs } from "./member/routeBotDMs";
 import { leavePod } from "./pod/leavePod";
 import { reactToImages } from "./react/react";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
-import { activeGoals } from "../metrics/activeGoals";
+import { displayActiveGoalsCount } from "../metrics/activeGoals";
+import { displayGoalCompletionCount } from "../metrics/completions";
 require("dotenv").config();
+
+export const GUILD = () => {
+  return CLIENT?.guilds.cache.get(SERVER_ID as string)
+}
 
 async function discordBot() {
   CLIENT.on("ready", async () => {
     console.log("The client bot is ready!");
     console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-5")); // in EST
-    const GUILD = CLIENT?.guilds.cache.get(SERVER_ID as string);
 
     // Run our bot functions
-    goalCommand(GUILD as Guild);
-    createGoal(GUILD as Guild);
-    breakCommand(GUILD as Guild);
-    createBreak(GUILD as Guild);
-    leavePodCommand(GUILD as Guild);
-    leavePod(GUILD as Guild);
-    reactToImages(GUILD as Guild);
+    GUILD()
+    goalCommand();
+    createGoal();
+    breakCommand();
+    createBreak();
+    leavePodCommand();
+    leavePod();
+    reactToImages();
     newMember();
     routeBotDMs();
-    activeGoals(GUILD as Guild);
+    displayGoalCompletionCount();
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
-      activeGoals(GUILD as Guild);
-      breakCommand(GUILD as Guild);
+      displayActiveGoalsCount();
+      breakCommand();
       const gmt0Hours = TODAY().getUTCHours();
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
 
@@ -54,19 +58,19 @@ async function discordBot() {
         " AND TODAY AS: ",
         TODAY()
       );
-      await updateGoalsYesterday(GUILD as Guild, timeZoneIsUTCMidnight);
-      await updateGoalsToday(GUILD as Guild, timeZoneIsUTCMidnight);
-      await autoKickMember(timeZoneIsUTCMidnight, GUILD as Guild);
+      await updateGoalsYesterday(timeZoneIsUTCMidnight);
+      await updateGoalsToday(timeZoneIsUTCMidnight);
+      await autoKickMember(timeZoneIsUTCMidnight);
     });
 
     // update every day at 9am EST (-5), (EST + 4) 1pm UTC
     cron.schedule("00 13 */1 * *", () => {
-      dailySummary(GUILD as Guild);
+      dailySummary();
     });
 
     // update "At 00:00 on Sunday"
     cron.schedule("0 0 * * 0", () => {
-      createGoalReminder(CLIENT);
+      createGoalReminder();
     });
   });
 

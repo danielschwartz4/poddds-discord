@@ -1,4 +1,5 @@
-import { CategoryChannel, ChannelType, Guild, PermissionsBitField, TextChannel } from "discord.js";
+import { CategoryChannel, ChannelType, PermissionsBitField, TextChannel } from "discord.js";
+import { GUILD } from "../jobs/discordScheduler";
 import { CLIENT, LOCAL_TODAY } from "../constants";
 import { User } from "../entities/User";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
@@ -6,8 +7,8 @@ import { readUser } from "../resolvers/user";
 import { GoalType } from "../types/dbTypes";
 import { colorBooleanMapper } from "./goalUtils";
 
-export const createTextChannel = (GUILD: Guild, channelName: string, channel_permission_overwrites: any[], position?: number) => {
-  return GUILD?.channels.create({
+export const createTextChannel = (channelName: string, channel_permission_overwrites: any[], position?: number) => {
+  return GUILD()?.channels.create({
     name: channelName,
     type: ChannelType.GuildText,
     permissionOverwrites: channel_permission_overwrites,
@@ -15,8 +16,8 @@ export const createTextChannel = (GUILD: Guild, channelName: string, channel_per
   });
 }
 
-export const createVoiceChannel = (GUILD: Guild, channelName: string, channel_permission_overwrites: any[], position?: number) => {
-  return GUILD?.channels.create({
+export const createVoiceChannel = (channelName: string, channel_permission_overwrites: any[], position?: number) => {
+  return GUILD()?.channels.create({
     name: channelName,
     type: ChannelType.GuildVoice,
     permissionOverwrites: channel_permission_overwrites,
@@ -24,11 +25,11 @@ export const createVoiceChannel = (GUILD: Guild, channelName: string, channel_pe
   });
 }
 
-export const createGoalsLeftTodayCategory = async (GUILD: Guild, position: number, type: GoalType, podId: number) => {
-  const podmate_role_id = GUILD?.roles.cache.find(
+export const createGoalsLeftTodayCategory = async (position: number, type: GoalType, podId: number) => {
+  const podmate_role_id = GUILD()?.roles.cache.find(
     (r) => r.name === type + "-" + podId
   );
-  const everyone_role_id = GUILD?.roles.cache.find((r) => r.name === "@everyone");
+  const everyone_role_id = GUILD()?.roles.cache.find((r) => r.name === "@everyone");
   const channel_permission_overwrites = [
     {
       id: podmate_role_id?.id as string,
@@ -43,7 +44,7 @@ export const createGoalsLeftTodayCategory = async (GUILD: Guild, position: numbe
   const name_descriptor = type + " pod " + podId
   const goals_position = position + 1
 
-  const categoryChannel = await GUILD?.channels.create({
+  const categoryChannel = await GUILD()?.channels.create({
     name: "--- goals left today, " + name_descriptor,
     type: ChannelType.GuildCategory,
     permissionOverwrites: channel_permission_overwrites,
@@ -53,11 +54,11 @@ export const createGoalsLeftTodayCategory = async (GUILD: Guild, position: numbe
   return categoryChannel
 }
 
-export const createGoalsLeftTodayChannel = async (GUILD: Guild, user: User, category_channel: CategoryChannel, weekly_goal: WeeklyGoal, timeZoneIsUTCMidnight: string, podType: GoalType, podId: number) => {
-  const podmate_role_id = GUILD?.roles.cache.find(
+export const createGoalsLeftTodayChannel = async (user: User, category_channel: CategoryChannel, weekly_goal: WeeklyGoal, timeZoneIsUTCMidnight: string, podType: GoalType, podId: number) => {
+  const podmate_role_id = GUILD()?.roles.cache.find(
     (r) => r.name === podType + "-" + podId
   );
-  const everyone_role_id = GUILD?.roles.cache.find((r) => r.name === "@everyone");
+  const everyone_role_id = GUILD()?.roles.cache.find((r) => r.name === "@everyone");
   const channel_permission_overwrites = [
     {
       id: podmate_role_id?.id as string,
@@ -70,7 +71,7 @@ export const createGoalsLeftTodayChannel = async (GUILD: Guild, user: User, cate
   ];
 
   // create a new channel
-  GUILD?.channels.create({
+  GUILD()?.channels.create({
     name: user.discordUsername,
     type: ChannelType.GuildText,
     permissionOverwrites: channel_permission_overwrites,
@@ -132,11 +133,11 @@ export const readTypeFromChannelName = (name: string) => {
   return type;
 };
 
-export const readChannelByName = (GUILD: Guild, channelName: string) => {
-  return GUILD?.channels.cache.find((channel) => channel.name.includes(channelName))
+export const readChannelByName = (channelName: string) => {
+  return GUILD()?.channels.cache.find((channel) => channel.name.includes(channelName))
 }
 
-export const readPodCategoryChannelsByType = async (discordId: string, type: GoalType, GUILD: Guild) => {
+export const readPodCategoryChannelsByType = async (discordId: string, type: GoalType) => {
     const userObject = await readUser(discordId)
     let podName: string;
     if (type === 'fitness') {
@@ -145,12 +146,12 @@ export const readPodCategoryChannelsByType = async (discordId: string, type: Goa
       podName = "--- 📚 study pod " + userObject?.studyPodId
     }
     if (!type) return
-    const userPodCategoryChannel = GUILD?.channels.cache.find((channel) => channel.name === podName)
-    const categoryChannels = GUILD.channels.cache.filter(c => c.parentId === userPodCategoryChannel?.id)
+    const userPodCategoryChannel = GUILD()?.channels.cache.find((channel) => channel.name === podName)
+    const categoryChannels = GUILD()?.channels.cache.filter(c => c.parentId === userPodCategoryChannel?.id)
     return categoryChannels
 }
 
-export const readPodCategoryChannelsByPodId = async (podId: number, type: GoalType, GUILD: Guild) => {
+export const readPodCategoryChannelsByPodId = async (podId: number, type: GoalType) => {
     let podName: string;
     if (type === 'fitness') {
       podName = "--- 💪 fitness pod " + podId
@@ -158,12 +159,12 @@ export const readPodCategoryChannelsByPodId = async (podId: number, type: GoalTy
       podName = "--- 📚 study pod " + podId
     }
     if (!type) return
-    const userPodCategoryChannel = GUILD?.channels.cache.find((channel) => channel.name === podName)
-    const categoryChannels = GUILD.channels.cache.filter(c => c.parentId === userPodCategoryChannel?.id)
+    const userPodCategoryChannel = GUILD()?.channels.cache.find((channel) => channel.name === podName)
+    const categoryChannels = GUILD()?.channels.cache.filter(c => c.parentId === userPodCategoryChannel?.id)
     return categoryChannels
 }
 
-export const readPodCategoryChannelByPodId = async (podId: number, type: GoalType, GUILD: Guild) => {
+export const readPodCategoryChannelByPodId = async (podId: number, type: GoalType) => {
   let podName: string;
   if (type === 'fitness') {
     podName = "--- 💪 fitness pod " + podId
@@ -171,12 +172,12 @@ export const readPodCategoryChannelByPodId = async (podId: number, type: GoalTyp
     podName = "--- 📚 study pod " + podId
   }
   if (!type) return
-  const userPodCategoryChannel = GUILD?.channels.cache.find((channel) => channel.name === podName)
+  const userPodCategoryChannel = GUILD()?.channels.cache.find((channel) => channel.name === podName)
   return userPodCategoryChannel as CategoryChannel
 }
 
-export const readPodGoalsLeftTodayCategoryChannelByPodId = async (podId: number, type: GoalType, GUILD: Guild) => {
+export const readPodGoalsLeftTodayCategoryChannelByPodId = async (podId: number, type: GoalType) => {
   let podName = "--- goals left today, " + type + " pod " + podId
-  const userPodCategoryChannel = GUILD?.channels.cache.find((channel) => channel.name === podName)
+  const userPodCategoryChannel = GUILD()?.channels.cache.find((channel) => channel.name === podName)
   return userPodCategoryChannel
 }

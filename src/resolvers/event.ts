@@ -42,6 +42,10 @@ export const readActiveEventsByDateAndWeeklyGoalAndTimezone = (adjustedDate: str
       });
 }
 
+export const readAllCompletedEvents = () => {
+    return Event.find({ where: { completed: true }})
+}
+
 export const updateEventToCompleted = ( discordId: string, adjustedDate: string, type: GoalType) => {
     return Event.update(
         { discordId, adjustedDate, isActive: true, type },

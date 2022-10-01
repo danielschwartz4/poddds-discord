@@ -1,4 +1,4 @@
-import { Guild, Role, TextChannel } from "discord.js";
+import { Role, TextChannel } from "discord.js";
 import { CLIENT } from "../../constants";
 import { Pod } from "../../entities/Pod";
 import { User } from "../../entities/User";
@@ -6,9 +6,10 @@ import {
   InteractionResponse,
   transformInteractionData,
 } from "../../utils/interactionData";
+import { GUILD } from "../discordScheduler";
 import { deactivateGoalsAndEvents } from "../goalsLeftToday/deactivateGoals";
 
-export const leavePod = async (GUILD: Guild) => {
+export const leavePod = async () => {
   CLIENT.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName === "leave-pod") {
@@ -81,7 +82,7 @@ export const leavePod = async (GUILD: Guild) => {
           }
 
           // 3. remove role
-          const user = await GUILD?.members.fetch(interaction.user.id);
+          const user = await GUILD()?.members.fetch(interaction.user.id);
           let pod_role_id = user?.guild.roles.cache.find(
             (r: Role) => r.name === category + podId
           );
@@ -92,7 +93,7 @@ export const leavePod = async (GUILD: Guild) => {
           );
           await user?.roles.remove(pod_role_id as Role);
 
-          deactivateGoalsAndEvents(user?.id, category);
+          deactivateGoalsAndEvents(user?.id as string, category);
         }
       }
     }

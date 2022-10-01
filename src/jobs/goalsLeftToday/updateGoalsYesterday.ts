@@ -1,4 +1,3 @@
-import { Guild } from "discord.js";
 import { readActivePods } from "../../resolvers/pod";
 import { LOCAL_TODAY } from "../../constants";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
@@ -9,9 +8,9 @@ import { readActiveEventsByDateAndWeeklyGoalAndTimezone, updateEventToCompleted,
 import { readPodGoalsLeftTodayCategoryChannelByPodId } from "../../utils/channelUtil";
 import { readUser } from "../../resolvers/user";
 import { GoalType } from "../../types/dbTypes";
+import { GUILD } from "../discordScheduler";
 
 export const updateGoalsYesterday = async (
-  GUILD: Guild,
   timeZoneIsUTCMidnight?: string
 ) => {
   const localTodayWithTimeZone = LOCAL_TODAY(timeZoneIsUTCMidnight as string);
@@ -44,18 +43,18 @@ export const updateGoalsYesterday = async (
     
     // 3 looping through all active events individually
     if (events_incompleted_yesterday && podType && podId) {
-      let goalsLeftCategoryChannel = await readPodGoalsLeftTodayCategoryChannelByPodId(podId, podType, GUILD);
-      const goalsLeftChannels = GUILD.channels.cache.filter(c => c.parentId === goalsLeftCategoryChannel?.id)
+      let goalsLeftCategoryChannel = await readPodGoalsLeftTodayCategoryChannelByPodId(podId, podType);
+      const goalsLeftChannels = GUILD()?.channels.cache.filter(c => c.parentId === goalsLeftCategoryChannel?.id)
       
       // 4. for each event yesterday incompleted, remove their channels from the category or update misses
       // await events_incompleted_yesterday.forEach(async (event) => {
       for (const event of events_incompleted_yesterday) {
         const user_id = event.discordId
         const user_incompleted_yesterday = await readUser(user_id)
-        const user_channels = goalsLeftChannels.filter(c => c.name === user_incompleted_yesterday?.discordUsername.toLowerCase())
+        const user_channels = goalsLeftChannels?.filter(c => c.name === user_incompleted_yesterday?.discordUsername.toLowerCase())
         
         // incompleted goal, update misses += 1
-        if (user_channels.size) { 
+        if (user_channels?.size) { 
           const weekly_goal = await readWeeklyGoalByType(user_id, podType);
           updateEventToInactive(user_id, date_yesterday, podType);
           if (weekly_goal) { updateWeeklyGoalMisses(user_id, podType, weekly_goal.misses + 1) }
@@ -71,7 +70,7 @@ export const updateGoalsYesterday = async (
         }
 
         // check if event was the last goal
-        checkIfLastGoal(event.discordId, date_yesterday, GUILD, event.type);
+        checkIfLastGoal(event.discordId, date_yesterday, event.type);
       }
     }
   }

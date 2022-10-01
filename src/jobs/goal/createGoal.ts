@@ -1,4 +1,4 @@
-import { Guild, GuildMember, Role } from "discord.js";
+import { GuildMember, Role } from "discord.js";
 import {
   ADMIN_USER_IDS,
   CLIENT,
@@ -17,10 +17,11 @@ import {
   transformInteractionData,
 } from "../../utils/interactionData";
 import { addDays, flipSign, int2day, mdyDate } from "../../utils/timeZoneUtil";
+import { GUILD } from "../discordScheduler";
 import { deactivateGoalsAndEvents } from "../goalsLeftToday/deactivateGoals";
 import { assignPod } from "../pod/assignPod";
 
-export const createGoal = (GUILD: Guild) => {
+export const createGoal = () => {
   CLIENT.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     let type;
@@ -83,7 +84,7 @@ export const createGoal = (GUILD: Guild) => {
       }
       const from_username = interaction.user.username;
       console.log(interaction.user);
-      const user = await GUILD.members.fetch(interaction.user.id);
+      const user = await GUILD()?.members.fetch(interaction.user.id);
       console.log(user);
       console.log("BEFORE ASSIGN POD");
       // Assign user to pod and send resp to that goals channel
@@ -92,7 +93,7 @@ export const createGoal = (GUILD: Guild) => {
       // Add podmate role
       let role_id = user?.guild?.roles?.cache.find((r) => r.name === "podmate");
       await user?.roles?.add(role_id as Role);
-      assignPod(type as GoalType, user as GuildMember, resp, GUILD);
+      assignPod(type as GoalType, user as GuildMember, resp);
       if (user?.roles.cache.some((role) => role.name === "new member")) {
         // Notify admins of new podmate
         ADMIN_USER_IDS.forEach((val) => {
@@ -107,7 +108,7 @@ export const createGoal = (GUILD: Guild) => {
         });
 
         // Automatically remove new member role and add podmate role to msg.author.roles
-        GUILD?.members.fetch(interaction.user.id).then((user: any) => {
+        GUILD()?.members.fetch(interaction.user.id).then((user: any) => {
           let new_member_role_id = user.guild.roles.cache.find(
             (r: Role) => r.name === "new member"
           );

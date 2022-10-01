@@ -1,4 +1,4 @@
-import { Guild, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 import { GoalType } from "../..//types/dbTypes";
 import { CLIENT } from "../../constants";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
@@ -7,7 +7,6 @@ import { readPodCategoryChannelsByType } from "../../utils/channelUtil";
 
 export const expiredGoalNotif = async (
   discordId: string,
-  GUILD: Guild,
   type: GoalType,
   weekly_goal: WeeklyGoal,
 ) => {
@@ -16,7 +15,7 @@ export const expiredGoalNotif = async (
   var Difference_In_Time = weekly_goal.adjustedEndDate.getTime() - weekly_goal.adjustedStartDate.getTime();
   var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
 
-  const categoryChannels = await readPodCategoryChannelsByType(discordId, type, GUILD)
+  const categoryChannels = await readPodCategoryChannelsByType(discordId, type)
 
   // find the self promo channel and post in there
   let selfPromoChannel: string;

@@ -1,4 +1,4 @@
-import { Guild, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 import { CLIENT, LOCAL_TODAY } from "../constants";
 import AppDataSource from "../dataSource";
 import { changeTimeZone, mdyDate } from "../utils/timeZoneUtil";
@@ -10,7 +10,7 @@ import { readActivePods } from "../resolvers/pod";
 import { readWeeklyGoalByFitnessPodIdAndType, readWeeklyGoalByStudyPodIdAndType } from "../resolvers/weeklyGoal";
 require("dotenv").config();
 
-export const dailySummary = async (GUILD: Guild) => {
+export const dailySummary = async () => {
   // iterate through every pod
   const activePods = await readActivePods();
 
@@ -29,7 +29,7 @@ export const dailySummary = async (GUILD: Guild) => {
     // if there are active goals for the pod
     if (podActiveWeeklyGoals) {
       // send daily summary into daily chat updates for that pod id
-      const categoryChannels = await readPodCategoryChannelsByPodId(podId, podType, GUILD);
+      const categoryChannels = await readPodCategoryChannelsByPodId(podId, podType);
       categoryChannels?.forEach(async (channel) => {
         const dailyUpdatesChannel = channel.id;
         if (channel.name === "🚩daily-updates-chat") {

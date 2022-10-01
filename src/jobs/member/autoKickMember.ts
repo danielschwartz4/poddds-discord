@@ -1,13 +1,13 @@
-import { Guild, Role } from "discord.js";
+import { Role } from "discord.js";
 import { readAllActiveGoalsForTimezone, updateAllUserWeeklyGoalsToInactive } from "../../resolvers/weeklyGoal";
 import { CLIENT, LOCAL_TODAY } from "../../constants";
 import { mdyDate } from "../../utils/timeZoneUtil";
 import { deactivateMember } from "./onMemberLeave";
 import { readActiveEvent } from "../../resolvers/event";
+import { GUILD } from "../discordScheduler";
 
 export const autoKickMember = async (
-  timeZoneIsUTCMidnight: string,
-  GUILD: Guild
+  timeZoneIsUTCMidnight: string
 ) => {
   const activeGoals = await readAllActiveGoalsForTimezone(timeZoneIsUTCMidnight)
 
@@ -52,11 +52,11 @@ export const autoKickMember = async (
           });
         // else if client.users.fetch is an error because it's an unknown member, then deactivate weekly goals of member
 
-        let kicked_role_id = GUILD?.roles.cache.find(
+        let kicked_role_id = GUILD()?.roles.cache.find(
           (r: Role) => r.name === "kicked"
         );
-        const user = await GUILD?.members.fetch(userId);
-        user.roles.set([kicked_role_id as Role]) // remove all roles and set to kicked
+        const user = await GUILD()?.members.fetch(userId);
+        user?.roles.set([kicked_role_id as Role]) // remove all roles and set to kicked
         updateAllUserWeeklyGoalsToInactive(userId);
         users_notified.push(userId)
       }

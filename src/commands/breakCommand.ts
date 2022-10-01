@@ -1,10 +1,10 @@
-import { Guild } from "discord.js";
+import { GUILD } from "../jobs/discordScheduler";
 import { CLIENT } from "../constants";
 
-export const breakCommand = (GUILD: Guild) => {
+export const breakCommand = () => {
   let commands;
-  if (GUILD) {
-    commands = GUILD.commands;
+  if (GUILD()) {
+    commands = GUILD()?.commands;
   } else {
     commands = CLIENT.application?.commands;
   }

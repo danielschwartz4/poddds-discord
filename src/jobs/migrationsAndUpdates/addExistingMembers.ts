@@ -1,8 +1,8 @@
-import { Guild } from "discord.js";
 import { User } from "../../entities/User";
+import { GUILD } from "../discordScheduler";
 
-export const addExistingMembers = async (GUILD: Guild) => {
-  GUILD?.members.fetch().then((members) => {
+export const addExistingMembers = async () => {
+  GUILD()?.members.fetch().then((members) => {
     members.forEach(async (user) => {
       // add member id and stuff to DB
       const newUser = await User.find({ where: { discordId: user.id } });

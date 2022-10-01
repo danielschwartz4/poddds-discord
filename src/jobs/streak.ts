@@ -1,7 +1,6 @@
-import { Guild, Role } from "discord.js";
+import { Role } from "discord.js";
 
 interface updateStreaks {
-  guild?: Guild;
   role?: Role;
 }
 

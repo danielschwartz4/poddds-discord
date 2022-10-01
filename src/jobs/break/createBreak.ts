@@ -1,4 +1,4 @@
-import { Guild, TextChannel } from "discord.js";
+import { TextChannel } from "discord.js";
 import { readUser } from "../../resolvers/user";
 import { readPodGoalsLeftTodayCategoryChannelByPodId } from "../../utils/channelUtil";
 import { CLIENT, LOCAL_TODAY } from "../../constants";
@@ -9,8 +9,9 @@ import {
   transformInteractionData,
 } from "../../utils/interactionData";
 import { addDays, mdyDate } from "../../utils/timeZoneUtil";
+import { GUILD } from "../discordScheduler";
 
-export const createBreak = (GUILD: Guild) => {
+export const createBreak = () => {
   CLIENT.on("interactionCreate", async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
     if (interaction.commandName === "break") {
@@ -53,14 +54,14 @@ export const createBreak = (GUILD: Guild) => {
           : "study";
         const podId = parseInt(channel?.parent?.name.split(" ").pop() as string);
 
-        let goalsLeftCategoryChannel = await readPodGoalsLeftTodayCategoryChannelByPodId(podId, podType, GUILD as Guild);
-        const goalsLeftChannels = GUILD.channels.cache.filter(c => c.parentId === goalsLeftCategoryChannel?.id)
+        let goalsLeftCategoryChannel = await readPodGoalsLeftTodayCategoryChannelByPodId(podId, podType);
+        const goalsLeftChannels = GUILD()?.channels.cache.filter(c => c.parentId === goalsLeftCategoryChannel?.id)
         
         const user = await readUser(interaction.user.id)
 
         // 2. if the username is found in goals left today as a channel, delete it
-        const userChannels = goalsLeftChannels.filter(c => c.name === user?.discordUsername.toLowerCase())
-        userChannels.forEach((channel) => {
+        const userChannels = goalsLeftChannels?.filter(c => c.name === user?.discordUsername.toLowerCase())
+        userChannels?.forEach((channel) => {
           channel.delete()
         })
       }

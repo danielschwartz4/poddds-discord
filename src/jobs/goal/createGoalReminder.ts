@@ -1,14 +1,14 @@
-import { Client } from "discord.js";
+import { CLIENT } from "../../constants";
 import { User } from "../../entities/User";
 import { readAllUsers } from "../../resolvers/user";
 import { readLastWeeklyGoalByType } from "../../resolvers/weeklyGoal";
 
-export const createGoalReminder = async (client: Client<boolean>) => {
+export const createGoalReminder = async () => {
   console.log("CREATE GOAL REMINDER");
   const users = await readAllUsers();
 
   users.forEach(async (userObject: User) => {
-    let userOnServer = await client.users.fetch(userObject.discordId);
+    let userOnServer = await CLIENT.users.fetch(userObject.discordId);
     if (userOnServer && !userOnServer.bot) {
       // !! added this becuasae we need the type for readLastWeeklyGoalByType.
       // !! getting the user's most recent goal is no longer ok since they can have two goals
@@ -23,7 +23,7 @@ export const createGoalReminder = async (client: Client<boolean>) => {
 
       // if the user does not have an active weekly goal, send them this reminder
       if (!fitnessWeeklyGoal) {
-        client.users.fetch(userObject.discordId).then((user) => {
+        CLIENT.users.fetch(userObject.discordId).then((user) => {
           console.log(
             "Weekly reminder being set to the following user: ",
             userObject.discordUsername
@@ -46,7 +46,7 @@ export const createGoalReminder = async (client: Client<boolean>) => {
       }
       // if the user does not have an active weekly goal, send them this reminder
       if (!studyWeeklyGoal) {
-        client.users.fetch(userObject.discordId).then((user) => {
+        CLIENT.users.fetch(userObject.discordId).then((user) => {
           console.log(
             "Weekly reminder being set to the following user: ",
             userObject.discordUsername

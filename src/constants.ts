@@ -60,5 +60,3 @@ export const CLIENT = new DiscordJS.Client({
   ],
   partials: [Partials.Channel],
 });
-
-// export const GUILD = CLIENT?.guilds.cache.get(SERVER_ID as string);

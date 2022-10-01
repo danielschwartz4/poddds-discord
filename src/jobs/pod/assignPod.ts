@@ -1,6 +1,5 @@
 import {
   CategoryChannel,
-  Guild,
   GuildMember,
   Role,
   TextChannel,
@@ -10,14 +9,13 @@ import { CLIENT } from "../../constants";
 import { Pod } from "../../entities/Pod";
 import { User } from "../../entities/User";
 import { GoalType } from "../../types/dbTypes";
-// import { GUILD } from "../discordScheduler";
+import { GUILD } from "../discordScheduler";
 import { createPodCategory } from "./createPodCategory";
 
 export const assignPod = async (
   type: GoalType,
   user: GuildMember,
-  resp: string,
-  GUILD: Guild
+  resp: string
 ) => {
   console.log("START", type);
   const dbUser = await User.findOne({
@@ -59,7 +57,7 @@ export const assignPod = async (
       });
       await user?.roles?.add(role_id as Role);
 
-      const category = await createPodCategory(type, pod?.id, GUILD);
+      const category = await createPodCategory(type, pod?.id);
       // Get 🏁view-goals channel id
       const channelId = category?.children.cache
         ?.filter((channel) => channel.name == "🏁view-goals")
@@ -87,8 +85,8 @@ export const assignPod = async (
         dbUser?.studyPodId != -1)
     ) {
       type == "fitness"
-        ? await sendMessage(type, resp, dbUser.fitnessPodId, GUILD)
-        : await sendMessage(type, resp, dbUser.studyPodId, GUILD);
+        ? await sendMessage(type, resp, dbUser.fitnessPodId)
+        : await sendMessage(type, resp, dbUser.studyPodId);
       return;
     }
 
@@ -102,35 +100,36 @@ export const assignPod = async (
       (r) => r.name === type + "-" + pod?.id
     );
     await user?.roles?.add(role_id as Role);
-    sendMessage(type, resp, pod?.id, GUILD);
+    sendMessage(type, resp, pod?.id);
   }
 };
 
 const sendMessage = async (
   type: GoalType,
   resp: string,
-  podId: number,
-  GUILD: Guild
+  podId: number
 ) => {
-  let category = GUILD?.channels?.cache?.filter(
+  let category = GUILD()?.channels?.cache?.filter(
     (category) =>
       category.name ==
       (type === "fitness"
         ? "--- 💪 " + type + " pod " + podId
         : "--- 📚 " + type + " pod " + podId)
   );
+
+  console.log("category", category)
+
   const categoryId = category?.keys().next().value;
   let categoryChannel = CLIENT.channels.cache.get(
     categoryId
   ) as CategoryChannel;
 
   const channelId = categoryChannel?.children.cache
-    ?.filter((channel) => channel.name == "🏁view-goals")
+    ?.filter((channel) => channel.name.includes("view-goals"))
     .keys()
     .next().value;
 
-  console.log("HERE");
-  console.log("resp", resp);
+  console.log("In sendMessage function", resp);
   let channel = CLIENT.channels.cache.get(channelId as string) as TextChannel;
   console.log("channel", channel);
   await channel.send(resp);
