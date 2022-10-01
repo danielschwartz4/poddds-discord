@@ -1,5 +1,5 @@
 import { User } from "../../entities/User";
-import { memberLeaveNotification } from "src/utils/adminNotifs";
+import { memberLeaveNotification } from "../../utils/adminNotifs";
 import { CLIENT } from "../../constants";
 import { readUser } from "../../resolvers/user";
 import { deactivateGoalsAndEvents } from "../goalsLeftToday/deactivateGoals";

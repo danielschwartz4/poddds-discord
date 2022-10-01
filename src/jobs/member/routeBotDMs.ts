@@ -1,5 +1,5 @@
 import { DMChannel } from "discord.js";
-import { botDMNotification } from "src/utils/adminNotifs";
+import { botDMNotification } from "../../utils/adminNotifs";
 import { CLIENT } from "../../constants";
 
 export const routeBotDMs = () => {
