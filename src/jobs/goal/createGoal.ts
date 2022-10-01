@@ -60,7 +60,7 @@ export const createGoal = () => {
           adjustedEndDate: endDate,
           days: daysObj,
           isActive: true,
-          timeZone: flipSign(cleanedData["time-zone"]),
+          timeZone: flipSign(timeZone),
           userId: user?.id,
           type: type as GoalType,
         }).save();
@@ -75,7 +75,7 @@ export const createGoal = () => {
               adjustedDate: formattedDate,
               discordId: interaction.user.id,
               goalId: weekly_goal.id,
-              timeZone: flipSign(cleanedData["time-zone"]),
+              timeZone: flipSign(timeZone),
               type: type as GoalType,
               isActive: true,
             }).save();
@@ -91,26 +91,47 @@ export const createGoal = () => {
       console.log("here");
       console.log(resp);
       // Add podmate role
-      let role_id = user?.guild?.roles?.cache.find((r) => r.name === "podmate");
-      await user?.roles?.add(role_id as Role);
+      let podmate_role_id = user?.guild?.roles?.cache.find(
+        (r) => r.name === "podmate"
+      );
+      await user?.roles?.add(podmate_role_id as Role);
+
       assignPod(type as GoalType, user as GuildMember, resp);
+      // Assign timezone role
+      console.log("BEFORE TIMEZONE ROLE ASSIGN");
+
+      let timezone_role_id = user?.guild?.roles?.cache.find(
+        (r) => r.name === "GMT" + flipSign(timeZone)
+      );
+      if (!user?.roles.cache.some((role) => role.name.includes("GMT"))) {
+        await user?.roles?.add(timezone_role_id as Role);
+      } else if (
+        user?.roles.cache.filter((role) => role.name.includes("GMT")).first()
+          ?.name !==
+        "GMT" + flipSign(timeZone)
+      ) {
+        await user?.roles?.remove(
+          user?.roles.cache
+            .filter((role) => role.name.includes("GMT"))
+            .first() as Role
+        );
+        await user?.roles?.add(timezone_role_id as Role);
+      }
+
+      // Handle new member roles
       if (user?.roles.cache.some((role) => role.name === "new member")) {
         // Notify admins of new podmate
         newPodmateNotification(from_username, resp);
 
         // Automatically remove new member role and add podmate role to msg.author.roles
-        GUILD()
-          ?.members.fetch(interaction.user.id)
-          .then((user: any) => {
-            let new_member_role_id = user.guild.roles.cache.find(
-              (r: Role) => r.name === "new member"
-            );
-            let podmate_role_id = user.guild.roles.cache.find(
-              (r: Role) => r.name === "podmate"
-            );
-            user.roles.add(podmate_role_id);
-            user.roles.remove(new_member_role_id);
-          });
+        let new_member_role_id = user?.guild.roles.cache.find(
+          (r: Role) => r.name === "new member"
+        );
+        let podmate_role_id = user?.guild.roles.cache.find(
+          (r: Role) => r.name === "podmate"
+        );
+        user.roles.add(podmate_role_id as Role);
+        user.roles.remove(new_member_role_id as Role);
       }
     }
   });
