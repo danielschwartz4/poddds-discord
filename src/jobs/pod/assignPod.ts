@@ -117,7 +117,7 @@ const sendMessage = async (
         : "--- 📚 " + type + " pod " + podId)
   );
 
-  console.log("category", category)
+  // console.log("category", category)
 
   const categoryId = category?.keys().next().value;
   let categoryChannel = CLIENT.channels.cache.get(
