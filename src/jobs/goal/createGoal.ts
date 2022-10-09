@@ -83,13 +83,8 @@ export const createGoal = () => {
         }
       }
       const from_username = interaction.user.username;
-      console.log(interaction.user);
       const user = await GUILD()?.members.fetch(interaction.user.id);
-      console.log(user);
-      console.log("BEFORE ASSIGN POD");
       // Assign user to pod and send resp to that goals channel
-      console.log("here");
-      console.log(resp);
       // Add podmate role
       let podmate_role_id = user?.guild?.roles?.cache.find(
         (r) => r.name === "podmate"
@@ -98,7 +93,6 @@ export const createGoal = () => {
 
       assignPod(type as GoalType, user as GuildMember, resp);
       // Assign timezone role
-      // console.log("BEFORE TIMEZONE ROLE ASSIGN");
 
       let timezone_role_id = user?.guild?.roles?.cache.find(
         (r) => r.name === "GMT" + flipSign(timeZone)

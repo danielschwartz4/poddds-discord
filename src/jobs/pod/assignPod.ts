@@ -17,13 +17,13 @@ export const assignPod = async (
   user: GuildMember,
   resp: string
 ) => {
-  console.log("START", type);
+  // console.log("START", type);
   const dbUser = await User.findOne({
     where: {
       discordId: user?.id,
     },
   });
-  console.log("user", dbUser);
+  // console.log("user", dbUser);
   // find target pod in database
   //
   const pod = await Pod.findOne({
@@ -40,13 +40,11 @@ export const assignPod = async (
     // 3. Add new pod role
     // 4. Assign user role
     // 5. send resp to goals channel
-    console.log("before pod");
     const pod = await Pod.create({
       numMembers: 1,
       type: type,
     }).save();
     if (pod) {
-      console.log("in if");
       type == "fitness"
         ? await User.update({ discordId: user?.id }, { fitnessPodId: pod?.id })
         : await User.update({ discordId: user?.id }, { studyPodId: pod?.id });
@@ -67,7 +65,7 @@ export const assignPod = async (
       let channel = CLIENT.channels.cache.get(
         channelId as string
       ) as TextChannel;
-      console.log("channel", channel, channelId);
+      // console.log("channel", channel, channelId);
       await channel.send(resp);
     }
   } else {
@@ -129,7 +127,7 @@ const sendMessage = async (
     .keys()
     .next().value;
 
-  console.log("In sendMessage function", resp);
+  // console.log("In sendMessage function", resp);
   let channel = CLIENT.channels.cache.get(channelId as string) as TextChannel;
   // console.log("channel", channel);
   await channel.send(resp);
