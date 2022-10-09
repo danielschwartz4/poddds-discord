@@ -98,7 +98,7 @@ export const createGoal = () => {
 
       assignPod(type as GoalType, user as GuildMember, resp);
       // Assign timezone role
-      console.log("BEFORE TIMEZONE ROLE ASSIGN");
+      // console.log("BEFORE TIMEZONE ROLE ASSIGN");
 
       let timezone_role_id = user?.guild?.roles?.cache.find(
         (r) => r.name === "GMT" + flipSign(timeZone)
