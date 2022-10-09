@@ -110,7 +110,7 @@ const buildSummary = async (activeGoals: WeeklyGoal[]) => {
       streak_length = Math.min(streak_length, Difference_In_Days_Event);
     }
 
-    console.log("STREAK FOR USER ", goal.discordId, " IS ", streak_length);
+    // console.log("STREAK FOR USER ", goal.discordId, " IS ", streak_length);
     // if (streak_length > 2) { // disabled streaks because people's ids for dates are probably still messed until October, might want to just create a column for streaks and track active events completed
     //   res += `<@${goal.discordId}>` + ": " + missesMap(goal.misses) + " 🔥**" + streak_length + "**\n";
     // } else {

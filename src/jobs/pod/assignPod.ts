@@ -131,6 +131,6 @@ const sendMessage = async (
 
   console.log("In sendMessage function", resp);
   let channel = CLIENT.channels.cache.get(channelId as string) as TextChannel;
-  console.log("channel", channel);
+  // console.log("channel", channel);
   await channel.send(resp);
 };
