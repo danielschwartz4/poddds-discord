@@ -9,7 +9,7 @@ const AppDataSource = __prod__
       url: process.env.DATABASE_URL,
       migrations: [path.join(__dirname, "./migrations/*")],
       entities: ["dist/entities/*.*"],
-      logging: true,
+      logging: false,
       extra: {
         ssl: {
           rejectUnauthorized: false,
@@ -25,7 +25,7 @@ const AppDataSource = __prod__
       password: process.env.LOCALHOST_PASSWORD,
       migrations: [path.join(__dirname, "./migrations/*")],
       entities: ["dist/entities/*.*"],
-      logging: true,
+      logging: false,
       extra: {
         ssl: false,
         rejectUnauthorized: __prod__ ? true : false,
