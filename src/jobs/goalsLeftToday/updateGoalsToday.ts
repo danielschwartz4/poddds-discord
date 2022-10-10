@@ -77,13 +77,13 @@ export const updateGoalsToday = async (
           goalIds,
           timeZoneIsUTCMidnight as string
         );
-      console.log(
-        "HERE ARE EVENTS THAT WILL BE UPDATED TO IS ACTIVE AND POSTED WHERE TODAY IS: ",
-        date_today,
-        " FOR TIMEZONE ",
-        timeZoneIsUTCMidnight,
-        events_for_day
-      );
+      // console.log(
+      //   "HERE ARE EVENTS THAT WILL BE UPDATED TO IS ACTIVE AND POSTED WHERE TODAY IS: ",
+      //   date_today,
+      //   " FOR TIMEZONE ",
+      //   timeZoneIsUTCMidnight,
+      //   events_for_day
+      // );
 
       // 4. ADD THESE EVENTS TO THE CATEGOR CHANNEL!
       events_for_day.forEach(async (event: Event) => {
