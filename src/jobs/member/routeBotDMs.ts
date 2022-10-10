@@ -15,7 +15,8 @@ export const routeBotDMs = () => {
     } else if (
       msg.author.bot &&
       msg.guildId === null &&
-      !msg.content.includes("poddds bot DM message")
+      !msg.content.includes("poddds bot DM message") && // do not route messages from admins to poddds bot back to admins
+      !msg.content.includes("Hey! ⌚ Automatic weekly reminder from poddds mod here to") // do not route messages of goal creation reminders back to admins
     ) {
       const DM_channel = (await CLIENT.channels.fetch(
         msg.channelId
