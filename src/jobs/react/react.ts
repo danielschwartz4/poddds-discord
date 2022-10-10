@@ -66,7 +66,15 @@ export const reactToImages = () => {
       let userCustomChannels = GUILD()?.channels.cache.filter(
         (channel) => channel.name === msg.author.username.toLowerCase()
       );
-      if (userCustomChannels)
+
+      console.log(
+        "looking for ",
+        msg.author.username.toLowerCase(),
+        " GOT ",
+        userCustomChannels
+      );
+      if (userCustomChannels) {
+        // deleting from goals left today category
         for (const userChannelObject of userCustomChannels) {
           let userChannel = msg.guild?.channels.cache.get(userChannelObject[0]);
           let userChannelCategory = msg.guild?.channels.cache.get(
@@ -94,31 +102,32 @@ export const reactToImages = () => {
                 goal_left_channel?.delete();
               }, 1000 * 3);
             }
-
-            if (!event?.completed) {
-              // only react on first post that makes it completed?
-              // check if they just completed their last weekly goal
-              checkIfLastGoal(user_id, date_today, pod_type as GoalType);
-              setTimeout(() => {
-                msg.react("🔥");
-              }, 1000 * 3);
-              setTimeout(() => {
-                msg.react("🙌");
-              }, 1000 * 4);
-              setTimeout(() => {
-                msg.react("💯");
-              }, 1000 * 5);
-              setTimeout(() => {
-                msg.react("💪");
-              }, 1000 * 6);
-            }
-
-            // just in case they don't have a channel id but we still want to update
-            updateEventToCompleted(user_id, date_today, pod_type as GoalType);
-            updateWeeklyGoalToCompleted(user_id, pod_type as GoalType);
             // }
           }
         }
+      }
+
+      // if (!event?.completed) { // only react on first post that makes it completed?
+      // check if they just completed their last weekly goal
+      checkIfLastGoal(user_id, date_today, pod_type as GoalType);
+
+      setTimeout(() => {
+        msg.react("🔥");
+      }, 1000 * 3);
+      setTimeout(() => {
+        msg.react("🙌");
+      }, 1000 * 4);
+      setTimeout(() => {
+        msg.react("💯");
+      }, 1000 * 5);
+      setTimeout(() => {
+        msg.react("💪");
+      }, 1000 * 6);
+      // }
+
+      // just in case they don't have a channel id but we still want to update
+      updateEventToCompleted(user_id, date_today, pod_type as GoalType);
+      updateWeeklyGoalToCompleted(user_id, pod_type as GoalType);
     }
   });
 };
