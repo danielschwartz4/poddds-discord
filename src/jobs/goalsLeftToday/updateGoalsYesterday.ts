@@ -39,7 +39,7 @@ export const updateGoalsYesterday = async (
       const user_incompleted_yesterday = await readUser(event.discordId)
       events_incompleted_yesterday_usernames.push(user_incompleted_yesterday?.discordUsername as string)
     }
-    console.log("HERE ARE EVENTS THAT WILL BE CHECKED FOR: ", date_yesterday, " FOR TIMEZONE ", timeZoneIsUTCMidnight, events_incompleted_yesterday, "users missed yesterday: ", events_incompleted_yesterday_usernames, "pod id", podId);
+    // console.log("HERE ARE EVENTS THAT WILL BE CHECKED FOR: ", date_yesterday, " FOR TIMEZONE ", timeZoneIsUTCMidnight, events_incompleted_yesterday, "users missed yesterday: ", events_incompleted_yesterday_usernames, "pod id", podId);
     
     // 3 looping through all active events individually
     if (events_incompleted_yesterday && podType && podId) {

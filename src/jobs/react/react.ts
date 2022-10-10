@@ -14,6 +14,7 @@ import {
   updateEventToCompleted,
 } from "../../resolvers/event";
 import { GUILD } from "../discordScheduler";
+import { readUser } from "../../resolvers/user";
 
 export const reactToImages = () => {
   CLIENT.on("messageCreate", async (msg) => {
@@ -63,16 +64,13 @@ export const reactToImages = () => {
         localTodayWithTimeZone
       );
 
+      // get goal left today channel based on discord username
+      const userObject = await readUser(msg.author.id);
+      const discordUsername = userObject?.discordUsername;
       let userCustomChannels = GUILD()?.channels.cache.filter(
-        (channel) => channel.name === msg.author.username.toLowerCase()
+        (channel) => channel.name === discordUsername
       );
 
-      console.log(
-        "looking for ",
-        msg.author.username.toLowerCase(),
-        " GOT ",
-        userCustomChannels
-      );
       if (userCustomChannels) {
         // deleting from goals left today category
         for (const userChannelObject of userCustomChannels) {

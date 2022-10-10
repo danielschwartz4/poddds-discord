@@ -38,9 +38,7 @@ export const createBreak = () => {
         " AND LOCAL_TODAY(timeZone): ",
         LOCAL_TODAY(timeZone),
         " FOR TIMEZONE: ",
-        timeZone,
-        " AND THE FOLLOWING WEEKLY GOAL",
-        weeklyGoal
+        timeZone
       );
 
       // delete event from goals left today if it's there
