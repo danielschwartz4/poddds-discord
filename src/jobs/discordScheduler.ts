@@ -17,6 +17,7 @@ import { reactToImages } from "./react/react";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { displayActiveGoalsCount } from "../metrics/activeGoals";
 import { displayGoalCompletionCount } from "../metrics/completions";
+import { checkForSupportTagOrReply } from "./supportPoints/support";
 require("dotenv").config();
 
 export const GUILD = () => {
@@ -39,6 +40,7 @@ async function discordBot() {
     reactToImages();
     newMember();
     routeBotDMs();
+    checkForSupportTagOrReply();
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
