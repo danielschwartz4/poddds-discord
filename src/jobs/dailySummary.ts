@@ -73,12 +73,12 @@ const buildSummary = async (activeGoals: WeeklyGoal[]) => {
       LOCAL_TODAY_WITH_TIMEZONE.getTime() - goal.adjustedStartDate.getTime();
     let streak_length =
       Math.round(Difference_In_Time_From_Goal_Start / (1000 * 3600 * 24)) - 1; // start date comes the day after
-    console.log(
-      "streak_length",
-      streak_length,
-      "LOCAL TODAY IS ",
-      LOCAL_TODAY_WITH_TIMEZONE
-    );
+    // console.log(
+    //   "streak_length",
+    //   streak_length,
+    //   "LOCAL TODAY IS ",
+    //   LOCAL_TODAY_WITH_TIMEZONE
+    // );
 
     const recently_missed_event = await AppDataSource.query(
       `

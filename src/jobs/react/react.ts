@@ -49,26 +49,30 @@ export const reactToImages = () => {
         pod_type as GoalType
       );
 
-      console.log(
-        "REACTING TO: ",
-        msg.author.username,
-        " WITH GOALLEFTCHANNELID: ",
-        event?.goalLeftChannelId,
-        " FOR TODAY: ",
-        date_today,
-        " FOR EVENT ID: ",
-        event?.id,
-        " AND DISCORD ID: ",
-        msg.author.id,
-        " AND DATE WITHOUT MDY DATE FUNCTION IS: ",
-        localTodayWithTimeZone
-      );
-
       // get goal left today channel based on discord username
       const userObject = await readUser(msg.author.id);
       const discordUsername = userObject?.discordUsername;
       let userCustomChannels = GUILD()?.channels.cache.filter(
         (channel) => channel.name === discordUsername
+      );
+
+      if (!msg.author.id) {
+        console.log("couldn't find msg.author.id for some reason, msg.author: ", msg.author)
+      }
+
+      console.log(
+        "REACTING TO: ",
+        discordUsername,
+        " WITH GOALLEFTCHANNELID: ",
+        event?.goalLeftChannelId,
+        " FOR TODAY: ",
+        date_today,
+        " AND DISCORD ID: ",
+        msg.author.id,
+        " FOR EVENT ID: ",
+        event?.id,
+        " AND DATE WITHOUT MDY DATE FUNCTION IS: ",
+        localTodayWithTimeZone
       );
 
       if (userCustomChannels) {
