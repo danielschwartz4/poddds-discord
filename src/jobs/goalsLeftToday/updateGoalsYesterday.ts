@@ -9,6 +9,7 @@ import { readPodGoalsLeftTodayCategoryChannelByPodId } from "../../utils/channel
 import { readUser } from "../../resolvers/user";
 import { GoalType } from "../../types/dbTypes";
 import { GUILD } from "../discordScheduler";
+import { TextChannel } from "discord.js";
 
 export const updateGoalsYesterday = async (
   timeZoneIsUTCMidnight?: string
@@ -72,6 +73,25 @@ export const updateGoalsYesterday = async (
         // check if event was the last goal
         checkIfLastGoal(event.discordId, date_yesterday, event.type);
       }
+
+
+      // clear all channels with messages 2+ days ago to clean up discord UI
+      goalsLeftChannels?.forEach((guildChannel) => {
+        let channel_id = guildChannel.id
+        let channel = GUILD()?.channels.cache.filter(c => c.id === channel_id)
+        let channel_text = channel?.get(channel_id) as TextChannel
+        channel_text.messages.fetch({ limit: 1 }).then((msg) => {
+          const msgTimestamp = msg.first()?.createdTimestamp
+          if (msgTimestamp) {
+            // difference is in milliseconds
+            const days_elapsed = (Date.now() - msgTimestamp) / (1000 * 60 * 60 * 24)
+            if (days_elapsed > 2) {
+              guildChannel.delete()
+            }
+          }
+        })
+      })
+
     }
   }
 }
