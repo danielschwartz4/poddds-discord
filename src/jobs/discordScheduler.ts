@@ -18,7 +18,6 @@ import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { displayActiveGoalsCount } from "../metrics/activeGoals";
 import { displayGoalCompletionCount } from "../metrics/completions";
 import { checkForSupportTagOrReply } from "./supportPoints/support";
-import { MessageManager, TextChannel } from "discord.js";
 require("dotenv").config();
 
 export const GUILD = () => {
