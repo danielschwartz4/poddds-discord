@@ -5,6 +5,7 @@ import { mdyDate } from "../../utils/timeZoneUtil";
 import { deactivateMember } from "./onMemberLeave";
 import { readActiveEvent } from "../../resolvers/event";
 import { GUILD } from "../discordScheduler";
+import { readUser } from "../../resolvers/user";
 
 export const autoKickMember = async (
   timeZoneIsUTCMidnight: string
@@ -58,6 +59,17 @@ export const autoKickMember = async (
         const user = await GUILD()?.members.fetch(userId);
         user?.roles.set([kicked_role_id as Role]) // remove all roles and set to kicked
         updateAllUserWeeklyGoalsToInactive(userId);
+        
+        // remove their channel names from the server in goals left today if they still remain
+        const userObject = await readUser(userId);
+        const discordUsername = userObject?.discordUsername;
+        const userChannels = GUILD()?.channels.cache.filter(c => c.name === discordUsername?.toLowerCase())
+        if (userChannels?.size) { 
+          for (const c of userChannels) {
+            await c[1].delete()
+          }
+        }
+
         users_notified.push(userId)
       }
     }
