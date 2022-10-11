@@ -91,7 +91,7 @@ export const createGoal = () => {
       );
       await user?.roles?.add(podmate_role_id as Role);
 
-      assignPod(type as GoalType, user as GuildMember, resp);
+      await assignPod(type as GoalType, user as GuildMember, resp);
       // Assign timezone role
 
       let timezone_role_id = user?.guild?.roles?.cache.find(

@@ -93,10 +93,10 @@ export const assignPod = async (
       : await User.update({ discordId: user?.id }, { studyPodId: pod?.id });
 
     Pod.update({ id: pod?.id }, { numMembers: pod?.numMembers + 1 });
-    console.log("SEEKING ROLE", type, pod?.id, type + pod?.id);
     let role_id = user?.guild?.roles?.cache.find(
       (r) => r.name === type + "-" + pod?.id
     );
+    console.log("SEEKING ROLE", type, pod?.id, type + pod?.id, " GOT ", role_id?.name);
     await user?.roles?.add(role_id as Role);
     sendMessage(type, resp, pod?.id);
   }

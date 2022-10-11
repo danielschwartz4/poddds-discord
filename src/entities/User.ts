@@ -26,12 +26,12 @@ export class User extends BaseEntity {
   discordUsername!: string;
 
   @Field({ nullable: true })
-  @Column({ nullable: true })
-  fitnessPodId: number;
+  @Column({ type: 'integer', nullable: true }) // adding type = integer allows the value to be null and adding | null
+  fitnessPodId!: number;
 
   @Field({ nullable: true })
-  @Column({ nullable: true })
-  studyPodId: number;
+  @Column({ type: 'integer', nullable: true })
+  studyPodId!: number;
 
   @Field()
   @CreateDateColumn()
