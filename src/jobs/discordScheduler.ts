@@ -42,6 +42,7 @@ async function discordBot() {
     newMember();
     routeBotDMs();
     checkForSupportTagOrReply();
+    displayRabidUsersCount();
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
@@ -65,11 +66,11 @@ async function discordBot() {
       // update metrics
       // displayActiveGoalsCount();
       // displayGoalCompletionCount();
-      displayRabidUsersCount();
     });
 
     // update every day at 9am EST (-5), (EST + 4) 1pm UTC
     cron.schedule("00 13 */1 * *", () => {
+      displayRabidUsersCount();
       dailySummary();
     });
 
