@@ -4,7 +4,7 @@ import { GUILD } from "../jobs/discordScheduler"
 import { createVoiceChannel, readChannelByName } from "../utils/channelUtil"
 
 export const displayRabidUsersCount = async () => {
-    let displayChannelName = "Active Users for 4+ Weeks (Goal: 100): "
+    let displayChannelName = "4+ Weeks Users: "
     const activeGoalsChannel = readChannelByName(displayChannelName)
     if (activeGoalsChannel) {
         activeGoalsChannel.delete()
@@ -26,13 +26,17 @@ export const displayRabidUsersCount = async () => {
     let count = 0
 
     for (const user of allUsers) {
-        // calculate today - created at date
-        let days = new Date().getTime() - user.createdAt.getTime()
-        let weeks = days / (24*3600*1000*7)
+        GUILD()?.members.fetch(user.discordId).then((userDiscord) => {
+            if (userDiscord.roles.cache.some((role) => role.name === "podmate")) {
+                // calculate today - created at date
+                let days = new Date().getTime() - user.createdAt.getTime()
+                let weeks = days / (24*3600*1000*7)
 
-        if (weeks >= 4) {
-            console.log("USER HERE FOR 4+ WEEKS: ", user.discordUsername)
-            count += 1
+                if (weeks >= 4) {
+                    console.log("USER HERE FOR 4+ WEEKS, REACH OUT TO THIS PERSON AND BUILD FOR THEM: ", user.discordUsername)
+                    count += 1
+                }
+            }
         }
     }
 
