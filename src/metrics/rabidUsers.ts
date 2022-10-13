@@ -2,6 +2,7 @@ import { PermissionsBitField } from "discord.js"
 import { readAllUsers } from "../resolvers/user"
 import { GUILD } from "../jobs/discordScheduler"
 import { createVoiceChannel, readChannelByName } from "../utils/channelUtil"
+import { readActiveGoalById } from "../resolvers/weeklyGoal"
 
 export const displayRabidUsersCount = async () => {
     let displayChannelName = "4+ Weeks Users: "
@@ -26,15 +27,20 @@ export const displayRabidUsersCount = async () => {
     let count = 0
 
     for (const user of allUsers) {
-        GUILD()?.members.fetch(user.discordId).then((userDiscord) => {
+        await GUILD()?.members.fetch(user.discordId).then(async (userDiscord) => {
             if (userDiscord.roles.cache.some((role) => role.name === "podmate")) {
-                // calculate today - created at date
-                let days = new Date().getTime() - user.createdAt.getTime()
-                let weeks = days / (24*3600*1000*7)
 
-                if (weeks >= 4) {
-                    console.log("USER HERE FOR 4+ WEEKS, REACH OUT TO THIS PERSON AND BUILD FOR THEM: ", user.discordUsername)
-                    count += 1
+                const activeGoal = await readActiveGoalById(user.discordId)
+
+                if (activeGoal.length) {
+                    // calculate today - created at date, and if they have an active goal
+                    let days = new Date().getTime() - user.createdAt.getTime()
+                    let weeks = days / (24*3600*1000*7)
+
+                    if (weeks >= 4) {
+                        console.log("USER HERE FOR 4+ WEEKS, REACH OUT TO THIS PERSON AND BUILD FOR THEM: ", user.discordUsername)
+                        count += 1
+                    }
                 }
             }
         }).catch(() => {})
