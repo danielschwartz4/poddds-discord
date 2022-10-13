@@ -37,9 +37,7 @@ export const displayRabidUsersCount = async () => {
                     count += 1
                 }
             }
-        }).catch((err) => {
-            console.log(err)
-        })
+        }).catch(() => {})
     }
 
     displayChannelName += count
