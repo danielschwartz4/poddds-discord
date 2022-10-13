@@ -18,6 +18,7 @@ import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { displayActiveGoalsCount } from "../metrics/activeGoals";
 import { displayGoalCompletionCount } from "../metrics/completions";
 import { checkForSupportTagOrReply } from "./supportPoints/support";
+import { displayRabidUsersCount } from "../metrics/rabidUsers";
 require("dotenv").config();
 
 export const GUILD = () => {
@@ -62,8 +63,9 @@ async function discordBot() {
       await autoKickMember(timeZoneIsUTCMidnight);
 
       // update metrics
-      displayActiveGoalsCount();
-      displayGoalCompletionCount();
+      // displayActiveGoalsCount();
+      // displayGoalCompletionCount();
+      displayRabidUsersCount();
     });
 
     // update every day at 9am EST (-5), (EST + 4) 1pm UTC
