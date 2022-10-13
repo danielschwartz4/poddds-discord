@@ -37,7 +37,7 @@ export const displayRabidUsersCount = async () => {
                     count += 1
                 }
             }
-        }
+        })
     }
 
     displayChannelName += count
