@@ -77,13 +77,6 @@ export const updateGoalsToday = async (
           goalIds,
           timeZoneIsUTCMidnight as string
         );
-      // console.log(
-      //   "HERE ARE EVENTS THAT WILL BE UPDATED TO IS ACTIVE AND POSTED WHERE TODAY IS: ",
-      //   date_today,
-      //   " FOR TIMEZONE ",
-      //   timeZoneIsUTCMidnight,
-      //   events_for_day
-      // );
 
       // 4. ADD THESE EVENTS TO THE CATEGOR CHANNEL!
       events_for_day.forEach(async (event: Event) => {
@@ -115,7 +108,7 @@ export const updateGoalsToday = async (
           if (goalsLeftTodayList)
           for (const channel of goalsLeftTodayList) {
             if (channel[1].name === user?.discordUsername) {
-              console.log(user?.discordUsername + "'s goal left today is already being displayed", channel)
+              console.log(user?.discordUsername + "'s goal left today is already being displayed")
               alreadyDisplayed = true;
             }
           }
@@ -129,6 +122,7 @@ export const updateGoalsToday = async (
               podType,
               podId
             );
+            console.log("created goal left today for ", user?.discordUsername)
           }
         }
       });

@@ -55,9 +55,7 @@ async function discordBot() {
         " AND GMT0HOURS IS: ",
         gmt0Hours,
         " WITH CURRENT TIME: ",
-        new Date(),
-        " AND TODAY AS: ",
-        TODAY()
+        new Date()
       );
       await updateGoalsYesterday(timeZoneIsUTCMidnight);
       await updateGoalsToday(timeZoneIsUTCMidnight);
@@ -70,12 +68,12 @@ async function discordBot() {
 
     // update every day at 9am EST (-5), (EST + 4) 1pm UTC
     cron.schedule("00 13 */1 * *", () => {
-      displayRabidUsersCount();
       dailySummary();
     });
 
     // update "At 00:00 on Sunday"
     cron.schedule("0 0 * * 0", () => {
+      displayRabidUsersCount();
       createGoalReminder();
     });
   });

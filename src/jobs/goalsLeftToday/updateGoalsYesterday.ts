@@ -62,12 +62,14 @@ export const updateGoalsYesterday = async (
 
           for (const c of user_channels) {
             await c[1].delete()
+            console.log("updateGoalsYesterday this user DID NOT complete their event yesterday: ", user_incompleted_yesterday?.discordUsername)
           }
           // user_channels.forEach(c => c.delete()); // delete extras if those exist
         } else { // completed channel and channel was deleted via react
           // update missed = 0
           updateEventToCompleted(user_id, date_yesterday, podType as GoalType)
           updateWeeklyGoalToCompleted(user_id, podType as GoalType)
+          console.log("updateGoalsYesterday this user completed their event yesterday: ", user_incompleted_yesterday?.discordUsername)
         }
 
         // check if event was the last goal
@@ -87,6 +89,7 @@ export const updateGoalsYesterday = async (
             const days_elapsed = (Date.now() - msgTimestamp) / (1000 * 60 * 60 * 24)
             if (days_elapsed > 2) {
               guildChannel.delete()
+              console.log("deleting channel that was here for 2+ days, it was sent on ", msgTimestamp.toString(), msg)
             }
           }
         })

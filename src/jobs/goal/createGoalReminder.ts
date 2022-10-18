@@ -1,5 +1,5 @@
 import { botDMNotification } from "../../utils/adminNotifs";
-import { CLIENT } from "../../constants";
+import { ADMIN_USER_IDS, CLIENT } from "../../constants";
 import { readAllUsers } from "../../resolvers/user";
 import { readLastWeeklyGoalByType } from "../../resolvers/weeklyGoal";
 
@@ -35,6 +35,7 @@ export const createGoalReminder = async () => {
                 user.send(
                   "Hey! ⌚ Automatic weekly reminder from poddds mod here to **CREATE A GOAL!**⌚\n✅ Make sure you head over to **GOAL SETTING** and type **/set-current-goal** to get started on your new goal!"
                 );
+                console.log("Bumped", userObject.discordUsername, " to create a new goal, with for loop position ", idx)
               } catch {
                 console.log(
                   "THERE WAS AN ERROR SENDING TO THE FOLLOWING USER: ",

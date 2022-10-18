@@ -20,8 +20,8 @@ export const leavePod = async () => {
       const category = channel?.parent?.name.includes("💪")
         ? "fitness"
         : "study";
-      console.log("CHANNEL NAME");
-      console.log(channel?.parent?.name);
+      console.log("LOGGING LEAVE POD CODE:");
+      console.log("CHANNEL NAME", channel?.parent?.name);
       const podId = parseInt(channel?.parent?.name.split(" ").pop() as string);
       console.log("PODID");
       console.log(podId);
@@ -91,7 +91,7 @@ export const leavePod = async () => {
             (user?.displayName as string) +
               " has left the pod :( Hopefully we see them again soon!"
           );
-          await user?.roles.remove(pod_role_id as Role);
+          await user?.roles.remove(pod_role_id as Role).catch((err) => {console.log("THERE WAS AN ERROR IN REMOVING ROLE, ERROR: ", err, "category + podId", category + podId, "pod_role_id", pod_role_id)});
 
           deactivateGoalsAndEvents(user?.id as string, category);
         }

@@ -101,12 +101,10 @@ const buildSummary = async (activeGoals: WeeklyGoal[]) => {
         new Date(mdyDate(LOCAL_TODAY_WITH_TIMEZONE)),
         goal.timeZone
       );
-      console.log(local_today, missed_event_date);
       const Difference_In_Time_Event =
         local_today.getTime() - missed_event_date.getTime();
       const Difference_In_Days_Event =
         Math.floor(Difference_In_Time_Event / (1000 * 3600 * 24)) - 1;
-      console.log("Difference_In_Days_Event", Difference_In_Days_Event);
       streak_length = Math.min(streak_length, Difference_In_Days_Event);
     }
 
