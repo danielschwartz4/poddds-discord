@@ -14,7 +14,7 @@ export const checkForSupportTagOrReply = () => {
       (msg.reference?.messageId || msg.mentions.members?.first()) &&
       !msg.author.bot
     ) {
-        const supporter_role_id = GUILD()?.roles.cache.find((r) => r.name === "supporter (1+ supports)");
+        const supporter_role_id = GUILD()?.roles.cache.find((r) => r.name === "⭐ Supporter ⋮ 1+ Supports");
         const user = await GUILD()?.members.fetch(msg.author.id);
 
         // if the user is not already a supporter, let them know!
@@ -22,7 +22,7 @@ export const checkForSupportTagOrReply = () => {
           let ephermeral_msg = await (CLIENT.channels.cache.get(msg.channelId) as TextChannel).send(
             "role unlocked! (temporary notification) \n" +
             `<@${msg.author.id}>` +
-              ' 🥳 you earned **1 support point** for today and unlocked the **@supporter (1+ supports) role**! 🏋️‍♂️\n💪 earn another support point tomorrow by sending 1+ messages tagging/replying and supporting a podmate! ➡'
+              ' 🥳 you earned **1 support point** for today and unlocked the **@⭐ Supporter ⋮ 1+ Supports role**! 🏋️‍♂️\n💪 earn another support point tomorrow by sending 1+ messages tagging/replying and supporting a podmate! ➡'
           );
           setTimeout(() => ephermeral_msg.delete(), 45000);
 
