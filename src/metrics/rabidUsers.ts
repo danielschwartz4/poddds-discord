@@ -11,7 +11,7 @@ export const displayRabidUsersCount = async () => {
         activeGoalsChannel.delete()
     }
 
-    const mod_role_id = GUILD()?.roles.cache.find((r) => r.name === "mod");
+    const mod_role_id = GUILD()?.roles.cache.find((r) => r.name === "🛡️ mod");
     const everyone_role_id = GUILD()?.roles.cache.find((r) => r.name === "@everyone");
     const channel_permission_overwrites = [
         {
@@ -28,7 +28,7 @@ export const displayRabidUsersCount = async () => {
 
     for (const user of allUsers) {
         await GUILD()?.members.fetch(user.discordId).then(async (userDiscord) => {
-            if (userDiscord.roles.cache.some((role) => role.name === "podmate")) {
+            if (userDiscord.roles.cache.some((role) => role.name === "🚀 podmate")) {
 
                 const activeGoal = await readActiveGoalById(user.discordId)
 

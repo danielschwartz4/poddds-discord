@@ -7,13 +7,13 @@ export const addExistingMembers = async () => {
       // add member id and stuff to DB
       const newUser = await User.find({ where: { discordId: user.id } });
       if (!newUser.length) {
-        if (user.roles.cache.some((role) => role.name === "podmate")) {
+        if (user.roles.cache.some((role) => role.name === "🚀 podmate")) {
           await User.create({
             discordUsername: user.displayName,
             discordId: user.id,
           }).save();
         } else if (
-          user.roles.cache.some((role) => role.name === "new member")
+          user.roles.cache.some((role) => role.name === "🌱 new member")
         ) {
           await User.create({
             discordUsername: user.displayName,

@@ -7,7 +7,7 @@ export const newMember = () => {
   CLIENT.on("guildMemberAdd", async (user) => {
     // auto assign role of new member
     let new_member_role_id = user.guild.roles.cache.find(
-      (r) => r.name === "new member"
+      (r) => r.name === "🌱 new member"
     );
 
     user.roles.add(new_member_role_id as Role);

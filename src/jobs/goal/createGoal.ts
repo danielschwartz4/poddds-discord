@@ -87,7 +87,7 @@ export const createGoal = () => {
       // Assign user to pod and send resp to that goals channel
       // Add podmate role
       let podmate_role_id = user?.guild?.roles?.cache.find(
-        (r) => r.name === "podmate"
+        (r) => r.name === "🚀 podmate"
       );
       await user?.roles?.add(podmate_role_id as Role);
 
@@ -113,16 +113,16 @@ export const createGoal = () => {
       }
 
       // Handle new member roles
-      if (user?.roles.cache.some((role) => role.name === "new member")) {
+      if (user?.roles.cache.some((role) => role.name === "🌱 new member")) {
         // Notify admins of new podmate
         newPodmateNotification(from_username, resp);
 
         // Automatically remove new member role and add podmate role to msg.author.roles
         let new_member_role_id = user?.guild.roles.cache.find(
-          (r: Role) => r.name === "new member"
+          (r: Role) => r.name === "🌱 new member"
         );
         let podmate_role_id = user?.guild.roles.cache.find(
-          (r: Role) => r.name === "podmate"
+          (r: Role) => r.name === "🚀 podmate"
         );
         user.roles.add(podmate_role_id as Role);
         user.roles.remove(new_member_role_id as Role);

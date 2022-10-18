@@ -10,7 +10,7 @@ export const displayGoalCompletionCount = async () => {
         goalsCompletedChannel.delete()
     }
 
-    const mod_role_id = GUILD()?.roles.cache.find((r) => r.name === "mod");
+    const mod_role_id = GUILD()?.roles.cache.find((r) => r.name === "🛡️ mod");
     const everyone_role_id = GUILD()?.roles.cache.find((r) => r.name === "@everyone");
     const channel_permission_overwrites = [
         {
