@@ -1,5 +1,5 @@
 import { botDMNotification } from "../../utils/adminNotifs";
-import { ADMIN_USER_IDS, CLIENT } from "../../constants";
+import { CLIENT } from "../../constants";
 import { readAllUsers } from "../../resolvers/user";
 import { readLastWeeklyGoalByType } from "../../resolvers/weeklyGoal";
 
