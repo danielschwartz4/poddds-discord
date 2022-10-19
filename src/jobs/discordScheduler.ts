@@ -19,7 +19,7 @@ import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 // import { displayGoalCompletionCount } from "../metrics/completions";
 import { checkForSupportTagOrReply } from "./supportPoints/support";
 import { displayRabidUsersCount } from "../metrics/rabidUsers";
-import { faq } from "./faq/faq";
+// import { faq } from "./faq/faq";
 require("dotenv").config();
 
 export const GUILD = () => {
