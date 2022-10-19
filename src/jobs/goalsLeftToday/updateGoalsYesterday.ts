@@ -89,7 +89,7 @@ export const updateGoalsYesterday = async (
             const days_elapsed = (Date.now() - msgTimestamp) / (1000 * 60 * 60 * 24)
             if (days_elapsed > 2) {
               guildChannel.delete()
-              console.log("deleting channel that was here for 2+ days, it was sent on ", msgTimestamp.toString(), msg)
+              console.log("deleting channel that was here for 2+ days, it was sent on ", msgTimestamp.toString())
             }
           }
         })

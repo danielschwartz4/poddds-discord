@@ -68,9 +68,9 @@ export const updateGoalsToday = async (
 
       // 3. get events for day based on resolver and for the pod based on active weekly goals
       let goalIds: number[] = [];
-      podActiveWeeklyGoals.forEach((weeklyGoal) => {
+      for (const weeklyGoal of podActiveWeeklyGoals) {
         goalIds.push(weeklyGoal.id);
-      });
+      }
       const events_for_day =
         await readActiveEventsByDateAndWeeklyGoalAndTimezone(
           date_today,
@@ -78,7 +78,7 @@ export const updateGoalsToday = async (
           timeZoneIsUTCMidnight as string
         );
 
-      // 4. ADD THESE EVENTS TO THE CATEGOR CHANNEL!
+      // 4. ADD THESE EVENTS TO THE CATEGORY CHANNEL!
       events_for_day.forEach(async (event: Event) => {
         let user_id = event.discordId;
 
@@ -89,6 +89,8 @@ export const updateGoalsToday = async (
             console.log("ERROR! Assuming user has left server", err);
             deactivateMember(user_id);
           });
+
+        console.log("updating goals left today for user id ", user_id, " username ", userDiscordObject?.nickname)
         if (
           userDiscordObject &&
           userDiscordObject?.roles.cache.some((role) => role.name === "kicked")
@@ -112,7 +114,6 @@ export const updateGoalsToday = async (
               alreadyDisplayed = true;
             }
           }
-
           if (!alreadyDisplayed) {
             createGoalsLeftTodayChannel(
               user,
