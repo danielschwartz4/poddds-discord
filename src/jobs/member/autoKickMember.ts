@@ -1,5 +1,8 @@
 import { Role } from "discord.js";
-import { readAllActiveGoalsForTimezone, updateAllUserWeeklyGoalsToInactive } from "../../resolvers/weeklyGoal";
+import {
+  readAllActiveGoalsForTimezone,
+  updateAllUserWeeklyGoalsToInactive,
+} from "../../resolvers/weeklyGoal";
 import { CLIENT, LOCAL_TODAY } from "../../constants";
 import { mdyDate } from "../../utils/timeZoneUtil";
 import { deactivateMember } from "./onMemberLeave";
@@ -7,22 +10,26 @@ import { readActiveEvent } from "../../resolvers/event";
 import { GUILD } from "../discordScheduler";
 import { readUser } from "../../resolvers/user";
 
-export const autoKickMember = async (
-  timeZoneIsUTCMidnight: string
-) => {
-  const activeGoals = await readAllActiveGoalsForTimezone(timeZoneIsUTCMidnight)
+export const autoKickMember = async (timeZoneIsUTCMidnight: string) => {
+  const activeGoals = await readAllActiveGoalsForTimezone(
+    timeZoneIsUTCMidnight
+  );
 
   // kick users that have active weekly goals after 3 misses
-  let users_notified: string[] = []
+  let users_notified: string[] = [];
   for (const goal of activeGoals) {
-  // activeGoals.forEach(async (goal: WeeklyGoal) => {
+    // activeGoals.forEach(async (goal: WeeklyGoal) => {
     const userId = goal.discordId;
-    if (!users_notified.includes(userId)) { 
+    if (!users_notified.includes(userId)) {
       // if 2 misses, DM the person with a warning message
       if (goal.misses == 2) {
-        const activeGoalToday = await readActiveEvent(userId, mdyDate(LOCAL_TODAY(timeZoneIsUTCMidnight)))
+        const activeGoalToday = await readActiveEvent(
+          userId,
+          mdyDate(LOCAL_TODAY(timeZoneIsUTCMidnight))
+        );
 
-        if (activeGoalToday.length) { // if they have an active event today where they can do something about it
+        if (activeGoalToday.length) {
+          // if they have an active event today where they can do something about it
           CLIENT.users
             .fetch(userId)
             .then(async (user_to_kick) => {
@@ -35,7 +42,7 @@ export const autoKickMember = async (
               deactivateMember(userId);
             });
         }
-        users_notified.push(userId)
+        users_notified.push(userId);
       }
 
       // if more than 2 misses, change role of person to kicked
@@ -57,21 +64,23 @@ export const autoKickMember = async (
           (r: Role) => r.name === "kicked"
         );
         const user = await GUILD()?.members.fetch(userId);
-        user?.roles.set([kicked_role_id as Role]) // remove all roles and set to kicked
+        user?.roles.set([kicked_role_id as Role]); // remove all roles and set to kicked
         updateAllUserWeeklyGoalsToInactive(userId);
-        
+
         // remove their channel names from the server in goals left today if they still remain
         const userObject = await readUser(userId);
         const discordUsername = userObject?.discordUsername;
-        const userChannels = GUILD()?.channels.cache.filter(c => c.name === discordUsername?.toLowerCase())
-        if (userChannels?.size) { 
+        const userChannels = GUILD()?.channels.cache.filter(
+          (c) => c.name === discordUsername?.toLowerCase()
+        );
+        if (userChannels?.size) {
           for (const c of userChannels) {
-            await c[1].delete()
+            await c[1].delete();
           }
         }
 
-        users_notified.push(userId)
+        users_notified.push(userId);
       }
     }
-  };
+  }
 };

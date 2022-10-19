@@ -23,8 +23,8 @@ import { displayRabidUsersCount } from "../metrics/rabidUsers";
 require("dotenv").config();
 
 export const GUILD = () => {
-  return CLIENT?.guilds.cache.get(SERVER_ID as string)
-}
+  return CLIENT?.guilds.cache.get(SERVER_ID as string);
+};
 
 async function discordBot() {
   CLIENT.on("ready", async () => {
@@ -32,7 +32,7 @@ async function discordBot() {
     console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-5")); // in EST
 
     // Run our bot functions
-    GUILD()
+    GUILD();
     goalCommand();
     createGoal();
     breakCommand();
@@ -43,7 +43,7 @@ async function discordBot() {
     newMember();
     routeBotDMs();
     checkForSupportTagOrReply();
-    displayRabidUsersCount();
+    // displayRabidUsersCount();
     // faq();
 
     // update every hour (give it one minute past for hour hand to update)
