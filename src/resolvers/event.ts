@@ -42,6 +42,15 @@ export const readActiveEventsByDateAndWeeklyGoalAndTimezone = (adjustedDate: str
       });
 }
 
+export const readAllEventsByDateAndTimezone = (adjustedDate: string, timeZone: string) => {
+    return Event.find({
+        where: {
+          adjustedDate,
+          timeZone
+        },
+    });
+}
+
 export const readAllCompletedEvents = () => {
     return Event.find({ where: { completed: true }})
 }

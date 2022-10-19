@@ -4,7 +4,7 @@ import { WeeklyGoal } from "../../entities/WeeklyGoal";
 import { addDays, mdyDate } from "../../utils/timeZoneUtil";
 import { checkIfLastGoal } from "./checkIfLastGoal";
 import { readWeeklyGoalByFitnessPodIdAndType, readWeeklyGoalByStudyPodIdAndType, readWeeklyGoalByType, updateWeeklyGoalMisses, updateWeeklyGoalToCompleted } from "../../resolvers/weeklyGoal";
-import { readActiveEventsByDateAndWeeklyGoalAndTimezone, updateEventToCompleted, updateEventToInactive } from "../../resolvers/event";
+import { readActiveEventsByDateAndWeeklyGoalAndTimezone, readAllEventsByDateAndTimezone, updateEventToCompleted, updateEventToInactive } from "../../resolvers/event";
 import { readPodGoalsLeftTodayCategoryChannelByPodId } from "../../utils/channelUtil";
 import { readUser } from "../../resolvers/user";
 import { GoalType } from "../../types/dbTypes";
@@ -71,9 +71,6 @@ export const updateGoalsYesterday = async (
           updateWeeklyGoalToCompleted(user_id, podType as GoalType)
           console.log("updateGoalsYesterday this user completed their event yesterday: ", user_incompleted_yesterday?.discordUsername)
         }
-
-        // check if event was the last goal
-        checkIfLastGoal(event.discordId, date_yesterday, event.type);
       }
 
 
@@ -95,6 +92,12 @@ export const updateGoalsYesterday = async (
         })
       })
 
+      // check if any goal yesterday (regardless of completed or incompleted) expired
+      const events_yesterday = await readAllEventsByDateAndTimezone(date_yesterday, timeZoneIsUTCMidnight as string)
+      for (const event of events_yesterday) {
+        // check if event was the last goal
+        checkIfLastGoal(event.discordId, date_yesterday, event.type);
+      }
     }
   }
 }

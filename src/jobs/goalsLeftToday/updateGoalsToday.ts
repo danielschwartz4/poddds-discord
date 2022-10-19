@@ -90,10 +90,10 @@ export const updateGoalsToday = async (
             deactivateMember(user_id);
           });
 
-        console.log("updating goals left today for user id ", user_id, " username ", userDiscordObject?.nickname)
+        console.log("updating goals left today for user id ", user_id, " username ", userDiscordObject?.nickname, " for pod id ", podId)
         if (
           userDiscordObject &&
-          userDiscordObject?.roles.cache.some((role) => role.name === "kicked")
+          userDiscordObject.roles.cache.some((role) => role.name === "kicked")
         ) {
           deactivateGoalsAndEvents(user_id); // they are kicked
         }
@@ -123,7 +123,7 @@ export const updateGoalsToday = async (
               podType,
               podId
             );
-            console.log("created goal left today for ", user?.discordUsername)
+            console.log("created goal left today for ", user?.discordUsername, " userid ", user_id)
           }
         }
       });

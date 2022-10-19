@@ -82,7 +82,7 @@ export const createGoalsLeftTodayChannel = async (user: User, category_channel: 
       // To calculate the no. of days between two dates
       var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
       let days_left_message = Difference_In_Days + " days left!";
-      if (Difference_In_Days === 1) { days_left_message = "1 day left! 🏁 🏃‍♂️" }
+      if (Difference_In_Days === 1) { days_left_message = "1 day left! 🏁 🏃‍♂️ " + `<@${user.discordId}>` }
 
       let dates = "";
       if (weekly_goal.days) {
