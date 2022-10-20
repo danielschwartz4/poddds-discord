@@ -21,6 +21,7 @@ import { checkForSupportTagOrReply } from "./supportPoints/supportPoints";
 import { displayRabidUsersCount } from "../metrics/rabidUsers";
 import { readAllUsers } from "../resolvers/user";
 import { createSupport, readSupport } from "../resolvers/support";
+// import { resetSupportPoints } from "./supportPoints/resetSupportPoints";
 // import { faq } from "./faq/faq";
 require("dotenv").config();
 
@@ -89,6 +90,7 @@ async function discordBot() {
       );
       await updateGoalsYesterday(timeZoneIsUTCMidnight);
       await updateGoalsToday(timeZoneIsUTCMidnight);
+      // await resetSupportPoints(timeZoneIsUTCMidnight); // cannot use yet because user table does not have timezone
       await autoKickMember(timeZoneIsUTCMidnight);
 
       // update metrics

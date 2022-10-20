@@ -19,3 +19,10 @@ export const updateSupportToComplete = (discordId: string, points: number) => {
         { supportedToday: true, points}
     )
 }
+
+export const updateSupportTodayToFalse = (discordId: string) => {
+    return Support.update(
+        { discordId },
+        { supportedToday: false}
+    )
+}

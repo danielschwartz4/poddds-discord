@@ -13,6 +13,10 @@ export const readAllUsers = () => {
   return User.find();
 };
 
+// export const readAllUsersByTimezone = (timeZone: string) => {
+//   return User.find({ where: { timeZone }});
+// };
+
 export const readPodUsers = (pod: Pod) => {
   const type = pod?.type;
   let users;

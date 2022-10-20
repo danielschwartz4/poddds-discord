@@ -10,6 +10,7 @@ import { readUser } from "../../resolvers/user";
 import { GoalType } from "../../types/dbTypes";
 import { GUILD } from "../discordScheduler";
 import { TextChannel } from "discord.js";
+import { updateSupportTodayToFalse } from "../../resolvers/support";
 
 export const updateGoalsYesterday = async (
   timeZoneIsUTCMidnight?: string
@@ -22,6 +23,8 @@ export const updateGoalsYesterday = async (
   for (const pod of activePods) {
     const podId = pod.id
     const podType = pod.type
+
+    console.log("UPDATING GOALS YESTERDAY FOR POD ID ", podId)
 
     // find what pod active weekly goals are
     let podActiveWeeklyGoals: WeeklyGoal[] = []
@@ -48,7 +51,6 @@ export const updateGoalsYesterday = async (
       const goalsLeftChannels = GUILD()?.channels.cache.filter(c => c.parentId === goalsLeftCategoryChannel?.id)
       
       // 4. for each event yesterday incompleted, remove their channels from the category or update misses
-      // await events_incompleted_yesterday.forEach(async (event) => {
       for (const event of events_incompleted_yesterday) {
         const user_id = event.discordId
         const user_incompleted_yesterday = await readUser(user_id)
@@ -62,14 +64,14 @@ export const updateGoalsYesterday = async (
 
           for (const c of user_channels) {
             await c[1].delete()
-            console.log("updateGoalsYesterday this user DID NOT complete their event yesterday: ", user_incompleted_yesterday?.discordUsername)
+            console.log("updateGoalsYesterday this user DID NOT complete their event yesterday: ", user_incompleted_yesterday?.discordUsername, " pod id", podId) // TODO: mainly interested that the program is deducting people
           }
           // user_channels.forEach(c => c.delete()); // delete extras if those exist
         } else { // completed channel and channel was deleted via react
           // update missed = 0
           updateEventToCompleted(user_id, date_yesterday, podType as GoalType)
           updateWeeklyGoalToCompleted(user_id, podType as GoalType)
-          console.log("updateGoalsYesterday this user completed their event yesterday: ", user_incompleted_yesterday?.discordUsername)
+          console.log("updateGoalsYesterday this user completed their event yesterday: ", user_incompleted_yesterday?.discordUsername, " pod id ", podId)
         }
       }
 
@@ -100,6 +102,7 @@ export const updateGoalsYesterday = async (
     // check if event was the last goal
     checkIfLastGoal(event.discordId, date_yesterday, event.type);
 
-    // 
+    // update everyone's support supportedToday = false
+    updateSupportTodayToFalse(event.discordId)
   }
 }
