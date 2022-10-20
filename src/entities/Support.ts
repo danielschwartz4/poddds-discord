@@ -19,9 +19,17 @@ export class Support extends BaseEntity {
   @Column({ nullable: true })
   userId: number;
 
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   @Column({ nullable: true })
-  supportText: string;
+  discordId: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true, default: 0 })
+  points: number;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true, default: false })
+  supportedToday: boolean;
 
   @Field()
   @CreateDateColumn()

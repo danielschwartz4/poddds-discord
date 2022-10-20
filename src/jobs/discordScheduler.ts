@@ -17,7 +17,7 @@ import { reactToImages } from "./react/react";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 // import { displayActiveGoalsCount } from "../metrics/activeGoals";
 // import { displayGoalCompletionCount } from "../metrics/completions";
-import { checkForSupportTagOrReply } from "./supportPoints/support";
+import { checkForSupportTagOrReply } from "./supportPoints/supportPoints";
 import { displayRabidUsersCount } from "../metrics/rabidUsers";
 // import { faq } from "./faq/faq";
 require("dotenv").config();
@@ -25,6 +25,23 @@ require("dotenv").config();
 export const GUILD = () => {
   return CLIENT?.guilds.cache.get(SERVER_ID as string);
 };
+
+export const ROLE_IDS = () => {
+  const supportRoleId = GUILD()?.roles.cache.find((r) => r.name === "⭐ Supporter ⋮ 1+ Supports");
+  const supportPlusRoleId = GUILD()?.roles.cache.find((r) => r.name === "💫 Supporter+ ⋮ 5+ Supports⭐");
+  const preChampRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔆Pre-Champ ⋮ 10+ Supports⭐⭐");
+  const champRoleId = GUILD()?.roles.cache.find((r) => r.name === "👑 Champ ⋮ 14+ Supports⭐⭐");
+  const legendRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔱 Legend ⋮ 30+ Supports⭐⭐⭐");
+  const lifeChangerRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔮 Life Changer ⋮ 100+ Supports✨");
+  return {
+    'supportRoleId' : supportRoleId,
+    'supportPlusRoleId' : supportPlusRoleId,
+    'preChampRoleId' : preChampRoleId,
+    'champRoleId' : champRoleId,
+    'legendRoleId' : legendRoleId,
+    'lifeChangerRoleId' : lifeChangerRoleId,
+  }
+}
 
 async function discordBot() {
   CLIENT.on("ready", async () => {
