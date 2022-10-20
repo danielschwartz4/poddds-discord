@@ -63,7 +63,7 @@ async function discordBot() {
     newMember();
     routeBotDMs();
     checkForSupportTagOrReply();
-    // displayRabidUsersCount();
+    displayRabidUsersCount();
     // faq();
 
     // seed our support table
@@ -74,8 +74,6 @@ async function discordBot() {
         createSupport(user.id, user.discordId)
       }
     }
-    await updateGoalsYesterday('-5');
-    await updateGoalsToday('-5');
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
