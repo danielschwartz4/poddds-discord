@@ -19,6 +19,8 @@ import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 // import { displayGoalCompletionCount } from "../metrics/completions";
 import { checkForSupportTagOrReply } from "./supportPoints/supportPoints";
 import { displayRabidUsersCount } from "../metrics/rabidUsers";
+import { readAllUsers } from "../resolvers/user";
+import { createSupport, readSupport } from "../resolvers/support";
 // import { faq } from "./faq/faq";
 require("dotenv").config();
 
@@ -62,6 +64,15 @@ async function discordBot() {
     checkForSupportTagOrReply();
     // displayRabidUsersCount();
     // faq();
+
+    // seed our support table
+    const allUsers = await readAllUsers()
+    for (const user of allUsers) {
+      const userSupport = await readSupport(user.discordId)
+      if (!userSupport) {
+        createSupport(user.id, user.discordId)
+      }
+    }
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {

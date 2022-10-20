@@ -91,13 +91,15 @@ export const updateGoalsYesterday = async (
           }
         })
       })
-
-      // check if any goal yesterday (regardless of completed or incompleted) expired
-      const events_yesterday = await readAllEventsByDateAndTimezone(date_yesterday, timeZoneIsUTCMidnight as string)
-      for (const event of events_yesterday) {
-        // check if event was the last goal
-        checkIfLastGoal(event.discordId, date_yesterday, event.type);
-      }
     }
+  }
+
+  // check if any goal yesterday (regardless of completed or incompleted) expired
+  const events_yesterday = await readAllEventsByDateAndTimezone(date_yesterday, timeZoneIsUTCMidnight as string)
+  for (const event of events_yesterday) {
+    // check if event was the last goal
+    checkIfLastGoal(event.discordId, date_yesterday, event.type);
+
+    // 
   }
 }
