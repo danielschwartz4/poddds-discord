@@ -49,6 +49,7 @@ export const readAllEventsByDateAndTimezone = (adjustedDate: string, timeZone: s
           timeZone
         },
     });
+    // might need to do a unique sort by id (limit 1 per id) and sort by goal id descending. otherwise overwritten goals may be caught as well
 }
 
 export const readAllCompletedEvents = () => {

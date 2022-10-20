@@ -17,6 +17,10 @@ export const checkForSupportTagOrReply = () => {
         const supporter_role_id = GUILD()?.roles.cache.find((r) => r.name === "⭐ Supporter ⋮ 1+ Supports");
         const user = await GUILD()?.members.fetch(msg.author.id);
 
+        const alreadySupportedToday = await readSupportPoints(user_id)
+        // 1. if alreadySupportedToday != True (they didn't support yet, update)
+
+        // 2. 
         // if the user is not already a supporter, let them know!
         if (!user?.roles.cache.some((role) => role === supporter_role_id)) { 
           let ephermeral_msg = await (CLIENT.channels.cache.get(msg.channelId) as TextChannel).send(
