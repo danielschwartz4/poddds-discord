@@ -3,13 +3,13 @@ import { addDays, flipSign } from "./utils/timeZoneUtil";
 
 export const __prod__ = process.env.NODE_ENV === "production";
 export const TODAY = () => {
-  let returnObject = addDays(new Date(), 0);
+  let returnObject = addDays(new Date(), 2);
   return returnObject as Date;
 };
 
 export const LOCAL_TODAY = (timeZone: string) => {
   let timeZoneFlipped = flipSign(timeZone);
-  let localDateObject = addDays(new Date(), 0).toLocaleString("en-GB", {
+  let localDateObject = addDays(new Date(), 2).toLocaleString("en-GB", {
     timeZone: "Etc/GMT" + timeZoneFlipped,
   });
 

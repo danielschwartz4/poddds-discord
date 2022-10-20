@@ -11,7 +11,6 @@ export const checkForSupportTagOrReply = () => {
     const msgCategoryChannel = msg.guild?.channels.cache.get(
       msgChannel?.parentId as string
     );
-    console.log("a")
     if ( ((msgCategoryChannel?.name.includes("fitness") || msgCategoryChannel?.name.includes("study")) && (msg.reference?.messageId || msg.mentions.members?.first()) 
       || msgChannel?.name.includes("feedback")) 
       && !msg.author.bot
@@ -22,12 +21,11 @@ export const checkForSupportTagOrReply = () => {
       const userSupport = await readSupport(userId)
 
       // 2. if alreadySupportedToday = False
-      console.log("b")
       if (userSupport && !userSupport.supportedToday) {
         // 3. supportPoints += 1
         const newSupportPoints = userSupport.points + 1
 
-        console.log("you now have support points = ", newSupportPoints)
+        console.log(user?.displayName + " now has support points = ", newSupportPoints)
         
         await updateSupportToComplete(userId, newSupportPoints)
 

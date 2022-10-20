@@ -122,7 +122,7 @@ export const createGoalsLeftTodayChannel = async (user: User, category_channel: 
           "**" +
           "\n" +
           dates + 
-          "\n**Support points: **" + userSupportPoints
+          "\n**⭐ Support points: **" + userSupportPoints
       );
     }
   });
