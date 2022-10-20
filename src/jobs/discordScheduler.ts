@@ -17,7 +17,7 @@ import { reactToImages } from "./react/react";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 // import { displayActiveGoalsCount } from "../metrics/activeGoals";
 // import { displayGoalCompletionCount } from "../metrics/completions";
-import { checkForSupportTagOrReply } from "./supportPoints/support";
+// import { checkForSupportTagOrReply } from "./supportPoints/support";
 import { displayRabidUsersCount } from "../metrics/rabidUsers";
 // import { faq } from "./faq/faq";
 require("dotenv").config();
@@ -42,7 +42,7 @@ async function discordBot() {
     reactToImages();
     newMember();
     routeBotDMs();
-    checkForSupportTagOrReply();
+    // checkForSupportTagOrReply();
     displayRabidUsersCount();
     // faq();
 

@@ -6,6 +6,7 @@ import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { readUser } from "../resolvers/user";
 import { GoalType } from "../types/dbTypes";
 import { colorBooleanMapper } from "./goalUtils";
+import { expiredGoalNotif } from "../jobs/goal/expiredGoalNotif";
 
 export const createTextChannel = (channelName: string, channel_permission_overwrites: any[], position?: number) => {
   return GUILD()?.channels.create({
@@ -83,6 +84,7 @@ export const createGoalsLeftTodayChannel = async (user: User, category_channel: 
       var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
       let days_left_message = Difference_In_Days + " days left!";
       if (Difference_In_Days === 1) { days_left_message = "1 day left! 🏁 🏃‍♂️ " + `<@${user.discordId}>` }
+      if (Difference_In_Days < 1) { expiredGoalNotif(user.discordId, podType, weekly_goal) } // backup code in case expired goal notif doesn't trigger somehow
 
       let dates = "";
       if (weekly_goal.days) {
