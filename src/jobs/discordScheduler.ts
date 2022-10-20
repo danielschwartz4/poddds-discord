@@ -67,13 +67,13 @@ async function discordBot() {
     // faq();
 
     // seed our support table
-    const allUsers = await readAllUsers()
-    for (const user of allUsers) {
-      const userSupport = await readSupport(user.discordId)
-      if (!userSupport) {
-        createSupport(user.id, user.discordId)
-      }
-    }
+    // const allUsers = await readAllUsers()
+    // for (const user of allUsers) {
+    //   const userSupport = await readSupport(user.discordId)
+    //   if (!userSupport) {
+    //     createSupport(user.id, user.discordId)
+    //   }
+    // }
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {

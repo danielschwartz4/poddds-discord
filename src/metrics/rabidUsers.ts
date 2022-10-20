@@ -11,7 +11,7 @@ export const displayRabidUsersCount = async () => {
     activeGoalsChannel.delete();
   }
 
-  const mod_role_id = GUILD()?.roles.cache.find((r) => r.name === "🛡 mod");
+  const mod_role_id = GUILD()?.roles.cache.find((r) => r.name.includes("mod"));
   const everyone_role_id = GUILD()?.roles.cache.find(
     (r) => r.name === "@everyone"
   );
