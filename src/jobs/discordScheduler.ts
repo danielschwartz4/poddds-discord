@@ -108,6 +108,12 @@ async function discordBot() {
       displayRabidUsersCount();
       createGoalReminder();
     });
+
+    // update "At 00:00 on Sunday"
+    cron.schedule("0 0 * * 4", () => {
+      displayRabidUsersCount();
+      createGoalReminder();
+    });
   });
 
   if (__prod__) {
