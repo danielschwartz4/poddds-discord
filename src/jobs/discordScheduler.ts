@@ -19,32 +19,6 @@ import { checkForSupportTagOrReply } from "./supportPoints/supportPoints";
 import { displayRabidUsersCount } from "../metrics/rabidUsers";
 require("dotenv").config();
 
-export const GUILD = () => {
-  return CLIENT?.guilds.cache.get(SERVER_ID as string);
-};
-
-export const ROLE_IDS = () => {
-  const newMemberRoleId = GUILD()?.roles.cache.find((r) => r.name === "🌱 new member");
-  const podmateRoleId = GUILD()?.roles.cache.find((r) => r.name === "🚀 podmate");
-  const supportRoleId = GUILD()?.roles.cache.find((r) => r.name === "⭐ Supporter ⋮ 1+ Supports");
-  const supportPlusRoleId = GUILD()?.roles.cache.find((r) => r.name === "💫 Supporter+ ⋮ 5+ Supports⭐");
-  const preChampRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔆Pre-Champ ⋮ 10+ Supports⭐⭐");
-  const champRoleId = GUILD()?.roles.cache.find((r) => r.name === "👑 Champ ⋮ 14+ Supports⭐⭐");
-  const legendRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔱 Legend ⋮ 30+ Supports⭐⭐⭐");
-  const lifeChangerRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔮 Life Changer ⋮ 100+ Supports✨");
-  
-  return {
-    'newMemberRoleId' : newMemberRoleId,
-    'podmateRoleId' : podmateRoleId,
-    'supportRoleId' : supportRoleId,
-    'supportPlusRoleId' : supportPlusRoleId,
-    'preChampRoleId' : preChampRoleId,
-    'champRoleId' : champRoleId,
-    'legendRoleId' : legendRoleId,
-    'lifeChangerRoleId' : lifeChangerRoleId,
-  }
-}
-
 async function discordBot() {
   CLIENT.on("ready", async () => {
     console.log("The client bot is ready!");
@@ -63,6 +37,13 @@ async function discordBot() {
     routeBotDMs();
     checkForSupportTagOrReply();
     displayRabidUsersCount();
+
+    // test
+    const timeZoneIsUTCMidnight = '-5'
+    await updateGoalsYesterday(timeZoneIsUTCMidnight);
+    await updateGoalsToday(timeZoneIsUTCMidnight);
+    // await resetSupportPoints(timeZoneIsUTCMidnight); // cannot use yet because user table does not have timezone
+    await autoKickMember(timeZoneIsUTCMidnight);
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
@@ -104,6 +85,32 @@ async function discordBot() {
     CLIENT.login(process.env.PROD_DISCORD_TOKEN);
   } else {
     CLIENT.login(process.env.TEST_DISCORD_TOKEN);
+  }
+}
+
+export const GUILD = () => {
+  return CLIENT?.guilds.cache.get(SERVER_ID as string);
+};
+
+export const ROLE_IDS = () => {
+  const newMemberRoleId = GUILD()?.roles.cache.find((r) => r.name === "🌱 new member");
+  const podmateRoleId = GUILD()?.roles.cache.find((r) => r.name === "🚀 podmate");
+  const supportRoleId = GUILD()?.roles.cache.find((r) => r.name === "⭐ Supporter ⋮ 1+ Supports");
+  const supportPlusRoleId = GUILD()?.roles.cache.find((r) => r.name === "💫 Supporter+ ⋮ 5+ Supports⭐");
+  const preChampRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔆Pre-Champ ⋮ 10+ Supports⭐⭐");
+  const champRoleId = GUILD()?.roles.cache.find((r) => r.name === "👑 Champ ⋮ 14+ Supports⭐⭐");
+  const legendRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔱 Legend ⋮ 30+ Supports⭐⭐⭐");
+  const lifeChangerRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔮 Life Changer ⋮ 100+ Supports✨");
+  
+  return {
+    'newMemberRoleId' : newMemberRoleId,
+    'podmateRoleId' : podmateRoleId,
+    'supportRoleId' : supportRoleId,
+    'supportPlusRoleId' : supportPlusRoleId,
+    'preChampRoleId' : preChampRoleId,
+    'champRoleId' : champRoleId,
+    'legendRoleId' : legendRoleId,
+    'lifeChangerRoleId' : lifeChangerRoleId,
   }
 }
 

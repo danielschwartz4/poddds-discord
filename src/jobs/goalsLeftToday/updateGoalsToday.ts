@@ -101,7 +101,7 @@ export const updateGoalsToday = async (
         }
 
         // 6. Create a channel for each valid due today
-        console.log("updating goals left today for user id ", user_id, " username ", userDiscordObject?.nickname, " for pod id ", podId)
+        console.log("updating goals left today for user id ", user_id, " username ", userDiscordObject?.user.username, " for pod id ", podId)
         let user = await readUser(user_id);
         let weekly_goal = await readActiveWeeklyGoalByGoalId(event.goalId);
         if (user && weekly_goal) {
