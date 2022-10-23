@@ -24,6 +24,7 @@ export const GUILD = () => {
 };
 
 export const ROLE_IDS = () => {
+  const newMemberRoleId = GUILD()?.roles.cache.find((r) => r.name === "🌱 new member");
   const podmateRoleId = GUILD()?.roles.cache.find((r) => r.name === "🚀 podmate");
   const supportRoleId = GUILD()?.roles.cache.find((r) => r.name === "⭐ Supporter ⋮ 1+ Supports");
   const supportPlusRoleId = GUILD()?.roles.cache.find((r) => r.name === "💫 Supporter+ ⋮ 5+ Supports⭐");
@@ -33,6 +34,7 @@ export const ROLE_IDS = () => {
   const lifeChangerRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔮 Life Changer ⋮ 100+ Supports✨");
   
   return {
+    'newMemberRoleId' : newMemberRoleId,
     'podmateRoleId' : podmateRoleId,
     'supportRoleId' : supportRoleId,
     'supportPlusRoleId' : supportPlusRoleId,
