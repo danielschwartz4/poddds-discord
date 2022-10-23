@@ -12,7 +12,7 @@ export const createGoalReminder = async () => {
   for (const idx of Array(users.length).keys()) {
     setTimeout(async () => {
       let userObject = users[idx]
-      let userOnServer = await CLIENT.users.fetch(userObject.discordId);
+      let userOnServer = await CLIENT.users.fetch(userObject.discordId).catch((err) => console.log(err));
       if (userOnServer && !userOnServer.bot) {
         // !! added this becuasae we need the type for readLastWeeklyGoalByType.
         // !! getting the user's most recent goal is no longer ok since they can have two goals
@@ -25,10 +25,10 @@ export const createGoalReminder = async () => {
           "study"
         );
 
-        const userGuildMember = await GUILD()?.members.fetch(userObject.discordId);
+        const userGuildMember = await GUILD()?.members.fetch(userObject.discordId).catch((err) => console.log(err));
         // if the user does not have an active weekly goal, send them this reminder
         if (!fitnessWeeklyGoal && !studyWeeklyGoal 
-          && (userGuildMember?.roles.cache.some((role) => role == ROLE_IDS()['podmateRoleId'] as Role) || userGuildMember?.roles.cache.some((role) => role == ROLE_IDS()['newMemberRoleId'] as Role))) {
+          && (userGuildMember && userGuildMember?.roles.cache.some((role) => role == ROLE_IDS()['podmateRoleId'] as Role) || userGuildMember?.roles.cache.some((role) => role == ROLE_IDS()['newMemberRoleId'] as Role))) {
           CLIENT.users.fetch(userObject.discordId).then((user) => {
             console.log(
               "Weekly reminder being set to the following user: ",
@@ -44,6 +44,6 @@ export const createGoalReminder = async () => {
           });
         }
       }
-    }, 1000 * 60 * 2 * idx);
+    }, 1000 * 60 * 1 * idx);
   }
 };
