@@ -17,7 +17,7 @@ import {
   transformInteractionData,
 } from "../../utils/interactionData";
 import { addDays, flipSign, int2day, mdyDate } from "../../utils/timeZoneUtil";
-import { GUILD } from "../discordScheduler";
+import { GUILD, ROLE_IDS } from "../discordScheduler";
 import { deactivateGoalsAndEvents } from "../goalsLeftToday/deactivateGoals";
 import { assignPod } from "../pod/assignPod";
 
@@ -86,9 +86,7 @@ export const createGoal = () => {
       const user = await GUILD()?.members.fetch(interaction.user.id);
       // Assign user to pod and send resp to that goals channel
       // Add podmate role
-      let podmate_role_id = user?.guild?.roles?.cache.find(
-        (r) => r.name === "🚀 podmate"
-      );
+      let podmate_role_id = ROLE_IDS()['podmateRoleId']
       await user?.roles?.add(podmate_role_id as Role);
 
       await assignPod(type as GoalType, user as GuildMember, resp);
@@ -118,12 +116,8 @@ export const createGoal = () => {
         newPodmateNotification(from_username, resp);
 
         // Automatically remove new member role and add podmate role to msg.author.roles
-        let new_member_role_id = user?.guild.roles.cache.find(
-          (r: Role) => r.name === "🌱 new member"
-        );
-        let podmate_role_id = user?.guild.roles.cache.find(
-          (r: Role) => r.name === "🚀 podmate"
-        );
+        let new_member_role_id = ROLE_IDS()['newMemberRoleId']
+        let podmate_role_id = ROLE_IDS()['podmateRoleId']
         user.roles.add(podmate_role_id as Role);
         user.roles.remove(new_member_role_id as Role);
       }

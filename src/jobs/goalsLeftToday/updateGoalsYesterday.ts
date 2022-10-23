@@ -57,7 +57,7 @@ export const updateGoalsYesterday = async (
       }
     }
 
-    // clear all channels with messages 2+ days ago to clean up discord UI (in case people leave when their goal is still there)
+    // clear all channels with messages 1+ days ago to clean up discord UI (in case people leave when their goal is still there)
     clearOldGoalsLeftTodayChannels(podId, podType)
   }
 

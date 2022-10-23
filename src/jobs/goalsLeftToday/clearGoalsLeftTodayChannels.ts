@@ -1,4 +1,5 @@
 import { TextChannel } from "discord.js";
+import { TODAY } from "../../constants";
 import { GoalType } from "../../types/dbTypes";
 import { readPodGoalsLeftTodayCategoryChannelByPodId } from "../../utils/channelUtil";
 import { GUILD } from "../discordScheduler";
@@ -14,10 +15,10 @@ export const clearOldGoalsLeftTodayChannels = async (podId: number, podType: Goa
         const msgTimestamp = msg.first()?.createdTimestamp
         if (msgTimestamp) {
           // difference is in milliseconds
-          const days_elapsed = (Date.now() - msgTimestamp) / (1000 * 60 * 60 * 24)
-          if (days_elapsed > 2) {
+          const days_elapsed = (TODAY().getTime() - msgTimestamp) / (1000 * 60 * 60 * 24)
+          if (days_elapsed > 1) {
             guildChannel.delete()
-            console.log("deleting channel that was here for 2+ days, it was sent on ", msgTimestamp.toString())
+            console.log("deleting channel that was here for 1+ days for ", guildChannel.name, " in pod ", podId)
           }
         }
       })
