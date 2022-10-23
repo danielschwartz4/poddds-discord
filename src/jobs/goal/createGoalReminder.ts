@@ -46,6 +46,6 @@ export const createGoalReminder = async () => {
           } 
         }
       }
-    }, 1000 * 60); // every minute
+    }, 1000 * 60 * idx); // every minute
   }
 };
