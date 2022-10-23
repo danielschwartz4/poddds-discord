@@ -28,7 +28,7 @@ export const createGoalReminder = async () => {
         );
 
         let userGuildMember
-        try { await GUILD()?.members.fetch(userObject.discordId) } catch { console.log("user was not found in guild : ", userObject.discordUsername)}
+        try { userGuildMember = await GUILD()?.members.fetch(userObject.discordId) } catch { console.log("user was not found in guild : ", userObject.discordUsername)}
         // if the user does not have an active weekly goal, send them this reminder
         if (!fitnessWeeklyGoal && !studyWeeklyGoal 
           && (userGuildMember && userGuildMember?.roles.cache.some((role) => role == ROLE_IDS()['podmateRoleId'] as Role) || userGuildMember?.roles.cache.some((role) => role == ROLE_IDS()['newMemberRoleId'] as Role))) {
