@@ -2,6 +2,8 @@ import { botDMNotification } from "../../utils/adminNotifs";
 import { CLIENT } from "../../constants";
 import { readAllUsers } from "../../resolvers/user";
 import { readLastWeeklyGoalByType } from "../../resolvers/weeklyGoal";
+import { GUILD, ROLE_IDS } from "../discordScheduler";
+import { Role } from "discord.js";
 
 export const createGoalReminder = async () => {
   botDMNotification("EVERY NEW MEMBER AND INACTIVE PODMATES", "CREATE A WEEKLY GOAL REMINDER!"); // notify admins via DM
@@ -23,27 +25,20 @@ export const createGoalReminder = async () => {
           "study"
         );
 
+        const userGuildMember = await GUILD()?.members.fetch(userObject.discordId);
         // if the user does not have an active weekly goal, send them this reminder
-        if (!fitnessWeeklyGoal && !studyWeeklyGoal) {
+        if (!fitnessWeeklyGoal && !studyWeeklyGoal && userGuildMember?.roles.cache.some((role) => role == ROLE_IDS()['podmateRoleId'] as Role)) {
           CLIENT.users.fetch(userObject.discordId).then((user) => {
             console.log(
               "Weekly reminder being set to the following user: ",
               userObject.discordUsername
             );
             if (user) {
-              try {
-                user.send(
-                  "Hey! ⌚ Automatic weekly reminder from poddds mod here to **CREATE A GOAL!**⌚\n✅ Make sure you head over to **GOAL SETTING** and type **/set-current-goal** to get started on your new goal!"
-                );
-                console.log("Bumped", userObject.discordUsername, " to create a new goal, with for loop position ", idx)
-              } catch {
-                console.log(
-                  "THERE WAS AN ERROR SENDING TO THE FOLLOWING USER: ",
-                  userObject.discordUsername,
-                  " WITH DB ID: ",
-                  userObject.id
-                );
-              }
+              user.send(
+                "Hey! ⌚ Automatic weekly reminder from poddds mod here to **CREATE A GOAL!**⌚\n✅ Make sure you head over to **GOAL SETTING** and type **/set-current-goal** to get started on your new goal!"
+              ).catch((err) => {
+                console.log(err)
+              });
             }
           });
         }

@@ -15,14 +15,8 @@ import { routeBotDMs } from "./member/routeBotDMs";
 import { leavePod } from "./pod/leavePod";
 import { reactToImages } from "./react/react";
 import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
-// import { displayActiveGoalsCount } from "../metrics/activeGoals";
-// import { displayGoalCompletionCount } from "../metrics/completions";
 import { checkForSupportTagOrReply } from "./supportPoints/supportPoints";
 import { displayRabidUsersCount } from "../metrics/rabidUsers";
-// import { readAllUsers } from "../resolvers/user";
-// import { createSupport, readSupport } from "../resolvers/support";
-// import { resetSupportPoints } from "./supportPoints/resetSupportPoints";
-// import { faq } from "./faq/faq";
 require("dotenv").config();
 
 export const GUILD = () => {
@@ -30,13 +24,16 @@ export const GUILD = () => {
 };
 
 export const ROLE_IDS = () => {
+  const podmateRoleId = GUILD()?.roles.cache.find((r) => r.name === "🚀 podmate");
   const supportRoleId = GUILD()?.roles.cache.find((r) => r.name === "⭐ Supporter ⋮ 1+ Supports");
   const supportPlusRoleId = GUILD()?.roles.cache.find((r) => r.name === "💫 Supporter+ ⋮ 5+ Supports⭐");
   const preChampRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔆Pre-Champ ⋮ 10+ Supports⭐⭐");
   const champRoleId = GUILD()?.roles.cache.find((r) => r.name === "👑 Champ ⋮ 14+ Supports⭐⭐");
   const legendRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔱 Legend ⋮ 30+ Supports⭐⭐⭐");
   const lifeChangerRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔮 Life Changer ⋮ 100+ Supports✨");
+  
   return {
+    'podmateRoleId' : podmateRoleId,
     'supportRoleId' : supportRoleId,
     'supportPlusRoleId' : supportPlusRoleId,
     'preChampRoleId' : preChampRoleId,
@@ -64,16 +61,6 @@ async function discordBot() {
     routeBotDMs();
     checkForSupportTagOrReply();
     displayRabidUsersCount();
-    // faq();
-
-    // seed our support table
-    // const allUsers = await readAllUsers()
-    // for (const user of allUsers) {
-    //   const userSupport = await readSupport(user.discordId)
-    //   if (!userSupport) {
-    //     createSupport(user.id, user.discordId)
-    //   }
-    // }
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
@@ -109,7 +96,7 @@ async function discordBot() {
       createGoalReminder();
     });
 
-    // update "At 00:00 on Sunday"
+    // update "At 00:00 on Thursday"
     cron.schedule("0 0 * * 4", () => {
       displayRabidUsersCount();
       createGoalReminder();
