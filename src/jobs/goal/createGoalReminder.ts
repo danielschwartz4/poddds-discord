@@ -41,7 +41,7 @@ export const createGoalReminder = async () => {
               )
             })
           } catch {
-            console.log("user was not found in guild : ", userObject.discordUsername)
+            console.log("user was not found in guild when trying to send message: ", userObject.discordUsername)
             // TODO: Probably delete this user from our database
           } 
         }
