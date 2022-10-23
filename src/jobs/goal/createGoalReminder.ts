@@ -12,7 +12,9 @@ export const createGoalReminder = async () => {
   for (const idx of Array(users.length).keys()) {
     setTimeout(async () => {
       let userObject = users[idx]
-      let userOnServer = await CLIENT.users.fetch(userObject.discordId).catch((err) => console.log(err));
+      let userOnServer
+      
+      try { userOnServer = await CLIENT.users.fetch(userObject.discordId) } catch { }
       if (userOnServer && !userOnServer.bot) {
         // !! added this becuasae we need the type for readLastWeeklyGoalByType.
         // !! getting the user's most recent goal is no longer ok since they can have two goals
@@ -39,6 +41,7 @@ export const createGoalReminder = async () => {
                 "Hey! ⌚ Automatic weekly reminder from poddds mod here to **CREATE A GOAL!**⌚\n✅ Make sure you head over to **GOAL SETTING** and type **/set-current-goal** to get started on your new goal!"
               ).catch((err) => {
                 console.log(err)
+                // TODO: Probably delete this user from our database
               });
             }
           });
