@@ -84,14 +84,23 @@ export const leavePod = async () => {
           // 3. remove role
           const user = await GUILD()?.members.fetch(interaction.user.id);
           let pod_role_id = user?.guild.roles.cache.find(
-            (r: Role) => r.name === category + podId
+            (r: Role) => r.name === category + "-" + podId
           );
 
           await interaction.reply(
             (user?.displayName as string) +
               " has left the pod :( Hopefully we see them again soon!"
           );
-          await user?.roles.remove(pod_role_id as Role).catch((err) => {console.log("THERE WAS AN ERROR IN REMOVING ROLE, ERROR: ", err, "category + podId", category + podId, "pod_role_id", pod_role_id)});
+          await user?.roles.remove(pod_role_id as Role).catch((err) => {
+            console.log(
+              "THERE WAS AN ERROR IN REMOVING ROLE, ERROR: ",
+              err,
+              "category + podId",
+              category + podId,
+              "pod_role_id",
+              pod_role_id
+            );
+          });
 
           deactivateGoalsAndEvents(user?.id as string, category);
         }
