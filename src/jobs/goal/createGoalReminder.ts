@@ -14,7 +14,7 @@ export const createGoalReminder = async () => {
       let userObject = users[idx]
       let userOnServer
       
-      try { userOnServer = await CLIENT.users.fetch(userObject.discordId) } catch { }
+      try { userOnServer = await CLIENT.users.fetch(userObject.discordId) } catch { console.log("user was not found in client: ", userObject.discordUsername)}
       if (userOnServer && !userOnServer.bot) {
         // !! added this becuasae we need the type for readLastWeeklyGoalByType.
         // !! getting the user's most recent goal is no longer ok since they can have two goals
@@ -27,7 +27,8 @@ export const createGoalReminder = async () => {
           "study"
         );
 
-        const userGuildMember = await GUILD()?.members.fetch(userObject.discordId).catch((err) => console.log(err));
+        let userGuildMember
+        try { await GUILD()?.members.fetch(userObject.discordId) } catch { console.log("user was not found in guild : ", userObject.discordUsername)}
         // if the user does not have an active weekly goal, send them this reminder
         if (!fitnessWeeklyGoal && !studyWeeklyGoal 
           && (userGuildMember && userGuildMember?.roles.cache.some((role) => role == ROLE_IDS()['podmateRoleId'] as Role) || userGuildMember?.roles.cache.some((role) => role == ROLE_IDS()['newMemberRoleId'] as Role))) {
