@@ -5,8 +5,14 @@ import { createVoiceChannel, readChannelByName } from "../utils/channelUtil";
 import { readActiveGoalById } from "../resolvers/weeklyGoal";
 
 export const displayRabidUsersCount = async () => {
-  let displayChannelName = "4+ Weeks Users: ";
-  const activeGoalsChannel = readChannelByName(displayChannelName);
+  let fourWeeksPlusdisplayChannelName = "4+ Weeks Users: ";
+  let threeWeeksPlusdisplayChannelName = "3+ Weeks Users: ";
+  let activeGoalsChannel = readChannelByName(fourWeeksPlusdisplayChannelName);
+  
+  if (activeGoalsChannel) {
+    activeGoalsChannel.delete();
+  }
+  activeGoalsChannel = readChannelByName(threeWeeksPlusdisplayChannelName);
   if (activeGoalsChannel) {
     activeGoalsChannel.delete();
   }
@@ -29,7 +35,8 @@ export const displayRabidUsersCount = async () => {
     },
   ];
   const allUsers = await readAllUsers();
-  let count = 0;
+  let fourWeeksPluscount = 0;
+  let threeWeeksPluscount = 0;
 
   for (const user of allUsers) {
     await GUILD()
@@ -50,7 +57,13 @@ export const displayRabidUsersCount = async () => {
                 "USER HERE FOR 4+ WEEKS, REACH OUT TO THIS PERSON AND BUILD FOR THEM: ",
                 user.discordUsername
               );
-              count += 1;
+              fourWeeksPluscount += 1;
+            } else if (weeks >= 3) {
+              console.log(
+                "USER HERE FOR 3+ WEEKS: ",
+                user.discordUsername
+              );
+              threeWeeksPluscount += 1;
             }
           }
         }
@@ -58,6 +71,8 @@ export const displayRabidUsersCount = async () => {
       .catch(() => {});
   }
 
-  displayChannelName += count;
-  createVoiceChannel(displayChannelName, channel_permission_overwrites, 1);
+  fourWeeksPlusdisplayChannelName += fourWeeksPluscount;
+  threeWeeksPlusdisplayChannelName += threeWeeksPluscount;
+  createVoiceChannel(fourWeeksPlusdisplayChannelName, channel_permission_overwrites, 1);
+  createVoiceChannel(threeWeeksPlusdisplayChannelName, channel_permission_overwrites, 2);
 };
