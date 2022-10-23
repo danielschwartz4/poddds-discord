@@ -67,9 +67,6 @@ export const updateGoalsToday = async (
           podId
         );
       }
-      const goalsLeftTodayList = GUILD()?.channels.cache.filter(
-        (c) => c.parentId === goalsLeftCategoryChannel?.id
-      );
 
       // 3. get events for day based on resolver and for the pod based on active weekly goals
       let goalIds: number[] = [];
