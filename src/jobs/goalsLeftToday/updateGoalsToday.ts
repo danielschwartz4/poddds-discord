@@ -20,6 +20,7 @@ import { deactivateMember } from "../member/onMemberLeave";
 import { deactivateGoalsAndEvents } from "./deactivateGoals";
 import { readUser } from "../../resolvers/user";
 import { GUILD } from "../discordScheduler";
+import { botDMNotification } from "../../utils/adminNotifs";
 
 export const updateGoalsToday = async (
   timeZoneIsUTCMidnight?: string
@@ -31,6 +32,7 @@ export const updateGoalsToday = async (
   for (const pod of activePods) {
     const podId = pod.id;
     const podType = pod.type;
+    if (!podId || !podType) { botDMNotification("MODS", "ERROR IN UPDATE GOALS TODAY" + podId + podType) }
 
     // 1. get all active weekly goals for that pod id
     let podActiveWeeklyGoals: WeeklyGoal[] = [];
@@ -47,7 +49,7 @@ export const updateGoalsToday = async (
     }
 
     // if there are active goals for the pod
-    if (podActiveWeeklyGoals && podType && podId) {
+    if (podActiveWeeklyGoals) {
       let goalsLeftCategoryChannel =
         await readPodGoalsLeftTodayCategoryChannelByPodId(
           podId,
@@ -65,6 +67,9 @@ export const updateGoalsToday = async (
           podId
         );
       }
+      const goalsLeftTodayList = GUILD()?.channels.cache.filter(
+        (c) => c.parentId === goalsLeftCategoryChannel?.id
+      );
 
       // 3. get events for day based on resolver and for the pod based on active weekly goals
       let goalIds: number[] = [];
@@ -89,42 +94,25 @@ export const updateGoalsToday = async (
             console.log("ERROR! Assuming user has left server", err);
             deactivateMember(user_id);
           });
-
-        console.log("updating goals left today for user id ", user_id, " username ", userDiscordObject?.nickname, " for pod id ", podId)
         if (
-          userDiscordObject &&
-          userDiscordObject.roles.cache.some((role) => role.name === "kicked")
+          userDiscordObject?.roles.cache.some((role) => role.name === "kicked")
         ) {
           deactivateGoalsAndEvents(user_id); // they are kicked
         }
 
         // 6. Create a channel for each valid due today
+        console.log("updating goals left today for user id ", user_id, " username ", userDiscordObject?.nickname, " for pod id ", podId)
         let user = await readUser(user_id);
         let weekly_goal = await readActiveWeeklyGoalByGoalId(event.goalId);
         if (user && weekly_goal) {
-          const goalsLeftTodayList = GUILD()?.channels.cache.filter(
-            (c) => c.parentId === goalsLeftCategoryChannel?.id
+          createGoalsLeftTodayChannel(
+            user,
+            goalsLeftCategoryChannel as CategoryChannel,
+            weekly_goal,
+            timeZoneIsUTCMidnight as string,
+            podType,
+            podId
           );
-
-          let alreadyDisplayed = false;
-          if (goalsLeftTodayList)
-          for (const channel of goalsLeftTodayList) {
-            if (channel[1].name === user?.discordUsername) {
-              console.log(user?.discordUsername + "'s goal left today is already being displayed")
-              alreadyDisplayed = true;
-            }
-          }
-          if (!alreadyDisplayed) {
-            createGoalsLeftTodayChannel(
-              user,
-              goalsLeftCategoryChannel as CategoryChannel,
-              weekly_goal,
-              timeZoneIsUTCMidnight as string,
-              podType,
-              podId
-            );
-            console.log("created goal left today for ", user?.discordUsername, " userid ", user_id)
-          }
         }
       });
     }

@@ -10,11 +10,9 @@ import {
 } from "../../resolvers/weeklyGoal";
 import { GoalType } from "../../types/dbTypes";
 import {
-  readActiveEventByType,
   updateEventToCompleted,
 } from "../../resolvers/event";
-import { GUILD } from "../discordScheduler";
-import { readUser } from "../../resolvers/user";
+import { deleteGoalLeftTodayChannelByChannelId } from "../goalsLeftToday/deleteGoalLeftTodayChannel";
 
 export const reactToImages = () => {
   CLIENT.on("messageCreate", async (msg) => {
@@ -27,7 +25,6 @@ export const reactToImages = () => {
       msg.attachments.size > 0 &&
       msgChannel?.name.includes("daily-updates-chat")
     ) {
-      // delete goals left channel if the user has one
       let pod_type = readTypeFromChannelName(
         msgCategoryChannel?.name as string
       );
@@ -37,82 +34,20 @@ export const reactToImages = () => {
         user_id,
         pod_type as GoalType
       );
+      
       if (!weekly_goal) return;
-      const localTodayWithTimeZone = LOCAL_TODAY(
-        weekly_goal?.timeZone as string
-      );
+      const localTodayWithTimeZone = LOCAL_TODAY(weekly_goal?.timeZone as string);
       const date_today = mdyDate(localTodayWithTimeZone);
 
-      const event = await readActiveEventByType(
-        msg.author.id,
-        date_today,
-        pod_type as GoalType
-      );
+      console.log("UPDATING AND REACTING TO: ", msg.author.username);
 
-      // get goal left today channel based on discord username
-      const userObject = await readUser(msg.author.id);
-      const discordUsername = userObject?.discordUsername;
-      let userCustomChannels = GUILD()?.channels.cache.filter(
-        (channel) => channel.name === discordUsername
-      );
-
-      if (!msg.author.id) {
-        console.log("couldn't find msg.author.id for some reason, msg.author: ", msg.author)
-      }
-
-      console.log(
-        "REACTING TO: ",
-        discordUsername,
-        " WITH GOALLEFTCHANNELID: ",
-        event?.goalLeftChannelId,
-        " FOR TODAY: ",
-        date_today,
-        " AND DISCORD ID: ",
-        msg.author.id,
-        " FOR EVENT ID: ",
-        event?.id,
-        " AND DATE WITHOUT MDY DATE FUNCTION IS: ",
-        localTodayWithTimeZone
-      );
-
-      if (userCustomChannels) {
-        // deleting from goals left today category
-        for (const userChannelObject of userCustomChannels) {
-          let userChannel = msg.guild?.channels.cache.get(userChannelObject[0]);
-          let userChannelCategory = msg.guild?.channels.cache.get(
-            userChannel?.parentId as string
-          );
-          let userChannelCategoryName = userChannelCategory?.name;
-
-          if (
-            readTypeFromChannelName(userChannelCategoryName as string) ===
-            pod_type
-          ) {
-            // only if the goals left today channel type is the same
-            // if (event) { // only update if there is a goalLeftChannelId so you do this stuff once
-            // delete their identified goal left channel id from old code
-            if (userChannelObject[0] != event?.goalLeftChannelId) {
-              // user channel still there but goal left channel id was not assigned
-              setTimeout(() => {
-                userChannel?.delete();
-              }, 1000 * 3);
-            } else if (event.goalLeftChannelId) {
-              let goal_left_channel = CLIENT?.channels.cache.get(
-                event.goalLeftChannelId
-              );
-              setTimeout(() => {
-                goal_left_channel?.delete();
-              }, 1000 * 3);
-            }
-            // }
-          }
-        }
-      }
-
-      // if (!event?.completed) { // only react on first post that makes it completed?
-      // check if they just completed their last weekly goal
+      // Updates 1. isActive 2. completion 3. misses and 4. goals left today channel
+      deleteGoalLeftTodayChannelByChannelId(msg.channelId, msg.author.id)
+      updateEventToCompleted(user_id, date_today, pod_type as GoalType);
+      updateWeeklyGoalToCompleted(user_id, pod_type as GoalType);
       checkIfLastGoal(user_id, date_today, pod_type as GoalType);
 
+      // Reacts
       setTimeout(() => {
         msg.react("🔥");
       }, 1000 * 3);
@@ -125,11 +60,6 @@ export const reactToImages = () => {
       setTimeout(() => {
         msg.react("💪");
       }, 1000 * 6);
-      // }
-
-      // just in case they don't have a channel id but we still want to update
-      updateEventToCompleted(user_id, date_today, pod_type as GoalType);
-      updateWeeklyGoalToCompleted(user_id, pod_type as GoalType);
     }
   });
 };

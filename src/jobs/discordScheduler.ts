@@ -63,7 +63,6 @@ async function discordBot() {
     routeBotDMs();
     checkForSupportTagOrReply();
     displayRabidUsersCount();
-    // createGoalReminder();
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
@@ -71,12 +70,8 @@ async function discordBot() {
       const timeZoneIsUTCMidnight = timeZoneOffsetDict[gmt0Hours];
 
       console.log(
-        "UPDATING GOALS LEFT TODAY FOR TIME ZONE: ",
-        timeZoneIsUTCMidnight,
-        " AND GMT0HOURS IS: ",
-        gmt0Hours,
-        " WITH CURRENT TIME: ",
-        new Date()
+        "UPDATING MISSED GOALS AND POSTING NEW GOALS LEFT TODAY FOR TIME ZONE: ",
+        timeZoneIsUTCMidnight
       );
       await updateGoalsYesterday(timeZoneIsUTCMidnight);
       await updateGoalsToday(timeZoneIsUTCMidnight);
