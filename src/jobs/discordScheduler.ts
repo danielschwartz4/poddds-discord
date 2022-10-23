@@ -38,13 +38,6 @@ async function discordBot() {
     checkForSupportTagOrReply();
     displayRabidUsersCount();
 
-    // test
-    const timeZoneIsUTCMidnight = '-5'
-    await updateGoalsYesterday(timeZoneIsUTCMidnight);
-    await updateGoalsToday(timeZoneIsUTCMidnight);
-    // await resetSupportPoints(timeZoneIsUTCMidnight); // cannot use yet because user table does not have timezone
-    await autoKickMember(timeZoneIsUTCMidnight);
-
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
       const gmt0Hours = TODAY().getUTCHours();
