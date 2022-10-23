@@ -63,7 +63,7 @@ async function discordBot() {
     routeBotDMs();
     checkForSupportTagOrReply();
     displayRabidUsersCount();
-    createGoalReminder();
+    // createGoalReminder();
 
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
