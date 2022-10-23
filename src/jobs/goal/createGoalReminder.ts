@@ -7,6 +7,7 @@ import { Role } from "discord.js";
 
 export const createGoalReminder = async () => {
   botDMNotification("EVERY NEW MEMBER AND INACTIVE PODMATES", "CREATE A WEEKLY GOAL REMINDER!"); // notify admins via DM
+  console.log("EVERY NEW MEMBER AND INACTIVE PODMATES: CREATE A WEEKLY GOAL REMINDER!")
   const users = await readAllUsers();
 
   for (const idx of Array(users.length).keys()) {
@@ -32,22 +33,19 @@ export const createGoalReminder = async () => {
         // if the user does not have an active weekly goal, send them this reminder
         if (!fitnessWeeklyGoal && !studyWeeklyGoal 
           && (userGuildMember && userGuildMember?.roles.cache.some((role) => role == ROLE_IDS()['podmateRoleId'] as Role) || userGuildMember?.roles.cache.some((role) => role == ROLE_IDS()['newMemberRoleId'] as Role))) {
-          CLIENT.users.fetch(userObject.discordId).then((user) => {
-            console.log(
-              "Weekly reminder being set to the following user: ",
-              userObject.discordUsername
-            );
-            if (user) {
-              user.send(
+          try { 
+            CLIENT.users.fetch(userObject.discordId).then((user) => {
+              console.log("Weekly reminder being set to the following user: ", userObject.discordUsername);
+              user?.send(
                 "Hey! ⌚ Automatic weekly reminder from poddds mod here to **CREATE A GOAL!**⌚\n✅ Make sure you head over to **GOAL SETTING** and type **/set-current-goal** to get started on your new goal!"
-              ).catch((err) => {
-                console.log(err)
-                // TODO: Probably delete this user from our database
-              });
-            }
-          });
+              )
+            })
+          } catch {
+            console.log("user was not found in guild : ", userObject.discordUsername)
+            // TODO: Probably delete this user from our database
+          } 
         }
       }
-    }, 1000 * 60 * 1 * idx);
+    }, 1000 * 60); // every minute
   }
 };
