@@ -70,6 +70,14 @@ export const updateEventToInactive = ( discordId: string, adjustedDate: string, 
     );
 }
 
+export const updateEventToInactiveByWeeklyGoal = ( weeklyGoalId: number) => {
+    return Event.update(
+        { goalId: weeklyGoalId },
+        { isActive: false, goalLeftChannelId: "" }
+    );
+}
+
+
 export const updateAllUserEventsToInactive = ( discordId: string) => {
     return Event.update({ discordId }, { isActive: false });
 }

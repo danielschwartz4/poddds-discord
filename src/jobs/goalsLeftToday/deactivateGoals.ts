@@ -1,6 +1,6 @@
 import { GoalType } from "../../types/dbTypes";
 import { updateAllUserEventsToInactive, updateUserEventsToInactiveByType } from "../../resolvers/event";
-import { updateAllUserWeeklyGoalsToInactive, updateUserWeeklyGoalsToInactiveByType } from "../../resolvers/weeklyGoal";
+import { updateAllUserWeeklyGoalsToInactive, updateWeeklyGoalStatusToInactiveByType } from "../../resolvers/weeklyGoal";
 
 export const deactivateGoalsAndEvents = async (
   discordId: string,
@@ -9,7 +9,7 @@ export const deactivateGoalsAndEvents = async (
   // deactivate any goals left today channels from discord UI if they exist
 
   if (type) {
-    updateUserWeeklyGoalsToInactiveByType(discordId, type);
+    updateWeeklyGoalStatusToInactiveByType(discordId, type);
     updateUserEventsToInactiveByType(discordId, type)
   } else {
     // deactivate all

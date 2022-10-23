@@ -1,5 +1,5 @@
 import { TextChannel } from "discord.js";
-import { CLIENT, LOCAL_TODAY } from "../constants";
+import { CLIENT, LOCAL_TODAY, TODAY } from "../constants";
 import AppDataSource from "../dataSource";
 import { changeTimeZone, mdyDate } from "../utils/timeZoneUtil";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
@@ -7,7 +7,9 @@ import { deactivateMember } from "./member/onMemberLeave";
 import inspirational_quotes from "../utils/quotes.json";
 import { readPodCategoryChannelsByPodId } from "../utils/channelUtil";
 import { readActivePods } from "../resolvers/pod";
-import { readWeeklyGoalByFitnessPodIdAndType, readWeeklyGoalByStudyPodIdAndType } from "../resolvers/weeklyGoal";
+import { readWeeklyGoalByFitnessPodIdAndType, readWeeklyGoalByStudyPodIdAndType, updateWeeklyGoalStatusToInactive } from "../resolvers/weeklyGoal";
+import { updateEventToInactiveByWeeklyGoal } from "../resolvers/event";
+import { GUILD, ROLE_IDS } from "./discordScheduler";
 require("dotenv").config();
 
 export const dailySummary = async () => {
@@ -28,6 +30,19 @@ export const dailySummary = async () => {
 
     // if there are active goals for the pod
     if (podActiveWeeklyGoals) {
+      // ensure all pod active weekly goals end dates have not passed yet, if they have, set the goal to inactive
+      let tempWeeklyGoals: WeeklyGoal[] = []
+      for (const goal of podActiveWeeklyGoals) {
+        console.log(goal.adjustedEndDate.getDate(), TODAY().getDate())
+        if (goal.adjustedEndDate.getDate() < TODAY().getDate()) {
+          updateWeeklyGoalStatusToInactive(goal.id)
+          updateEventToInactiveByWeeklyGoal(goal.id)
+        } else if (goal.isActive) {
+          tempWeeklyGoals.push(goal)
+        }
+      }
+      podActiveWeeklyGoals = tempWeeklyGoals
+
       // send daily summary into daily chat updates for that pod id
       const categoryChannels = await readPodCategoryChannelsByPodId(podId, podType);
       categoryChannels?.forEach(async (channel) => {
@@ -37,7 +52,11 @@ export const dailySummary = async () => {
           let channel = CLIENT.channels.cache.get(
             dailyUpdatesChannel
           ) as TextChannel;
+
+          // updates
           channel.send((await buildSummary(podActiveWeeklyGoals)) as string);
+
+          // explanation
           const daily_summary_description =
             "Hey everyone! Each day we will send out a progress update 🚩\n🟩 = on track! 🟨 = missed recent goal 🟥 = complete your next goal so your role doesn’t change to “kicked”!";
           channel.send(daily_summary_description);
@@ -73,12 +92,6 @@ const buildSummary = async (activeGoals: WeeklyGoal[]) => {
       LOCAL_TODAY_WITH_TIMEZONE.getTime() - goal.adjustedStartDate.getTime();
     let streak_length =
       Math.round(Difference_In_Time_From_Goal_Start / (1000 * 3600 * 24)) - 1; // start date comes the day after
-    // console.log(
-    //   "streak_length",
-    //   streak_length,
-    //   "LOCAL TODAY IS ",
-    //   LOCAL_TODAY_WITH_TIMEZONE
-    // );
 
     const recently_missed_event = await AppDataSource.query(
       `
@@ -113,10 +126,28 @@ const buildSummary = async (activeGoals: WeeklyGoal[]) => {
     //   res += `<@${goal.discordId}>` + ": " + missesMap(goal.misses) + " 🔥**" + streak_length + "**\n";
     // } else {
 
+    // display their support role
+    let supportIcon = ''
+    await GUILD()?.members.fetch(goal.discordId).then((user) => {
+      console.log(user.roles)
+      if (user.roles.cache.some((role) => role === ROLE_IDS()['lifeChangerRoleId'])) {
+        supportIcon += '🔮'
+      } else if (user.roles.cache.some((role) => role === ROLE_IDS()['legendRoleId'])) {
+        supportIcon += '🔱'
+      } else if (user.roles.cache.some((role) => role === ROLE_IDS()['champRoleId'])) {
+        supportIcon += '👑'
+      } else if (user.roles.cache.some((role) => role === ROLE_IDS()['preChampRoleId'])) {
+        supportIcon += '🔆'
+      } else if (user.roles.cache.some((role) => role === ROLE_IDS()['supportPlusRoleId'])) {
+        supportIcon += '💫'
+      } else if (user.roles.cache.some((role) => role === ROLE_IDS()['supportRoleId'])) {
+        supportIcon += '⭐'
+      }
+    })
 
     let misses = missesMap(goal.misses);
     if (misses === "🟩" || misses === "🟨" || misses === "🟥") {
-      res += `<@${goal.discordId}>` + ": " + missesMap(goal.misses) + "\n";
+      res += `<@${goal.discordId}>` + supportIcon + ": " + missesMap(goal.misses) + "\n";
     } else {
       console.log("MISSES IS UNDEFINED FOR USER ID: ", goal.discordId);
     }
@@ -133,3 +164,16 @@ const missesMap = (misses: number) => {
   };
   return map[misses];
 }
+
+// const supportMap = (role: string) => {
+//   const map: { [i: string]: string } = {
+//     'newMember' : newMemberRoleId,
+//     'podmate' : podmateRoleId,
+//     'support' : supportRoleId,
+//     'supportPlus' : supportPlusRoleId,
+//     'preChamp' : preChampRoleId,
+//     'champ' : champRoleId,
+//     'legend' : legendRoleId,
+//     'lifeChanger' : lifeChangerRoleId,
+//   }
+// }

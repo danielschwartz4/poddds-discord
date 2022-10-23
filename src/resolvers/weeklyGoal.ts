@@ -113,9 +113,11 @@ export const updateAllUserWeeklyGoalsToInactive = (discordId: string) => {
   WeeklyGoal.update({ discordId }, { isActive: false });
 };
 
-export const updateUserWeeklyGoalsToInactiveByType = (
-  discordId: string,
-  type: GoalType
+export const updateWeeklyGoalStatusToInactive = (
+  weeklyGoalId: number
 ) => {
-  WeeklyGoal.update({ discordId, type }, { isActive: false });
+  return WeeklyGoal.update(
+    { id: weeklyGoalId },
+    { isActive: false }
+  );
 };

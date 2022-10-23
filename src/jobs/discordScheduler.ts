@@ -22,7 +22,7 @@ require("dotenv").config();
 async function discordBot() {
   CLIENT.on("ready", async () => {
     console.log("The client bot is ready!");
-    console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-5")); // in EST
+    console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-5"), " TODAY: ", TODAY()); // in EST
 
     // Run our bot functions
     GUILD();
