@@ -2,15 +2,14 @@ import { ChannelType, PermissionsBitField } from "discord.js";
 import { GoalType } from "../../types/dbTypes";
 import { GUILD } from "../discordScheduler";
 
-export const createPodCategory = async (
-  type: GoalType,
-  podId: number
-) => {
+export const createPodCategory = async (type: GoalType, podId: number) => {
   // Create permissions
   const pod_role_id = GUILD()?.roles.cache.find(
     (r) => r.name === type + "-" + podId
   );
-  const everyone_role_id = GUILD()?.roles.cache.find((r) => r.name === "@everyone");
+  const everyone_role_id = GUILD()?.roles.cache.find(
+    (r) => r.name === "@everyone"
+  );
 
   const channel_permission_overwrites = [
     {
@@ -30,7 +29,10 @@ export const createPodCategory = async (
     },
     {
       id: everyone_role_id?.id as string,
-      deny: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages],
+      deny: [
+        PermissionsBitField.Flags.ViewChannel,
+        PermissionsBitField.Flags.SendMessages,
+      ],
     },
   ];
 
