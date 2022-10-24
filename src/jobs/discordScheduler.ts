@@ -38,8 +38,6 @@ async function discordBot() {
     checkForSupportTagOrReply();
     displayRabidUsersCount();
 
-    dailySummary();
-
     // update every hour (give it one minute past for hour hand to update)
     cron.schedule("1 */1 * * *", async () => {
       const gmt0Hours = TODAY().getUTCHours();

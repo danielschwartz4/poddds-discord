@@ -54,7 +54,7 @@ export const dailySummary = async () => {
 
           // explanation
           const daily_summary_description =
-            "Hey everyone! Each day we will send out a progress update 🚩\n🟩 = on track! 🟨 = missed recent goal 🟥 = complete your next goal so your role doesn’t change to “kicked”!\nThe number next to your name is how many support points you have. Check out the **faqs** channel for more info. :)";
+            "Hey everyone! Each day we will send out a progress update 🚩\n🟩 = on track! 🟨 = missed recent goal 🟥 = complete your next goal so your role doesn’t change to “kicked”!\n⭐The symbol and number next to your name is your role and how many support points you have. Check out the **❓┆faq** channel for more info";
           channel.send(daily_summary_description);
         }
       });
