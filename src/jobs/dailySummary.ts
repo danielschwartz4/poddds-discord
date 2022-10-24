@@ -1,15 +1,15 @@
 // import { TextChannel } from "discord.js";
-import { CLIENT, TODAY } from "../constants";
+import { TODAY } from "../constants";
 // import AppDataSource from "../dataSource";
 // import { changeTimeZone, mdyDate } from "../utils/timeZoneUtil";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
-import { deactivateMember } from "./member/onMemberLeave";
-import inspirational_quotes from "../utils/quotes.json";
+// import { deactivateMember } from "./member/onMemberLeave";
+// import inspirational_quotes from "../utils/quotes.json";
 // import { readPodCategoryChannelsByPodId } from "../utils/channelUtil";
 import { readActivePods } from "../resolvers/pod";
 import { readWeeklyGoalByFitnessPodIdAndType, readWeeklyGoalByStudyPodIdAndType, updateWeeklyGoalStatusToInactive } from "../resolvers/weeklyGoal";
 import { updateEventToInactiveByWeeklyGoal } from "../resolvers/event";
-import { GUILD, ROLE_IDS } from "./discordScheduler";
+// import { GUILD, ROLE_IDS } from "./discordScheduler";
 require("dotenv").config();
 
 export const dailySummary = async () => {
