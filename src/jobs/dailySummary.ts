@@ -11,6 +11,7 @@ import { readWeeklyGoalByFitnessPodIdAndType, readWeeklyGoalByStudyPodIdAndType 
 // import { updateEventToInactiveByWeeklyGoal } from "../resolvers/event";
 import { GUILD, ROLE_IDS } from "./discordScheduler";
 import { deactivateMember } from "./member/onMemberLeave";
+import { readSupport } from "src/resolvers/support";
 // import { GUILD, ROLE_IDS } from "./discordScheduler";
 require("dotenv").config();
 
@@ -110,6 +111,10 @@ const buildSummary = async (activeGoals: WeeklyGoal[]) => {
           supportIcon += '⭐'
         }
       })
+
+      // show how many support points they have
+      const user_support_points = await readSupport(goal.discordId)
+      if (user_support_points) { supportIcon += user_support_points }
 
       let misses = missesMap(goal.misses);
       if (misses === "🟩" || misses === "🟨" || misses === "🟥") {
