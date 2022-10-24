@@ -113,8 +113,8 @@ const buildSummary = async (activeGoals: WeeklyGoal[]) => {
       })
 
       // show how many support points they have
-      const user_support_points = await readSupport(goal.discordId)
-      if (user_support_points) { supportIcon += user_support_points }
+      const user_support = await readSupport(goal.discordId)
+      if (user_support) { supportIcon += user_support?.points }
 
       let misses = missesMap(goal.misses);
       if (misses === "🟩" || misses === "🟨" || misses === "🟥") {
