@@ -1,6 +1,6 @@
 import { CategoryChannel, ChannelType, PermissionsBitField, TextChannel } from "discord.js";
 import { GUILD } from "../jobs/discordScheduler";
-import { CLIENT, LOCAL_TODAY } from "../constants";
+import { CLIENT, LOCAL_TODAY, TODAY } from "../constants";
 import { User } from "../entities/User";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
 import { readUser } from "../resolvers/user";
@@ -186,4 +186,85 @@ export const readPodGoalsLeftTodayCategoryChannelByPodId = async (podId: number,
   let podName = "--- goals left today, " + type + " pod " + podId
   const userPodCategoryChannel = GUILD()?.channels.cache.find((channel) => channel.name === podName)
   return userPodCategoryChannel
+}
+
+export const deleteGoalLeftTodayChannel = async (podId: number, podType: GoalType, userId: string) => {
+  let goalsLeftCategoryChannel = await readPodGoalsLeftTodayCategoryChannelByPodId(podId, podType);
+  const goalsLeftChannels = GUILD()?.channels.cache.filter(c => c.parentId === goalsLeftCategoryChannel?.id)
+  
+  const user = await readUser(userId)
+
+  // if the username is found in goals left today as a channel, delete it
+  const userChannels = goalsLeftChannels?.filter(c => c.name === user?.discordUsername.toLowerCase())
+  userChannels?.forEach((channel) => {
+      setTimeout(() => {
+          channel?.delete();
+      }, 1000 * 3);
+  })
+}
+
+export const deleteGoalLeftTodayChannelByPodType = async (podType: GoalType, userId: string) => {
+  const user = await readUser(userId)
+
+  // figure out podId
+  let podId
+  if (podType == 'fitness') {
+      podId = user?.fitnessPodId
+  } else if (podType = 'study') {
+      podId = user?.studyPodId
+  }
+
+  let goalsLeftCategoryChannel = await readPodGoalsLeftTodayCategoryChannelByPodId(podId as number, podType);
+  const goalsLeftChannels = GUILD()?.channels.cache.filter(c => c.parentId === goalsLeftCategoryChannel?.id)
+  
+  // if the username is found in goals left today as a channel, delete it
+  const userChannels = goalsLeftChannels?.filter(c => c.name === user?.discordUsername.toLowerCase())
+  userChannels?.forEach((channel) => {
+      setTimeout(() => {
+          channel?.delete();
+      }, 1000 * 3);
+  })
+}
+
+export const deleteGoalLeftTodayChannelByChannelId = async (channelId: string, userId: string) => {
+  const channel = CLIENT.channels.cache.get(channelId) as TextChannel;
+
+  const podType = channel?.parent?.name.includes("💪")
+      ? "fitness"
+      : "study";
+  const podId = parseInt(channel?.parent?.name.split(" ").pop() as string);
+
+  let goalsLeftCategoryChannel = await readPodGoalsLeftTodayCategoryChannelByPodId(podId, podType);
+  const goalsLeftChannels = GUILD()?.channels.cache.filter(c => c.parentId === goalsLeftCategoryChannel?.id)
+  
+  const user = await readUser(userId)
+
+  // if the username is found in goals left today as a channel, delete it
+  const userChannels = goalsLeftChannels?.filter(c => c.name === user?.discordUsername.toLowerCase())
+  userChannels?.forEach((channel) => {
+      setTimeout(() => {
+          channel?.delete();
+      }, 1000 * 3);
+  })
+}
+
+export const clearOldGoalsLeftTodayChannels = async (podId: number, podType: GoalType) => {
+  let goalsLeftCategoryChannel = await readPodGoalsLeftTodayCategoryChannelByPodId(podId, podType);
+  const goalsLeftChannels = GUILD()?.channels.cache.filter(c => c.parentId === goalsLeftCategoryChannel?.id)
+  goalsLeftChannels?.forEach((guildChannel) => {
+    let channel_id = guildChannel.id
+    let channel = GUILD()?.channels.cache.filter(c => c.id === channel_id)
+    let channel_text = channel?.get(channel_id) as TextChannel
+    channel_text.messages.fetch({ limit: 1 }).then((msg) => {
+      const msgTimestamp = msg.first()?.createdTimestamp
+      if (msgTimestamp) {
+        // difference is in milliseconds
+        const days_elapsed = (TODAY().getTime() - msgTimestamp) / (1000 * 60 * 60 * 24)
+        if (days_elapsed > 1) {
+          guildChannel.delete()
+          console.log("deleting channel that was here for 1+ days for ", guildChannel.name, " in pod ", podId)
+        }
+      }
+    })
+  })
 }

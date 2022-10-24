@@ -2,19 +2,22 @@ import { Role } from "discord.js";
 import {
   readAllActiveGoalsForTimezone,
   updateAllUserWeeklyGoalsToInactive,
+  updateWeeklyGoalAndEventsActive,
 } from "../../resolvers/weeklyGoal";
 import { CLIENT, LOCAL_TODAY } from "../../constants";
 import { mdyDate } from "../../utils/timeZoneUtil";
 import { deactivateMember } from "./onMemberLeave";
 import { readActiveEvent } from "../../resolvers/event";
-import { GUILD } from "../discordScheduler";
-import { readUser } from "../../resolvers/user";
+import { GUILD, ROLE_IDS } from "../discordScheduler";
+import { removeRole } from "../../resolvers/role";
+import { deleteGoalLeftTodayChannelByPodType } from "../../utils/channelUtil";
+import { botDMNotification } from "../../utils/adminNotifs";
 
 export const autoKickMember = async (timeZoneIsUTCMidnight: string) => {
   const activeGoals = await readAllActiveGoalsForTimezone(
     timeZoneIsUTCMidnight
   );
-
+  
   // kick users that have active weekly goals after 3 misses
   let users_notified: string[] = [];
   for (const goal of activeGoals) {
@@ -23,6 +26,7 @@ export const autoKickMember = async (timeZoneIsUTCMidnight: string) => {
     if (!users_notified.includes(userId)) {
       // if 2 misses, DM the person with a warning message
       if (goal.misses == 2) {
+        console.log("GOAL MISSES = 2")
         const activeGoalToday = await readActiveEvent(
           userId,
           mdyDate(LOCAL_TODAY(timeZoneIsUTCMidnight))
@@ -47,39 +51,37 @@ export const autoKickMember = async (timeZoneIsUTCMidnight: string) => {
 
       // if more than 2 misses, change role of person to kicked
       if (goal.misses > 2) {
-        CLIENT.users
-          .fetch(userId)
-          .then((user_to_kick) => {
-            let kick_msg =
-              "‼ You've been put into the kicked role in the poddds community ‼\n\n🤗 We know things happen, so **if the community has helped you and you want to join back in again, message the mods saying what happened once you decide to recommit** \n\nFeel free to reach out using the #general channel for support in the meantime 🙂";
-            user_to_kick.send(kick_msg);
-          })
-          .catch((err) => {
-            console.log("ERROR! Assuming user has left server", err);
-            deactivateMember(userId);
-          });
-        // else if client.users.fetch is an error because it's an unknown member, then deactivate weekly goals of member
+        const user_to_kick = await CLIENT.users.fetch(userId).catch((err) => {
+          console.log("ERROR! Assuming user has left server", err);
+          deactivateMember(userId);
+        });
 
-        let kicked_role_id = GUILD()?.roles.cache.find(
-          (r: Role) => r.name === "kicked"
-        );
-        const user = await GUILD()?.members.fetch(userId);
-        user?.roles.set([kicked_role_id as Role]); // remove all roles and set to kicked
-        updateAllUserWeeklyGoalsToInactive(userId);
+        await GUILD()?.members.fetch(goal.discordId).then(async (user) => {
+          if (user.roles.cache.some((r) => r.name.includes('fitness')) && user.roles.cache.some((r) => r.name.includes('study'))) {
+            // remove pod role
+            removeRole(user, goal.type)
 
-        // remove their channel names from the server in goals left today if they still remain
-        const userObject = await readUser(userId);
-        const discordUsername = userObject?.discordUsername;
-        const userChannels = GUILD()?.channels.cache.filter(
-          (c) => c.name === discordUsername?.toLowerCase()
-        );
-        if (userChannels?.size) {
-          for (const c of userChannels) {
-            await c[1].delete();
+            // deactivate their goal
+            updateWeeklyGoalAndEventsActive(goal.id)
+
+            // notify them
+            let kick_msg ="‼ You've been kicked from your " + goal.type + " pod ‼";
+            user_to_kick?.send(kick_msg);
+
+          } else {
+            // kick them
+            let kick_msg ="‼ You've been put into the kicked role in the poddds community ‼\n\n🤗 We know things happen, so **if the community has helped you and you want to join back in again, message the mods to rejoin once you decide to recommit** 🙂";
+            user_to_kick?.send(kick_msg);
+
+            user?.roles.set([ROLE_IDS()['kickedRoleId'] as Role]).catch((err) => {console.log(err); botDMNotification(user.displayName, "TRIED KICKING THEM BUT RAN INTO AN ISSUE! CHECK HEROKU LOGS");}); // remove all roles and set to kicked
+            updateAllUserWeeklyGoalsToInactive(userId);
+
+            // remove their channel names from the server in goals left today if they still remain
+            deleteGoalLeftTodayChannelByPodType(goal.type, goal.discordId)
+
+            users_notified.push(userId);
           }
-        }
-
-        users_notified.push(userId);
+        })
       }
     }
   }

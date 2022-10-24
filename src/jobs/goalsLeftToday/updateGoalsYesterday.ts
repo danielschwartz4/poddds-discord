@@ -8,8 +8,7 @@ import { readActiveEventsByDateAndWeeklyGoalAndTimezone, readAllEventsByDateAndT
 import { readUser } from "../../resolvers/user";
 import { updateSupportTodayToFalse } from "../../resolvers/support";
 import { botDMNotification } from "../../utils/adminNotifs";
-import { deleteGoalLeftTodayChannel } from "./deleteGoalLeftTodayChannel";
-import { clearOldGoalsLeftTodayChannels } from "./clearGoalsLeftTodayChannels";
+import { clearOldGoalsLeftTodayChannels, deleteGoalLeftTodayChannel } from "../../utils/channelUtil";
 
 export const updateGoalsYesterday = async (
   timeZoneIsUTCMidnight?: string

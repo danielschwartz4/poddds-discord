@@ -49,12 +49,7 @@ async function discordBot() {
       );
       await updateGoalsYesterday(timeZoneIsUTCMidnight);
       await updateGoalsToday(timeZoneIsUTCMidnight);
-      // await resetSupportPoints(timeZoneIsUTCMidnight); // cannot use yet because user table does not have timezone
       await autoKickMember(timeZoneIsUTCMidnight);
-
-      // update metrics
-      // displayActiveGoalsCount();
-      // displayGoalCompletionCount();
     });
 
     // update every day at 9am EST (-5), (EST + 4) 1pm UTC
@@ -86,6 +81,7 @@ export const GUILD = () => {
 };
 
 export const ROLE_IDS = () => {
+  const kickedRoleId = GUILD()?.roles.cache.find((r) => r.name === "kicked");
   const newMemberRoleId = GUILD()?.roles.cache.find((r) => r.name === "🌱 new member");
   const podmateRoleId = GUILD()?.roles.cache.find((r) => r.name === "🚀 podmate");
   const supportRoleId = GUILD()?.roles.cache.find((r) => r.name === "⭐ Supporter ⋮ 1+ Supports");
@@ -96,6 +92,7 @@ export const ROLE_IDS = () => {
   const lifeChangerRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔮 Life Changer ⋮ 100+ Supports✨");
   
   return {
+    'kickedRoleId' : kickedRoleId,
     'newMemberRoleId' : newMemberRoleId,
     'podmateRoleId' : podmateRoleId,
     'supportRoleId' : supportRoleId,
