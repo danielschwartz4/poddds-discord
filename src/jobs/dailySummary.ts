@@ -11,7 +11,7 @@ import { readWeeklyGoalByFitnessPodIdAndType, readWeeklyGoalByStudyPodIdAndType 
 // import { updateEventToInactiveByWeeklyGoal } from "../resolvers/event";
 import { GUILD, ROLE_IDS } from "./discordScheduler";
 import { deactivateMember } from "./member/onMemberLeave";
-import { readSupport } from "src/resolvers/support";
+import { readSupport } from "../resolvers/support";
 // import { GUILD, ROLE_IDS } from "./discordScheduler";
 require("dotenv").config();
 
