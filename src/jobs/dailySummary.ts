@@ -24,6 +24,7 @@ export const dailySummary = async () => {
 
     // TODO: get rid of 
     if (podId != 2) {
+      console.log("yeet")
       continue
     }
 
