@@ -20,7 +20,7 @@ export const addExistingMembers = async () => {
             discordId: user.id,
           }).save();
         }
-        console.log("new user added: " + newUser);
+        console.log("new user added: " + newUser[0].discordUsername);
       }
     });
   });

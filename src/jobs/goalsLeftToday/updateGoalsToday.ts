@@ -85,31 +85,31 @@ export const updateGoalsToday = async (
         let user_id = event.discordId;
 
         // 5. if their role isn't a podmate, then deactivate their goals !! issue here (need to create a helper function to activate goals and events given a discord id now :/)
-        let userDiscordObject = await GUILD()?.members
-          .fetch(user_id)
-          .catch((err) => {
-            console.log("ERROR! Assuming user has left server", err);
-            deactivateMember(user_id);
-          });
-        if (
-          userDiscordObject?.roles.cache.some((role) => role.name === "kicked")
-        ) {
-          deactivateGoalsAndEvents(user_id); // they are kicked
-        }
+        try {
+          let userDiscordObject = await GUILD()?.members.fetch(user_id)
+          if (
+            userDiscordObject?.roles.cache.some((role) => role.name === "kicked")
+          ) {
+            deactivateGoalsAndEvents(user_id); // they are kicked
+          }
 
-        // 6. Create a channel for each valid due today
-        console.log("creating goals left today for user id ", user_id, " username ", userDiscordObject?.user.username, " for pod id ", podId)
-        let user = await readUser(user_id);
-        let weekly_goal = await readActiveWeeklyGoalByGoalId(event.goalId);
-        if (user && weekly_goal) {
-          createGoalsLeftTodayChannel(
-            user,
-            goalsLeftCategoryChannel as CategoryChannel,
-            weekly_goal,
-            timeZoneIsUTCMidnight as string,
-            podType,
-            podId
-          );
+          // 6. Create a channel for each valid due today
+          console.log("creating goals left today for user id ", user_id, " username ", userDiscordObject?.user.username, " for pod id ", podId)
+          let user = await readUser(user_id);
+          let weekly_goal = await readActiveWeeklyGoalByGoalId(event.goalId);
+          if (user && weekly_goal) {
+            createGoalsLeftTodayChannel(
+              user,
+              goalsLeftCategoryChannel as CategoryChannel,
+              weekly_goal,
+              timeZoneIsUTCMidnight as string,
+              podType,
+              podId
+            );
+          }
+        } catch {
+          console.log("updateGoalsToday ERROR! Assuming user has left server", user_id);
+          deactivateMember(user_id);
         }
       });
     }

@@ -17,13 +17,11 @@ export const assignPod = async (
   user: GuildMember,
   resp: string
 ) => {
-  // console.log("START", type);
   const dbUser = await User.findOne({
     where: {
       discordId: user?.id,
     },
   });
-  // console.log("user", dbUser);
   // find target pod in database
   //
   const pod = await Pod.findOne({
@@ -65,7 +63,6 @@ export const assignPod = async (
       let channel = CLIENT.channels.cache.get(
         channelId as string
       ) as TextChannel;
-      // console.log("channel", channel, channelId);
       await channel.send(resp);
     }
   } else {
@@ -115,8 +112,6 @@ const sendMessage = async (
         : "--- 📚 " + type + " pod " + podId)
   );
 
-  // console.log("category", category)
-
   const categoryId = category?.keys().next().value;
   let categoryChannel = CLIENT.channels.cache.get(
     categoryId
@@ -127,8 +122,6 @@ const sendMessage = async (
     .keys()
     .next().value;
 
-  // console.log("In sendMessage function", resp);
   let channel = CLIENT.channels.cache.get(channelId as string) as TextChannel;
-  // console.log("channel", channel);
   await channel.send(resp);
 };

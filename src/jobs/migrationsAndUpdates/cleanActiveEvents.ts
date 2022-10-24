@@ -23,7 +23,6 @@ export const cleanActiveEvents = async () => {
     // allActiveGoals.forEach((active_goal: Event) => {
     //     if (active_goal.isActive) {
     //         if (checkedGoalIds.includes(active_goal.goalId) && checkedGoalDate.includes(active_goal.adjustedDate)) {
-    //             // console.log("THIS ACTIVE GOAL IS A DUPLICATE, event id: " + active_goal.id)
     //             duplicatesIds.push(active_goal.id)
     //         } else {
     //             // catch duplicates
