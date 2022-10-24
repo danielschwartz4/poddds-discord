@@ -1,18 +1,14 @@
-// import { TextChannel } from "discord.js";
 import { CLIENT, TODAY } from "../constants";
-// import AppDataSource from "../dataSource";
-// import { changeTimeZone, mdyDate } from "../utils/timeZoneUtil";
 import { WeeklyGoal } from "../entities/WeeklyGoal";
-// import { deactivateMember } from "./member/onMemberLeave";
 import inspirational_quotes from "../utils/quotes.json";
-// import { readPodCategoryChannelsByPodId } from "../utils/channelUtil";
 import { readActivePods } from "../resolvers/pod";
-import { readWeeklyGoalByFitnessPodIdAndType, readWeeklyGoalByStudyPodIdAndType } from "../resolvers/weeklyGoal";
-// import { updateEventToInactiveByWeeklyGoal } from "../resolvers/event";
+import { readWeeklyGoalByFitnessPodIdAndType, readWeeklyGoalByStudyPodIdAndType, updateWeeklyGoalStatusToInactive } from "../resolvers/weeklyGoal";
 import { GUILD, ROLE_IDS } from "./discordScheduler";
 import { deactivateMember } from "./member/onMemberLeave";
 import { readSupport } from "../resolvers/support";
-// import { GUILD, ROLE_IDS } from "./discordScheduler";
+import { readPodCategoryChannelsByPodId } from "src/utils/channelUtil";
+import { TextChannel } from "discord.js";
+import { updateEventToInactiveByWeeklyGoal } from "src/resolvers/event";
 require("dotenv").config();
 
 export const dailySummary = async () => {
@@ -22,12 +18,6 @@ export const dailySummary = async () => {
   for (const pod of activePods) {
     const podId = pod.id;
     const podType = pod.type;
-
-    // TODO: get rid of 
-    if (podId != 2) {
-      console.log("yeet")
-      continue
-    }
 
     // get all active weekly goals for that pod id
     let podActiveWeeklyGoals: WeeklyGoal[] = []
@@ -42,37 +32,32 @@ export const dailySummary = async () => {
       // ensure all pod active weekly goals end dates have not passed yet, if they have, set the goal to inactive
       let tempWeeklyGoals: WeeklyGoal[] = []
       for (const goal of podActiveWeeklyGoals) {
-        console.log("CHECKING FOR USER ", goal.userId, goal.adjustedEndDate.setHours(0,0,0,0), TODAY().setHours(0,0,0,0))
         if (goal.adjustedEndDate.setHours(0,0,0,0) < TODAY().setHours(0,0,0,0)) {
-          console.log("DISABLED GOAL BECAUSE goal.adjustedEndDate.getDate() < TODAY().getDate()", goal.discordId)
-          // updateWeeklyGoalStatusToInactive(goal.id)
-          // updateEventToInactiveByWeeklyGoal(goal.id)
+          updateWeeklyGoalStatusToInactive(goal.id)
+          updateEventToInactiveByWeeklyGoal(goal.id)
         } else if (goal.isActive) {
           tempWeeklyGoals.push(goal)
-          console.log("ADDING GOAL: ", goal.discordId)
         }
       }
       podActiveWeeklyGoals = tempWeeklyGoals
-      console.log(await buildSummary(podActiveWeeklyGoals))
 
-      // TODO: comment this back in
-      // // send daily summary into daily chat updates for that pod id
-      // const categoryChannels = await readPodCategoryChannelsByPodId(podId, podType);
-      // categoryChannels?.forEach(async (channel) => {
-      //   const dailyUpdatesChannel = channel.id;
-      //   if (channel.name === "🚩daily-updates-chat") {
-      //     // hardcoding test-channel id
-      //     let channel = CLIENT.channels.cache.get(dailyUpdatesChannel) as TextChannel;
+      // send daily summary into daily chat updates for that pod id
+      const categoryChannels = await readPodCategoryChannelsByPodId(podId, podType);
+      categoryChannels?.forEach(async (channel) => {
+        const dailyUpdatesChannel = channel.id;
+        if (channel.name === "🚩daily-updates-chat") {
+          // hardcoding test-channel id
+          let channel = CLIENT.channels.cache.get(dailyUpdatesChannel) as TextChannel;
 
-      //     // updates
-      //     channel.send((await buildSummary(podActiveWeeklyGoals)) as string);
+          // updates
+          channel.send((await buildSummary(podActiveWeeklyGoals)) as string);
 
-      //     // explanation
-      //     const daily_summary_description =
-      //       "Hey everyone! Each day we will send out a progress update 🚩\n🟩 = on track! 🟨 = missed recent goal 🟥 = complete your next goal so your role doesn’t change to “kicked”!";
-      //     channel.send(daily_summary_description);
-      //   }
-      // });
+          // explanation
+          const daily_summary_description =
+            "Hey everyone! Each day we will send out a progress update 🚩\n🟩 = on track! 🟨 = missed recent goal 🟥 = complete your next goal so your role doesn’t change to “kicked”!\nThe number next to your name is how many support points you have. Check out the **faqs** channel for more info. :)";
+          channel.send(daily_summary_description);
+        }
+      });
     }
   }
 };
@@ -114,7 +99,7 @@ const buildSummary = async (activeGoals: WeeklyGoal[]) => {
 
       // show how many support points they have
       const user_support = await readSupport(goal.discordId)
-      if (user_support) { supportIcon += user_support?.points }
+      if (user_support && user_support.points != 0) { supportIcon += user_support.points }
 
       let misses = missesMap(goal.misses);
       if (misses === "🟩" || misses === "🟨" || misses === "🟥") {
