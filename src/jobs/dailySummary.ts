@@ -6,9 +6,9 @@ import { readWeeklyGoalByFitnessPodIdAndType, readWeeklyGoalByStudyPodIdAndType,
 import { GUILD, ROLE_IDS } from "./discordScheduler";
 import { deactivateMember } from "./member/onMemberLeave";
 import { readSupport } from "../resolvers/support";
-import { readPodCategoryChannelsByPodId } from "src/utils/channelUtil";
+import { readPodCategoryChannelsByPodId } from "../utils/channelUtil";
 import { TextChannel } from "discord.js";
-import { updateEventToInactiveByWeeklyGoal } from "src/resolvers/event";
+import { updateEventToInactiveByWeeklyGoal } from "../resolvers/event";
 require("dotenv").config();
 
 export const dailySummary = async () => {
