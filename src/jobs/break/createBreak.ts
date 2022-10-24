@@ -1,3 +1,4 @@
+import { deleteGoalLeftTodayChannelByChannelId } from "../../utils/channelUtil";
 import { CLIENT, LOCAL_TODAY } from "../../constants";
 import AppDataSource from "../../dataSource";
 import { WeeklyGoal } from "../../entities/WeeklyGoal";
@@ -7,7 +8,6 @@ import {
 } from "../../utils/interactionData";
 import { addDays, mdyDate } from "../../utils/timeZoneUtil";
 import { GUILD } from "../discordScheduler";
-import { deleteGoalLeftTodayChannelByChannelId } from "../goalsLeftToday/deleteGoalLeftTodayChannel";
 
 export const createBreak = () => {
   CLIENT.on("interactionCreate", async (interaction) => {

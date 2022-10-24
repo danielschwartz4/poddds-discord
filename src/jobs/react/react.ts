@@ -1,6 +1,6 @@
 // react with some emojis if there's an image
 
-import { readTypeFromChannelName } from "../../utils/channelUtil";
+import { deleteGoalLeftTodayChannelByChannelId, readTypeFromChannelName } from "../../utils/channelUtil";
 import { CLIENT, LOCAL_TODAY } from "../../constants";
 import { mdyDate } from "../../utils/timeZoneUtil";
 import { checkIfLastGoal } from "../goalsLeftToday/checkIfLastGoal";
@@ -12,7 +12,6 @@ import { GoalType } from "../../types/dbTypes";
 import {
   updateEventToCompleted,
 } from "../../resolvers/event";
-import { deleteGoalLeftTodayChannelByChannelId } from "../goalsLeftToday/deleteGoalLeftTodayChannel";
 
 export const reactToImages = () => {
   CLIENT.on("messageCreate", async (msg) => {
