@@ -5,7 +5,6 @@ import { addDays, mdyDate } from "../../utils/timeZoneUtil";
 import { checkIfLastGoal } from "./checkIfLastGoal";
 import { readWeeklyGoalByFitnessPodIdAndType, readWeeklyGoalByStudyPodIdAndType, readWeeklyGoalByType, updateWeeklyGoalMisses } from "../../resolvers/weeklyGoal";
 import { readActiveEventsByDateAndWeeklyGoalAndTimezone, readAllEventsByDateAndTimezone, updateEventToInactive } from "../../resolvers/event";
-import { readUser } from "../../resolvers/user";
 import { updateSupportTodayToFalse } from "../../resolvers/support";
 import { botDMNotification } from "../../utils/adminNotifs";
 import { clearOldGoalsLeftTodayChannels, deleteGoalLeftTodayChannel } from "../../utils/channelUtil";
@@ -35,11 +34,6 @@ export const updateGoalsYesterday = async (
     let goalIds: number[] = []
     for (const weeklyGoal of podActiveWeeklyGoals) { goalIds.push(weeklyGoal.id) }
     const events_incompleted_yesterday = await readActiveEventsByDateAndWeeklyGoalAndTimezone(date_yesterday, goalIds, timeZoneIsUTCMidnight as string)
-    let events_incompleted_yesterday_usernames: string[] = []
-    for (const event of events_incompleted_yesterday) {
-      const user_incompleted_yesterday = await readUser(event.discordId)
-      events_incompleted_yesterday_usernames.push(user_incompleted_yesterday?.discordUsername as string)
-    }
 
     // 3 looping through all active events individually
     // Updates here
@@ -47,6 +41,7 @@ export const updateGoalsYesterday = async (
       // 4. for each event yesterday incompleted, remove their channels from the category or update misses
       for (const event of events_incompleted_yesterday) {
         const user_id = event.discordId
+        console.log("FOR DATE YESTERDAY:", date_yesterday, "we are looking for goal ids", goalIds, "for timezone", timeZoneIsUTCMidnight, " for user id ", user_id, " and event id ", event.id, " and goal id ", event.goalId)
         
         // No post update 1) isActive=F 2) isComplete=F 3) misses += 1 4) delete goal left today
         updateEventToInactive(user_id, date_yesterday, podType);
