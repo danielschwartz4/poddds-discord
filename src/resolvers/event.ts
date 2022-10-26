@@ -1,6 +1,6 @@
 import { GoalType } from "../types/dbTypes";
 import { Event } from "../entities/Event";
-import { In, IsNull } from "typeorm";
+import { In } from "typeorm";
 
 export const readActiveEvent = (discordId: string, adjustedDate: string) => {
     return Event.find({ 
@@ -33,7 +33,6 @@ export const readActiveEventsByDateAndWeeklyGoalAndTimezone = (adjustedDate: str
     return Event.find({
         where: {
           adjustedDate,
-          goalLeftChannelId: IsNull() || "",
           completed: false,
           isActive: true,
           goalId: In(goalIds),

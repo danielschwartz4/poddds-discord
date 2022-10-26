@@ -80,9 +80,12 @@ export const updateGoalsToday = async (
           timeZoneIsUTCMidnight as string
         );
 
+      console.log("here are weekly goal ids ", goalIds, " that will be checked from pod ", podId, " for date today", date_today)
+
       // 4. ADD THESE EVENTS TO THE CATEGORY CHANNEL!
       events_for_day.forEach(async (event: Event) => {
         let user_id = event.discordId;
+        console.log("checking goal id ", event.goalId, " and event ", event.id, " for user id ", user_id, " for pod id ", podId)
 
         // 5. if their role isn't a podmate, then deactivate their goals !! issue here (need to create a helper function to activate goals and events given a discord id now :/)
         try {

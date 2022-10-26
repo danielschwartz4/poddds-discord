@@ -261,8 +261,13 @@ export const clearOldGoalsLeftTodayChannels = async (podId: number, podType: Goa
         // difference is in milliseconds
         const days_elapsed = (TODAY().getTime() - msgTimestamp) / (1000 * 60 * 60 * 24)
         if (days_elapsed > 1) {
-          guildChannel.delete()
           console.log("deleting channel that was here for 1+ days for ", guildChannel.name, " in pod ", podId)
+          try {
+            guildChannel?.delete()
+          } catch {
+            console.log("ERROR IN DELETING GUILD CHANNEL")
+          }
+
         }
       }
     })

@@ -38,7 +38,7 @@ export const reactToImages = () => {
       const localTodayWithTimeZone = LOCAL_TODAY(weekly_goal?.timeZone as string);
       const date_today = mdyDate(localTodayWithTimeZone);
 
-      console.log("UPDATING AND REACTING TO: ", msg.author.username);
+      console.log("UPDATING AND REACTING TO: ", msg.author.username, " for ", pod_type);
 
       // Updates 1. isActive 2. completion 3. misses and 4. goals left today channel
       deleteGoalLeftTodayChannelByChannelId(msg.channelId, msg.author.id)
