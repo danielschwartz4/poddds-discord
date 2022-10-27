@@ -12,7 +12,7 @@ export const expiredGoalNotif = async (
 ) => {
   if (!weekly_goal) return
   var Difference_In_Time = weekly_goal.adjustedEndDate.setHours(0,0,0,0) - weekly_goal.adjustedStartDate.setHours(0,0,0,0);
-  var Difference_In_Days = (Difference_In_Time / (1000 * 3600 * 24)) + 1;
+  var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
 
   const categoryChannels = await readPodCategoryChannelsByType(discordId, type)
 
