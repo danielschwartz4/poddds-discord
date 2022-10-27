@@ -80,7 +80,7 @@ export const createGoalsLeftTodayChannel = async (user: User, category_channel: 
     parent: category_channel?.id,
   }).then(async (goal_left_channel) => {
     if (weekly_goal?.description) {
-      var Difference_In_Time = weekly_goal.adjustedEndDate.getTime() - LOCAL_TODAY(timeZoneIsUTCMidnight as string).getTime();
+      var Difference_In_Time = weekly_goal.adjustedEndDate.setHours(0,0,0,0) - LOCAL_TODAY(timeZoneIsUTCMidnight as string).setHours(0,0,0,0);
       // To calculate the no. of days between two dates
       var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600 * 24));
       let days_left_message = Difference_In_Days + " days left!";
@@ -263,7 +263,7 @@ export const clearOldGoalsLeftTodayChannels = async (podId: number, podType: Goa
         if (days_elapsed > 1) {
           console.log("deleting channel that was here for 1+ days for ", guildChannel.name, " in pod ", podId)
           try {
-            guildChannel?.delete()
+            guildChannel?.delete().catch(() => {console.log("ERROR IN DELETING GUILD CHANNEL, IN CATCH")})
           } catch {
             console.log("ERROR IN DELETING GUILD CHANNEL")
           }

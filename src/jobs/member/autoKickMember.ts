@@ -65,12 +65,13 @@ export const autoKickMember = async (timeZoneIsUTCMidnight: string) => {
 
               // notify them
               let kick_msg ="‼ You've been kicked from your " + goal.type + " pod ‼";
-              user_to_kick?.send(kick_msg);
+              try { user_to_kick?.send(kick_msg) } catch { console.log("couldn't send an autokick message to ", user_to_kick.username) }
 
             } else {
               // kick them
               let kick_msg ="‼ You've been put into the kicked role in the poddds community ‼\n\n🤗 We know things happen, so **if the community has helped you and you want to join back in again, message the mods to rejoin once you decide to recommit** 🙂";
-              user_to_kick?.send(kick_msg);
+              
+              try { user_to_kick?.send(kick_msg) } catch { console.log("couldn't send an autokick message to ", user_to_kick.username) }
 
               try {
                 user?.roles.set([ROLE_IDS()['kickedRoleId'] as Role]) // remove all roles and set to kicked
