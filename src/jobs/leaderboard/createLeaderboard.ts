@@ -14,9 +14,12 @@ export const createLeaderboard = () => {
       );
       console.log(cleanedData);
 
-      interaction.reply(
-        "🏆Leaderboard created!🏆 \n\n 1️⃣ React below 🙋 if you want to join this week's pair leaderboard \n 2️⃣ Participants will be paired up by timezone at the start of the week \n 3️⃣ Your ranking depends on both of your consistency! 🥇🥈🥉"
-      );
+      const message = await interaction.reply({
+        content:
+          "🏆Leaderboard created!🏆 \n\n 1️⃣ React below 🙋 if you want to join this week's pair leaderboard \n 2️⃣ Participants will be paired up by timezone at the start of the week \n 3️⃣ Your ranking depends on both of your consistency! 🥇🥈🥉",
+        fetchReply: true,
+      });
+      message.react("🙋");
     }
   });
 };
