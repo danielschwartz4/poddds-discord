@@ -18,6 +18,7 @@ import { routeBotDMs } from "./member/routeBotDMs";
 import { leavePod } from "./pod/leavePod";
 import { reactToImages } from "./react/react";
 import { checkForSupportTagOrReply } from "./supportPoints/supportPoints";
+import { createLeaderboard } from "./leaderboard/createLeaderboard";
 require("dotenv").config();
 
 async function discordBot() {
@@ -32,16 +33,14 @@ async function discordBot() {
 
     // Run our bot functions
     GUILD();
-    // Commands
     goalCommand();
     createGoal();
     breakCommand();
     createBreak();
     leavePodCommand();
-    createLeaderboardCommand();
-
-    // Jobs
     leavePod();
+    createLeaderboardCommand();
+    createLeaderboard();
     reactToImages();
     newMember();
     routeBotDMs();

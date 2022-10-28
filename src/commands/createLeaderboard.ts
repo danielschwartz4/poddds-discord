@@ -27,8 +27,7 @@ const newGoalOptions = [
   },
   {
     name: "duration",
-    description:
-      "What will you do this week? (e.g. I will run a mile on Mondays, Wednesdays, and Fridays)",
+    description: "How many days",
     type: 3,
     required: true,
   },
