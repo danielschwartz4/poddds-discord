@@ -10,7 +10,7 @@ import {
 
 @ObjectType()
 @Entity()
-export class LeaderboardPairs extends BaseEntity {
+export class LeaderboardPair extends BaseEntity {
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id!: number;
