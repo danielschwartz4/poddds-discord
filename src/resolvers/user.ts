@@ -7,15 +7,11 @@ export const createUser = (discordUsername: string, discordId: string) => {
 
 export const readUser = (discordId: string) => {
   return User.findOne({ where: { discordId } });
-}
+};
 
 export const readAllUsers = () => {
   return User.find();
 };
-
-// export const readAllUsersByTimezone = (timeZone: string) => {
-//   return User.find({ where: { timeZone }});
-// };
 
 export const readPodUsers = (pod: Pod) => {
   const type = pod?.type;
