@@ -56,8 +56,8 @@ export const createGoal = () => {
           description: cleanedData["goal"],
           evidence: cleanedData["evidence"],
           discordId: interaction.user.id,
-          adjustedStartDate: startDate,
-          adjustedEndDate: endDate,
+          startDate: startDate,
+          endDate: endDate,
           days: daysObj,
           isActive: true,
           timeZone: flipSign(timeZone),
@@ -86,7 +86,7 @@ export const createGoal = () => {
       const user = await GUILD()?.members.fetch(interaction.user.id);
       // Assign user to pod and send resp to that goals channel
       // Add podmate role
-      let podmate_role_id = ROLE_IDS()['podmateRoleId']
+      let podmate_role_id = ROLE_IDS()["podmateRoleId"];
       await user?.roles?.add(podmate_role_id as Role);
 
       await assignPod(type as GoalType, user as GuildMember, resp);
@@ -116,8 +116,8 @@ export const createGoal = () => {
         newPodmateNotification(from_username, resp);
 
         // Automatically remove new member role and add podmate role to msg.author.roles
-        let new_member_role_id = ROLE_IDS()['newMemberRoleId']
-        let podmate_role_id = ROLE_IDS()['podmateRoleId']
+        let new_member_role_id = ROLE_IDS()["newMemberRoleId"];
+        let podmate_role_id = ROLE_IDS()["podmateRoleId"];
         user.roles.add(podmate_role_id as Role);
         user.roles.remove(new_member_role_id as Role);
       }

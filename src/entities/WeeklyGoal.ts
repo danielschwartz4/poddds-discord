@@ -64,11 +64,11 @@ export class WeeklyGoal extends BaseEntity {
 
   @Field({ nullable: true })
   @Column({ type: "timestamp with time zone", nullable: true })
-  adjustedStartDate: Date;
+  startDate: Date;
 
   @Field({ nullable: true })
   @Column({ type: "timestamp with time zone", nullable: true })
-  adjustedEndDate: Date;
+  endDate: Date;
 
   @Field(() => User)
   @ManyToOne(() => User, (user) => user.weeklyGoal)

@@ -8,19 +8,20 @@ import { readPodCategoryChannelsByType } from "../../utils/channelUtil";
 export const expiredGoalNotif = async (
   discordId: string,
   type: GoalType,
-  weekly_goal: WeeklyGoal,
+  weekly_goal: WeeklyGoal
 ) => {
-  if (!weekly_goal) return
-  var Difference_In_Time = weekly_goal.adjustedEndDate.getTime() - weekly_goal.adjustedStartDate.getTime();
+  if (!weekly_goal) return;
+  var Difference_In_Time =
+    weekly_goal.endDate.getTime() - weekly_goal.startDate.getTime();
   var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
 
-  const categoryChannels = await readPodCategoryChannelsByType(discordId, type)
+  const categoryChannels = await readPodCategoryChannelsByType(discordId, type);
 
   // find the self promo channel and post in there
   let selfPromoChannel: string;
   categoryChannels?.forEach(async (channel) => {
-    if (channel.name === '🔥wins') {
-      selfPromoChannel = channel.id
+    if (channel.name === "🔥wins") {
+      selfPromoChannel = channel.id;
 
       let msg = await (
         CLIENT.channels.cache.get(selfPromoChannel) as TextChannel
@@ -39,7 +40,5 @@ export const expiredGoalNotif = async (
 
       updateWeeklyGoalStatusToInactiveByType(discordId, type);
     }
-  })
-
-  
+  });
 };
