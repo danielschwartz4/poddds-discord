@@ -1,4 +1,4 @@
-import { LeaderboardPair } from "src/entities/LeaderboardPair";
+import { LeaderboardPair } from "../entities/LeaderboardPair";
 
 export const createLeaderboardPair = (
   userIdA: number,

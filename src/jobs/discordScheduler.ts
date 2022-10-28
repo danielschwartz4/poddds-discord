@@ -1,8 +1,11 @@
 import cron from "node-cron";
-import { goalCommand } from "../commands/goalCommand";
+import { createLeaderboardCommand } from "../commands/createLeaderboard";
 import { breakCommand } from "../commands/breakCommand";
+import { goalCommand } from "../commands/goalCommand";
 import { leavePodCommand } from "../commands/leavePodCommand";
 import { CLIENT, LOCAL_TODAY, SERVER_ID, TODAY, __prod__ } from "../constants";
+import { displayRabidUsersCount } from "../metrics/rabidUsers";
+import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { createBreak } from "./break/createBreak";
 import { dailySummary } from "./dailySummary";
 import { createGoal } from "./goal/createGoal";
@@ -14,23 +17,30 @@ import { newMember } from "./member/newMember";
 import { routeBotDMs } from "./member/routeBotDMs";
 import { leavePod } from "./pod/leavePod";
 import { reactToImages } from "./react/react";
-import { timeZoneOffsetDict } from "../utils/timeZoneUtil";
 import { checkForSupportTagOrReply } from "./supportPoints/supportPoints";
-import { displayRabidUsersCount } from "../metrics/rabidUsers";
 require("dotenv").config();
 
 async function discordBot() {
   CLIENT.on("ready", async () => {
     console.log("The client bot is ready!");
-    console.log("EST LOCAL TIME RIGHT NOW TO CHECK: ", LOCAL_TODAY("-5"), " TODAY: ", TODAY()); // in EST
+    console.log(
+      "EST LOCAL TIME RIGHT NOW TO CHECK: ",
+      LOCAL_TODAY("-5"),
+      " TODAY: ",
+      TODAY()
+    ); // in EST
 
     // Run our bot functions
     GUILD();
+    // Commands
     goalCommand();
     createGoal();
     breakCommand();
     createBreak();
     leavePodCommand();
+    createLeaderboardCommand();
+
+    // Jobs
     leavePod();
     reactToImages();
     newMember();
@@ -82,26 +92,42 @@ export const GUILD = () => {
 
 export const ROLE_IDS = () => {
   const kickedRoleId = GUILD()?.roles.cache.find((r) => r.name === "kicked");
-  const newMemberRoleId = GUILD()?.roles.cache.find((r) => r.name === "🌱 new member");
-  const podmateRoleId = GUILD()?.roles.cache.find((r) => r.name === "🚀 podmate");
-  const supportRoleId = GUILD()?.roles.cache.find((r) => r.name === "⭐ Supporter ⋮ 1+ Supports");
-  const supportPlusRoleId = GUILD()?.roles.cache.find((r) => r.name === "💫 Supporter+ ⋮ 5+ Supports⭐");
-  const preChampRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔆Pre-Champ ⋮ 10+ Supports⭐⭐");
-  const champRoleId = GUILD()?.roles.cache.find((r) => r.name === "👑 Champ ⋮ 14+ Supports⭐⭐");
-  const legendRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔱 Legend ⋮ 30+ Supports⭐⭐⭐");
-  const lifeChangerRoleId = GUILD()?.roles.cache.find((r) => r.name === "🔮 Life Changer ⋮ 100+ Supports✨");
-  
+  const newMemberRoleId = GUILD()?.roles.cache.find(
+    (r) => r.name === "🌱 new member"
+  );
+  const podmateRoleId = GUILD()?.roles.cache.find(
+    (r) => r.name === "🚀 podmate"
+  );
+  const supportRoleId = GUILD()?.roles.cache.find(
+    (r) => r.name === "⭐ Supporter ⋮ 1+ Supports"
+  );
+  const supportPlusRoleId = GUILD()?.roles.cache.find(
+    (r) => r.name === "💫 Supporter+ ⋮ 5+ Supports⭐"
+  );
+  const preChampRoleId = GUILD()?.roles.cache.find(
+    (r) => r.name === "🔆Pre-Champ ⋮ 10+ Supports⭐⭐"
+  );
+  const champRoleId = GUILD()?.roles.cache.find(
+    (r) => r.name === "👑 Champ ⋮ 14+ Supports⭐⭐"
+  );
+  const legendRoleId = GUILD()?.roles.cache.find(
+    (r) => r.name === "🔱 Legend ⋮ 30+ Supports⭐⭐⭐"
+  );
+  const lifeChangerRoleId = GUILD()?.roles.cache.find(
+    (r) => r.name === "🔮 Life Changer ⋮ 100+ Supports✨"
+  );
+
   return {
-    'kickedRoleId' : kickedRoleId,
-    'newMemberRoleId' : newMemberRoleId,
-    'podmateRoleId' : podmateRoleId,
-    'supportRoleId' : supportRoleId,
-    'supportPlusRoleId' : supportPlusRoleId,
-    'preChampRoleId' : preChampRoleId,
-    'champRoleId' : champRoleId,
-    'legendRoleId' : legendRoleId,
-    'lifeChangerRoleId' : lifeChangerRoleId,
-  }
-}
+    kickedRoleId: kickedRoleId,
+    newMemberRoleId: newMemberRoleId,
+    podmateRoleId: podmateRoleId,
+    supportRoleId: supportRoleId,
+    supportPlusRoleId: supportPlusRoleId,
+    preChampRoleId: preChampRoleId,
+    champRoleId: champRoleId,
+    legendRoleId: legendRoleId,
+    lifeChangerRoleId: lifeChangerRoleId,
+  };
+};
 
 export default discordBot;
