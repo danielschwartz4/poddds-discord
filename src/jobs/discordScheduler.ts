@@ -19,6 +19,8 @@ import { leavePod } from "./pod/leavePod";
 import { reactToImages } from "./react/react";
 import { checkForSupportTagOrReply } from "./supportPoints/supportPoints";
 import { createLeaderboard } from "./leaderboard/createLeaderboard";
+import { leaderboardReactAdd } from "./leaderboard/leaderboardReactAdd";
+import { leaderboardReactRemove } from "./leaderboard/leaderboardReactRemove";
 require("dotenv").config();
 
 async function discordBot() {
@@ -41,6 +43,8 @@ async function discordBot() {
     leavePod();
     createLeaderboardCommand();
     createLeaderboard();
+    leaderboardReactAdd();
+    leaderboardReactRemove();
     reactToImages();
     newMember();
     routeBotDMs();

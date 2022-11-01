@@ -22,4 +22,5 @@ export const createLeaderboard = () => {
       message.react("🙋");
     }
   });
+  // ! get people who reacted
 };

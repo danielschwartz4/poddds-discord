@@ -15,6 +15,10 @@ export class Leaderboard extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
+  @Field(() => Int, { nullable: true })
+  @Column({ nullable: true })
+  messageId: number;
+
   @Field({ nullable: true })
   @Column({ type: "timestamp with time zone", nullable: true })
   startDate: Date;

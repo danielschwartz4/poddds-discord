@@ -53,10 +53,11 @@ export const CLIENT = new DiscordJS.Client({
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildPresences,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
     GatewayIntentBits.Guilds,
     GatewayIntentBits.DirectMessages,
     GatewayIntentBits.DirectMessageTyping,
     GatewayIntentBits.DirectMessageReactions,
   ],
-  partials: [Partials.Channel],
+  partials: [Partials.Message, Partials.Channel, Partials.Reaction],
 });
