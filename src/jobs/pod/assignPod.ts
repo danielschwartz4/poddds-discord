@@ -1,9 +1,4 @@
-import {
-  CategoryChannel,
-  GuildMember,
-  Role,
-  TextChannel,
-} from "discord.js";
+import { CategoryChannel, GuildMember, Role, TextChannel } from "discord.js";
 import { LessThan } from "typeorm";
 import { CLIENT } from "../../constants";
 import { Pod } from "../../entities/Pod";
@@ -27,7 +22,7 @@ export const assignPod = async (
   const pod = await Pod.findOne({
     where: {
       type: type,
-      numMembers: LessThan(20),
+      numMembers: LessThan(40),
     },
     order: { numMembers: "ASC" },
   });
@@ -93,17 +88,20 @@ export const assignPod = async (
     let role_id = user?.guild?.roles?.cache.find(
       (r) => r.name === type + "-" + pod?.id
     );
-    console.log("SEEKING ROLE", type, pod?.id, type + pod?.id, " GOT ", role_id?.name);
+    console.log(
+      "SEEKING ROLE",
+      type,
+      pod?.id,
+      type + pod?.id,
+      " GOT ",
+      role_id?.name
+    );
     await user?.roles?.add(role_id as Role);
     sendMessage(type, resp, pod?.id);
   }
 };
 
-const sendMessage = async (
-  type: GoalType,
-  resp: string,
-  podId: number
-) => {
+const sendMessage = async (type: GoalType, resp: string, podId: number) => {
   let category = GUILD()?.channels?.cache?.filter(
     (category) =>
       category.name ==
